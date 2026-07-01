@@ -1,0 +1,26 @@
+# Competition data — not redistributed outside Kaggle (download via kaggle.json/API, see README)
+data/
+*.zip
+
+# Generated submissions / run artifacts
+submission*.csv
+sp45_*.csv
+gold_prefix_*.csv
+gold_prefix_*.json
+run_summary.json
+*publicleaderboard*.csv
+leaderboard.zip
+
+# Credentials — never commit
+kaggle.json
+*access_token*
+.kaggle/
+
+# Python / Jupyter
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# OS
+Thumbs.db
+.DS_Store
