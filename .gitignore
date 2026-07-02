@@ -1,5 +1,7 @@
 # Competition data — not redistributed outside Kaggle (download via kaggle.json/API, see README)
 data/
+data_extra/
+models/
 *.zip
 
 # Generated submissions / run artifacts
