@@ -5,11 +5,21 @@ change that produced a genuine leaderboard gain.**
 
 TL;DR — We started from the public PF pipeline (Public LB ≈ 7.23), added a *decorrelated
 particle-filter ensemble* that pushed us to **7.096** (below the pipeline's own seed-noise floor,
-so a real gain — not luck), and then spent most of our effort answering a harder question:
-**how much of the remaining error is actually learnable?** Our answer, confirmed ~9 independent ways
-and by 7 neural architectures: **most of it is not.** The eval-zone TVT is dominated by a drift whose
-*direction* is physically absent from the observable data. We think this is the most useful thing we
-can share, because it reframes what "a good score" means on this task.
+so a real gain — not luck), and then spent most of our effort on a harder question: **which parts of
+the remaining error are learnable, and which are not?** The split matters more than any single score:
+
+- The **coarse per-well drift offset/slope is NOT learnable across fields** — field-grouped OOF R²
+  goes below zero (shuffle-controlled). This half is independently confirmed by the competition's
+  diagnostic topic author (G. Mamarin, *"Fork the ruler, not the model"*) and reproduced by another
+  competitor — a genuine structural limit for cross-field extrapolation.
+- But the **within-well fine structure (the "wiggle") IS learnable from per-well GR + typewell**: the
+  2nd-place solver publicly reports **~5 ft pooled RMSE with a single model using only per-well data**,
+  *below* the ~6.6 ft per-well-line oracle.
+
+Our own from-scratch models capped near the PF's ~7. We now read that as a **method/compute gap in our
+implementations, not a wall in the data** — an important correction to an earlier, over-strong "physics
+ceiling" reading of ours. What we *can* offer with confidence is the validation methodology and an
+honest map of what did and didn't transfer to the leaderboard.
 
 ---
 
@@ -58,10 +68,14 @@ We pushed the same idea further — a 3rd partner decorrelated by a *different* 
 ranking can fail to transfer when all slices share a blind spot (here: isolated-PF, no full pipeline).
 The single-partner ensemble (7.096) was the sweet spot; more dilution of the tuned base only hurt.
 
-## 4. The central finding — "the wall"
-Why is flat so hard to beat? Because the eval-zone TVT behaves like a **near-random walk around the
-last known value, whose drift *direction* is not present in the observable data.** We confirmed this
-from ~9 independent angles:
+## 4. What is and isn't recoverable — "the wall" (scoped correctly)
+Why is *flat* so hard to beat, and where exactly does prediction hit a limit? We confirmed from ~9
+angles that the **coarse per-well drift (offset + slope), treated as a cross-field regression on legal
+features, is essentially unpredictable** — this is the real "wall", and it matches the topic author's
+field-grouped OOF finding. **Important scope note:** this is a limit on *cross-field slope regression*,
+**not** a claim that the eval-zone signal is un-learnable in general — the within-well wiggle is
+recoverable by a strong enough GR-alignment model (2nd place, ~5 ft). The evidence below is about the
+coarse drift:
 
 | # | Probe | Result | Meaning |
 |---|---|---|---|
@@ -75,11 +89,12 @@ from ~9 independent angles:
 | 8 | Oracle GR window registration | ~31 ft | pure GR matching is weak (GR is self-similar) |
 | 9 | Learned contrastive GR↔typewell matcher (localization) | **179 ft** | without a continuity prior, GR localizes *nowhere* |
 
-The picture is consistent: **the exploitable signal is the continuity prior (stay near the last
-position); GR only nudges locally, and the sub-seismic fault drift that dominates the error is
-physically not observable.** The particle filter's ~7 comes almost entirely from continuity + a
-carefully tuned (deliberately *weak*) GR likelihood + the beam/GBM/calibration stack — not from strong
-GR localization.
+Read correctly: the **cross-field, static-feature regression** of the per-well drift bottoms out here —
+neighbours, formation curvature and naive GR-registration don't pin the coarse offset/slope. The PF's
+~7 comes from continuity + a deliberately *weak* GR likelihood + the beam/GBM/calibration stack. What
+these probes do **not** rule out — and what we initially over-read them as ruling out — is a *learned
+sequence model* that recovers the fine wiggle directly from per-well GR↔typewell alignment; the
+2nd-place ~5 ft result shows that signal is real and reachable from the same per-well data.
 
 ### 4b. The labels are human-drawn — and that doesn't rescue us
 TVT was drawn by geologists in steering software, not measured. We verified the human signature:
@@ -90,11 +105,13 @@ are exactly the thing probe #6/#7 show is **not recoverable** from observable GR
 dips to the round grid only discretizes our error (10.35 → 10.42–12.15, all worse). Real structure,
 no post-hoc handle.
 
-## 5. Can a neural network beat the tuned PF? (7 architectures, honest negatives)
-The leading solutions (≈5.6) are reportedly regularized CNNs that generalize well on local holdout.
-We took that seriously and built a proper research harness (773-well feature cache, whole-well holdout,
-augmentation: GR calibration jitter / noise / channel-dropout). Every from-scratch architecture we
-tried **fails to beat flat** on the honest holdout:
+## 5. Our 7 from-scratch NN attempts (all capped — a method gap, not a data wall)
+The leading solutions are reportedly regularized models that generalize well on local holdout, and the
+2nd-place solver states **~5 ft is reachable with a single per-well model**. We took that seriously and
+built a proper research harness (773-well feature cache, whole-well holdout, augmentation: GR
+calibration jitter / noise / channel-dropout). **Every architecture *we* built capped near flat/PF —
+but we now read this as our own execution/compute limit (tiny 20–47k-param models, ~30 epochs on a
+GTX 1050 Ti), not evidence against the 2nd-place ~5 ft result.** For the record, our attempts:
 
 | Architecture | Holdout pooled RMSE | Failure mode |
 |---|---|---|
@@ -115,9 +132,12 @@ The production PF wins (7.096) only because its Gaussian likelihood is hand-tune
 enough* to help without misleading — a razor's edge a from-scratch model doesn't find — plus the full
 classical stack around it.
 
-**Takeaway for the community:** the ceiling for public-data methods on this task appears to be set by
-physics, not modeling effort. A strong score is mostly a well-tuned continuity prior with a very light
-GR touch; heavier "learning" of the GR→position map tends to hurt.
+**Takeaway (corrected):** *our* small models couldn't make a learned GR likelihood help, but the
+2nd-place solver reaching ~5 ft from per-well data proves the fine-wiggle signal **is** there and
+recoverable — the gap is model quality/scale, not physics. The honest lesson from our failures is
+narrower: a naive or under-powered GR→position learner easily does *worse* than a continuity prior, so
+the emission has to be genuinely good before it helps. Getting there is the open problem we're now
+returning to (bigger sequence model, proper monotone alignment, on GPU).
 
 ## 6. Lessons (the ones we'd want to read first)
 1. **Isolated component tests lie.** Denoise (+2.8% isolated → −0.24 LB), GBM blends, and a 4-way
@@ -142,5 +162,16 @@ private while over-optimized entries regress.
 - Every number above is from the honest whole-well holdout or the real Public LB, never per-well
   averaging.
 
+## 9. Acknowledgements & corrections
+- The public PF pipeline we build on, and the diagnostic framing of the two traps (CV→LB mirage +
+  seed/refork variance) and the field-grouped "wall test", are due to **Georgy Mamarin**
+  (*"Fork the ruler, not the model"*); another competitor (**wharekawa**) independently reproduced the
+  same numbers. Our findings converge with theirs.
+- **Correction to our earlier framing:** we initially over-generalized the cross-field drift result into
+  a "physics ceiling ~7". The 2nd-place solver's stated **~5 ft single-model, per-well** result shows
+  that reading was too strong — the fine wiggle is learnable; our NN cap was a method/compute gap.
+
 *If you take one thing from this write-up: on this task, measure twice on a whole-well holdout, distrust
-Public LB, and respect the wall — a lot of "improvement" is the estimator's own seed variance.*
+Public LB, and separate what's truly unrecoverable (the cross-field coarse drift) from what a good model
+can still reach (the per-well wiggle) — a lot of apparent "improvement" is just seed variance, but the
+real signal below ~7 is there for a strong enough per-well model.*
