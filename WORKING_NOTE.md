@@ -1,6 +1,27 @@
 # Why This Problem Is Hard: A Rigorous Negative-Result Study of Wellbore Stratigraphic-Position (TVT) Prediction
 
 **ROGII Wellbore Geology Prediction — Working Note**
+**Team:** Malyshev Danil
+
+---
+
+## Contributions at a glance
+
+- **A trustworthy validation protocol** for a task where the public leaderboard is dominated by seed
+  noise: a whole-well holdout whose flat baseline (15.1) matches the LB flat baseline (15.9), so model
+  rankings transfer. We demonstrate the seed-noise problem directly (identical pipeline → 7.096 / 7.135 /
+  7.091 on separate runs).
+- **A real, transferable gain by variance reduction**, not new modeling: a decorrelated particle-filter
+  ensemble (7.230 → **7.096**, below the pipeline's own seed-noise floor of 7.168) and a more-seeds
+  robustness variant (7.091).
+- **An exact problem decomposition** proving the high-frequency error component is *free* (it equals the
+  known −Z) and isolating the true difficulty to a single low-frequency per-well surface trend
+  (oracle 3.9).
+- **A quantified impossibility argument:** the gamma-ray log's localization error is *broadband and
+  irreducible* (measured from ~9 independent angles), which explains why a weak-GR/strong-continuity prior
+  beats explicit alignment and why every neural architecture we tried caps at the isolated-PF level.
+- **A 20-architecture neural-network study** (including MDN, 2D misfit-SDF, transformers, and synthetic
+  pretraining) with per-architecture failure analysis — a map of what does not work, and precisely why.
 
 ---
 
@@ -35,6 +56,21 @@ Two metric facts shaped everything:
   points, ~15.9 for the trivial baseline. All numbers here are pooled RMSE.
 - **The trivial "flat" baseline is strong.** Predicting `TVT = last known TVT` scores **15.883** on the
   LB (15.1 on our holdout). *Almost every "smarter" idea we tried did worse than flat.*
+
+## 1b. Related Work
+
+Automated geosteering / log-to-typewell correlation has a substantial literature. Sequential Bayesian
+methods (particle filters, HMM/Viterbi over stratigraphic position) are the classical backbone and
+underpin the public pipeline we build on. Recent deep-learning approaches frame the problem as image-like
+matching or multi-modal inversion: convolutional "geosteering-image" networks that consume a 2D
+misfit/heatmap between the horizontal and vertical logs; Temporal Convolutional Networks (TCN) with
+cross-attention to the typewell; and Mixture-Density Networks (MDN) for multi-modal depth inversion of
+geophysical logs (e.g. Alyaev et al., *Direct Multi-Modal Inversion of Geophysical Logs Using Deep
+Learning*), which model the ±cycle bedding ambiguity as a Gaussian mixture rather than collapsing to a
+mean. We implemented representatives of each of these families (§5). Our finding is not that these methods
+are wrong — leading teams reach 5.2–5.4 with them — but that, on this dataset's scale (773 wells) and
+signal (self-similar GR), they cap at the isolated-PF level unless paired with realistic synthetic
+pretraining, which is the decisive and hard-to-reproduce ingredient.
 
 ## 2. Validation Methodology (our most reusable contribution)
 
@@ -86,6 +122,21 @@ decomposing the aligner's error shows removing an oracle constant (31), oracle l
 frequencies (28) barely helps — the error has **roughly equal power at all frequencies**. No filter,
 low-pass, anchor, or continuity decode recovers it. This is the deepest form of the wall: GR corrupts
 localization at *every scale*.
+
+### 4.3b Summary: the wall confirmed from ~9 independent angles
+
+| # | Probe | Result | Meaning |
+|---|---|---|---|
+| 1 | Flat baseline | 15.1 | strong; drift has small predictable mean |
+| 2 | Linear / dip / surface extrapolation | 37–85 | trends do not persist → worse than flat |
+| 3 | Inter-well drift corr. w/ nearest neighbor | −0.08 | neighbors don't give the direction |
+| 4 | Bimodal tie-break (±15 ft Eagle Ford) | r=0.054, mode correct 48.8% | a coin flip |
+| 5 | PF residual vs any observable | all \|corr\| < 0.15 | know *where* error is, not *which way* |
+| 6 | Surface breakpoints vs GR shift | 0.082 | fault locations not in GR |
+| 7 | Breakpoints vs formation-column curvature | 0.293 (cols removed in test) | weak & unavailable |
+| 8 | Oracle GR window registration | ~31 ft | pure GR matching is weak |
+| 9 | Learned contrastive GR↔typewell matcher | 179 ft localization | GR alone localizes nowhere |
+| 10 | Aligner-error frequency decomposition | −const 31 / −linear 31 / −LF 28 | error is broadband, irreducible |
 
 ### 4.4 The recurring principle
 Across every experiment, **a weak-GR / strong-continuity prior beats explicit GR matching.** The PF (and
@@ -178,6 +229,26 @@ results are included. Companion datasets: the competition data + the two public 
 uses. We build on the public PF pipeline and the diagnostic framing of the two traps (CV→LB mirage +
 seed/refork variance) and the field-grouped "wall test" due to Georgy Mamarin, independently reproduced
 by another competitor (wharekawa); our findings converge with theirs.
+
+## 9b. Limitations and Future Work
+
+**Limitations.** (i) Our best submission builds on a public pipeline; our own contribution is the
+variance-reduction ensemble and the analysis, not a new end-to-end model. (ii) The neural study, while
+broad, was compute-bounded (single modest GPU) — larger models / longer schedules might shift absolute
+numbers, though the *relative* ceiling (~isolated-PF) was consistent across scales and architectures.
+(iii) We did not achieve a working synthetic-pretraining pipeline; our naive generator produced
+too-clean, trivially-invertible logs that failed to transfer.
+
+**Future work (the path to the leaders' 5.2–5.4).** The single most promising direction is **realistic
+synthetic pretraining**: a generator that simulates millions of horizontal trajectories from the ~69
+unique typewells with drift, faults, ±15 ft bimodal jumps, realistic GR self-similarity, noise, and
+miscalibration — so a model is forced to learn continuity + robust matching (not trivial inversion) — then
+fine-tune on the 773 real wells. A validation gate should confirm transfer (a synth-trained model must
+reach ~11 on the real holdout, not ~0 on a synth holdout). Complementary directions: distilling the *full*
+7-pipeline (not the isolated PF) into a compact model; and combining the MDN head with a 2D misfit-SDF
+backbone once realistic priors are in place. Our analysis suggests these are necessary because the raw GR
+signal is broadband-unreliable; the gains must come from a better *prior*, learned from synthetic geology,
+rather than from the observation likelihood.
 
 ## 10. Conclusion
 
