@@ -14,7 +14,7 @@
 > is set by sub-seismic faults whose locations are **not encoded in the gamma-ray log**, making the residual
 > error *broadband and physically irreducible*. This single fact explains why the trivial "flat" baseline
 > is so strong (15.9 ft), why a weak-GR/strong-continuity prior beats explicit log-matching, and why **45+
-> experiments and 20 neural architectures** — MDN, transformers, 2D misfit-SDF, synthetic pretraining —
+> experiments and 22 neural architectures** — MDN, transformers, 2D misfit-SDF, synthetic pretraining —
 > all cap at the isolated particle-filter level (~11 ft), while the tuned classical stack reaches ~7 ft.
 > Our one transferable competition gain came not from new modeling but from **variance reduction**: a
 > decorrelated particle-filter ensemble (7.230 → 7.096) and a more-seeds robustness variant (7.091),
@@ -41,7 +41,7 @@
   beats explicit alignment and why every neural architecture caps at the isolated-PF level.
 - **A full experiment catalogue** — 45+ rigorous experiments across baselines, GR-matching, particle-filter
   internals, post-processing, GBM blending, denoising, human-markup reverse-engineering, and a
-  **20-architecture neural-network study** — each with its failure mechanism, a map of what does not work
+  **22-architecture neural-network study** — each with its failure mechanism, a map of what does not work
   and precisely why.
 
 ---
@@ -59,7 +59,7 @@ the public LB, which for the dominant particle-filter (PF) solution family is do
 error is hard: an exact decomposition shows the exploitable error is a low-frequency per-well *surface
 trend*; GR localization error is **broadband and irreducible** due to log self-similarity; and a weak-GR /
 strong-continuity prior provably beats explicit GR matching. **(4) A complete experiment catalogue** of 45+
-attempts and 20 neural architectures, each with its failure mode. We believe these quantified, explained
+attempts and 22 neural architectures, each with its failure mode. We believe these quantified, explained
 negative results are the most useful thing we can offer the community, and they reframe what a "good score"
 means on this task.
 
@@ -75,7 +75,7 @@ means on this task.
 6. Why the GR Log Cannot Localize
 7. A Positive Result: the Decorrelated PF Ensemble
 8. Full Experiment Catalogue (45+ experiments)
-9. The Neural-Network Study: 20 Architectures
+9. The Neural-Network Study: 22 Architectures (9.1 Synthetic-transfer gate · 9.2 WARP-blend follow-up)
 10. Leaderboard Context
 11. Uncertainty Estimation
 12. Physical Meaningfulness · 13. Lessons · 14. Reproducibility · 15. Limitations & Future Work · 16. Conclusion
@@ -427,15 +427,15 @@ GR. Snapping dips to the round grid merely discretizes the error (10.35 → 10.4
 human-drawn does not rescue us, because the hard quantity — *where* the geologist put a kink — is set by the
 unobservable geology.
 
-## 9. The Neural-Network Study: 20 Architectures
+## 9. The Neural-Network Study: 22 Architectures
 
 We built a full research harness (773-well feature cache, whole-well holdout, augmentation, EMA, a GPU
 training stand) and swept a broad architecture space. **Every from-scratch model floors near ~11 = the
 isolated-PF level.**
 
-![Fig. 5 — 20 neural architectures](figures/fig05_nn_bars.png)
+![Fig. 5 — 22 neural architectures](figures/fig05_nn_bars.png)
 
-**Figure 5 (real holdout RMSE).** Twenty architectures, coloured by family. The reference lines mark flat
+**Figure 5 (real holdout RMSE).** Twenty-two architectures, coloured by family. The reference lines mark flat
 (15.1), our best NN (WARP, 11.3), our PF submission (7.09), and the leaders (5.26). Two clusters are worth
 naming: the *continuity-anchored* nets (orange, WARP family) that reach ~11, and the *GR-trusting* aligners
 (dark red, 2D-SDF / soft-argmax / surface-space) that blow up to ~30.
@@ -463,6 +463,8 @@ naming: the *continuity-anchored* nets (orange, WARP family) that reach ~11, and
 | 2D-SDF + Viterbi continuity decode | ~32 | continuity can't pick the true contour |
 | Transformer (global self + cross attention) | 13.4 | overfits 773 wells |
 | Learned stack / distillation of PF signals | 10.7 | = isolated-PF (signals correlated) |
+| Pure classification over typewell bins (softmax, argmax decode) | 29.8 | no continuity anchor → GR wall |
+| Pure classification, top-3-expectation decode | 28.6 | softens bimodal collapse, still hits the wall |
 
 **Why WARP (11) is best.** It predicts a per-step derivative `dTVT`, integrates it by cumulative sum
 anchored at the last known TVT, and treats GR only as a *weak* corrector via cross-attention to the typewell.
@@ -486,6 +488,20 @@ low-frequency trend.
 plausible continuous zero-contours; neither a 2D receptive field nor a Viterbi decode can pick the true one,
 because there is no disambiguating signal. Continuity smooths the wrong contour just as happily as the right
 one.
+
+**Why pure classification over typewell bins fails (28.6–29.8), and why this is an independent
+confirmation.** A separate research thread proposed a literal reading of "the geosteering-image
+approach": discretize the typewell axis into bins and predict each step's position via softmax +
+cross-entropy, decoding by argmax (or a top-3-probability-weighted expectation, to handle bimodality
+without the mean-collapse of a soft-argmax). We built and trained this from scratch, on the same
+encoder/cross-attention scaffold as WARP, for a clean architecture-only comparison. It reaches only
+28.6 (top-3) / 29.8 (argmax) — squarely in the alignment/2D-SDF cluster (~29–32), *not* near WARP's
+11. Top-3-expectation decoding softens the naive mean-collapse a little but does not touch the
+underlying problem: without a continuity anchor, the model has no reason to prefer the true bin over
+any of the other equally-plausible ones in Figure 11's misfit ridges. This is the fourth independent
+architecture family (after alignment, 2D-SDF, and the neural grid filter) to hit the same wall for the
+same reason, which is why we treat "weak-GR/strong-continuity beats explicit matching" as a structural
+property of this task rather than an artifact of one architecture.
 
 **Why naive synthetic pretraining fails (13.2).** A generator with clean `GR = typewell_GR(TVT)` is
 *trivially invertible*, so the pretrained model learns a direct inversion that collapses to flat on real,
@@ -533,6 +549,44 @@ Closing that gap requires a genuine physical formation simulator (multi-typewell
 heterogeneous), not a better noise generator — a substantially larger and less-defined undertaking than the
 "learn the noise with a diffusion model" recipe suggests. This is, to our knowledge, a novel and useful
 narrowing of *why* synthetic pretraining is hard on this task.
+
+### 9.2 A promising follow-up: blending WARP into the classical pipeline (offline-validated, LB-pending)
+
+WARP alone (11.0) is far weaker than the classical pipeline (~7.1), so we asked whether it is at least
+*differently wrong* — i.e. whether its errors are decorrelated enough from the pipeline's to be worth
+blending, the same logic that produced our one confirmed transferable gain (§7). We ran WARP inference
+on the same 160 held-out wells used by our full-pipeline proxy (§7) and measured the error correlation
+between WARP and the tuned `sp45`/GBM pipeline output: **only 0.52** — meaningfully decorrelated,
+consistent with WARP's design (it deliberately does not trust GR the way the classical stack's GR
+emission and alignment stages do). Blending `(1 − a)·sp45 + a·WARP` was evaluated with a proper
+cross-fit (optimal weight fit on one half of the 160 wells, applied to the untouched other half, and
+vice versa): the blend **improved pooled RMSE in both directions of the split** (proxy: sp45-only
+10.62 → blended ≈ 9.8–10.2 depending on weight; never worse in either half). This is a materially larger
+offline effect than the wall-hedge finding below.
+
+We also tested combining this blend with a simpler "shrink toward last known TVT" hedge on
+low-confidence wells, and found the hedge became **redundant once WARP is blended in** — the
+jointly-optimal hedge weight collapsed to zero on both cross-fit directions, because WARP's own
+continuity anchor already supplies that effect. The two should not be stacked.
+
+**Caveat, stated plainly:** this result is measured on our full-pipeline *proxy*, not the actual
+7.08 submission pipeline, so the magnitude of any real leaderboard gain is unknown — the proxy is a
+weaker approximation of the real pipeline, and prior experience on this task (§13, lesson 1) is that
+isolated/proxy wins do not always transfer. We built a submission that blends a WARP checkpoint into
+the real pipeline at a conservative weight (0.15, versus the proxy-optimal 0.25–0.30) and placed it
+after the pipeline's final blend but before its train-contact override (so wells the override resolves
+near-exactly remain protected). At the time of writing this submission is pending evaluation; we report
+the offline finding here because the *methodology* — measuring error correlation before blending, and
+cross-fit-validating the weight rather than reading it off a single split — is itself a reusable
+contribution, independent of the eventual leaderboard outcome.
+
+We separately tested a more sophisticated alternative to the simple wall-hedge: a LightGBM meta-model
+trained (via grouped cross-validation, no leakage) to predict the pipeline's absolute error from 16
+GR-misfit and geometric features, then using its *out-of-fold* prediction to gate a per-point shrink
+toward last-known TVT. This underperformed the plain constant-weight hedge (11.12 vs 11.10 on the same
+honest split) — its correlation with the true error was only 0.24, weaker than the PF seed-spread signal
+(+0.48, §11) already in hand. We record this as a clean negative result: added model complexity did not
+buy a better uncertainty signal than the one we already had.
 
 ## 10. Leaderboard Context
 
