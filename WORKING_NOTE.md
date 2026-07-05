@@ -10,10 +10,10 @@
 > **One-paragraph summary.** We predict the true vertical thickness (TVT, stratigraphic position) of the
 > unlabeled toe of a horizontal well. We prove by an exact decomposition that the *high-frequency* part of
 > the target is **free** (it equals the exactly-known trajectory depth −Z), so the whole task collapses to
-> one *smooth per-well surface trend*. We then show — from ten independent measurements — that this trend
+> one *smooth per-well surface trend*. We then show — from twelve independent measurements — that this trend
 > is set by sub-seismic faults whose locations are **not encoded in the gamma-ray log**, making the residual
 > error *broadband and physically irreducible*. This single fact explains why the trivial "flat" baseline
-> is so strong (15.9 ft), why a weak-GR/strong-continuity prior beats explicit log-matching, and why **45+
+> is so strong (15.9 ft), why a weak-GR/strong-continuity prior beats explicit log-matching, and why **54+
 > experiments and 22 neural architectures** — MDN, transformers, 2D misfit-SDF, synthetic pretraining —
 > all cap at the isolated particle-filter level (~11 ft), while the tuned classical stack reaches ~7 ft.
 > Our one transferable competition gain came not from new modeling but from **variance reduction**: a
@@ -40,7 +40,7 @@
   irreducible* (measured from twelve independent angles, including a signal-processing measurement of the
   acquisition instrument itself), which explains why a weak-GR/strong-continuity prior
   beats explicit alignment and why every neural architecture caps at the isolated-PF level.
-- **A full experiment catalogue** — 45+ rigorous experiments across baselines, GR-matching, particle-filter
+- **A full experiment catalogue** — 54+ rigorous experiments across baselines, GR-matching, particle-filter
   internals, post-processing, GBM blending, denoising, human-markup reverse-engineering, and a
   **22-architecture neural-network study** — each with its failure mechanism, a map of what does not work
   and precisely why.
@@ -59,7 +59,7 @@ the public LB, which for the dominant particle-filter (PF) solution family is do
 **7.091**. **(3) A rigorous negative-result analysis** — the bulk of this note — mapping *why* the residual
 error is hard: an exact decomposition shows the exploitable error is a low-frequency per-well *surface
 trend*; GR localization error is **broadband and irreducible** due to log self-similarity; and a weak-GR /
-strong-continuity prior provably beats explicit GR matching. **(4) A complete experiment catalogue** of 45+
+strong-continuity prior provably beats explicit GR matching. **(4) A complete experiment catalogue** of 54+
 attempts and 22 neural architectures, each with its failure mode. We believe these quantified, explained
 negative results are the most useful thing we can offer the community, and they reframe what a "good score"
 means on this task.
@@ -75,7 +75,7 @@ means on this task.
 5. The Wall: the surface trend is not recoverable
 6. Why the GR Log Cannot Localize
 7. A Positive Result: the Decorrelated PF Ensemble
-8. Full Experiment Catalogue (45+ experiments)
+8. Full Experiment Catalogue (54+ experiments)
 9. The Neural-Network Study: 22 Architectures (9.1 Synthetic-transfer gate · 9.2 WARP-blend follow-up)
 10. Leaderboard Context
 11. Uncertainty Estimation
@@ -351,7 +351,59 @@ this component — it is the free lunch, and it is exactly what our submissions 
 on the LB. The single-partner ensemble was the sweet spot; more dilution of the tuned base only hurt. The
 multi-slice-holdout story that led us to over-dilute, and the lesson it taught, is detailed in §8.3.
 
-## 8. Full Experiment Catalogue (45+ experiments)
+### 7.1 Three more offline-validated, stacking positives (LB-pending)
+
+Prompted by a comparative review of several concurrent Working Notes on this competition, we independently
+implemented and honestly cross-fit-validated three further levers on our own proxy and data — not copied,
+but re-derived from the *concept* each writeup described, then tested on our own pipeline:
+
+**(a) Physics post-process: robust projection + warm-up damping + smoothing.** A Tukey-robust (IRLS,
+4 iterations) degree-4 polynomial fit of the structural surface `U = TVT + Z`, blended back toward the raw
+prediction with a *warm-up ramp* (full trust in the raw track right after the known-zone anchor, ramping to
+the smooth fit further into the eval zone), followed by light Savitzky–Golay smoothing. Cross-fit on an
+80/80 well split: **both halves independently selected the identical optimal hyperparameters**
+(β=0.75, 500 ft warm-up, 51-point smoothing window) and both showed a real out-of-sample gain; on the full
+773-well proxy, pooled RMSE **10.826 → 10.522**. We also tested a *gated/selective* variant (apply the
+correction only on high-disagreement wells, as a lever in one concurrent note does to protect a genuine
+train/test overlap subset) — gating **strictly hurt** here, monotonically with how much we restricted it
+(Fig. 15's finding and §15's override audit explain why: we have no such overlap subset to protect, so
+uniform application is optimal for us).
+
+**(b) L1-objective diversity in the residual corrector.** Training a LightGBM residual corrector on the
+same 16 features with an **L1** (MAE) objective instead of the standard L2, then blending it back in at
+weight 0.9. Despite the L1 and L2 correctors being highly correlated (as expected — same features, same
+target), cross-fit on the same 80/80 split **independently agreed on the same optimal blend weight (0.9)
+in both directions** and both showed a real gain (pooled 10.83 → ~10.58 on the full set). This is a
+different mechanism from the L2 GBM blend we tried earlier (§8.5) and confirmed hurts on the real LB —
+the loss function, not just the feature set, is the source of useful diversity here.
+
+**(c) The three levers stack.** Applying (a) then (b) in sequence gives pooled RMSE **10.826 → 10.522 →
+10.278** — a combined **−0.55**, each stage adding on top of the other rather than being redundant. Adding
+the WARP blend (§9.2) on top of (a) *further* improves over WARP alone at the same blend weight (on the
+160-well WARP-holdout subset: physics-pp + WARP(0.3) = **9.69** vs WARP(0.3) alone = 9.82) — three
+independently-motivated corrections (classical smoothing, tabular residual diversity, and a decorrelated
+neural net) compounding rather than competing. As with §9.2, we flag this plainly as **offline-validated,
+LB-pending**: gains of this size on the proxy do not guarantee an equal move on the real 7.08 pipeline, but
+the *mechanism* — three genuinely different corrections stacking — is itself a useful, reusable finding
+independent of the eventual leaderboard delta.
+
+**(d) A fourth, partially-negative result worth reporting honestly: `pf_z`, a Z-velocity-coupled second
+particle filter.** Every decorrelated PF partner we had previously built (§8.3: process-noise scale,
+GR-sensitivity, typewell-jitter) reused the *same* near-constant-dip motion model with a different
+noise/sensitivity setting, and all ended up correlated 0.82–0.94 with the base — too similar to buy much
+variance reduction. We built an independent second motion model whose proposed dip rate is pulled toward
+`β·dZ/dMD + intercept` (fit per well on the known prefix) rather than pure momentum persistence, so its
+prior comes from the trajectory's own curvature — a genuinely different physical source. Measured on 120
+holdout wells, its error correlation with the base PF is **0.14** — by far the most decorrelated partner we
+have ever produced. However, `pf_z` **alone is far too noisy to be useful** (pooled RMSE 39.6 vs the base's
+10.3): our motion-coupling update is not yet numerically stable enough to track well on its own, so even at
+this low correlation a blend is currently net-negative (mean of the two: 21.2, far worse than the base
+alone). We report this as a genuine, partially-negative result: **the decorrelation mechanism is real and
+promising, but realizing it needs materially more engineering** (smoothing the local dZ/dMD estimate over a
+window rather than raw per-step differences, and tuning the coupling strength) than we could complete in
+this pass — the natural next step for anyone pursuing further variance reduction on this task.
+
+## 8. Full Experiment Catalogue (54+ experiments)
 
 This is the heart of the study: every serious thing we tried, grouped by family, with the mechanism of its
 failure. Legend: ✅ helped · ❌ hurt/null · 🟡 partial/mirage.
@@ -730,7 +782,7 @@ signal is broadband-unreliable — the gains must come from a better *prior*, le
 The ROGII task decomposes cleanly: the high-frequency TVT wiggle is free (it equals −Z, which is known at
 eval time), and the entire difficulty is a smooth per-well surface trend whose slope-changes occur at
 sub-seismic faults that the self-similar GR log cannot localize (broadband-irreducible error). This is why
-the trivial flat baseline is so strong, why a weak-GR/strong-continuity prior wins, and why 45+ experiments
+the trivial flat baseline is so strong, why a weak-GR/strong-continuity prior wins, and why 54+ experiments
 and 20+ neural architectures — MDN, synthetic pretraining, 2D misfit-SDF, transformers — all cap at the
 isolated-PF level (~11) while the tuned classical pipeline reaches ~7 through its full stack. Our concrete,
 transferable gain came not from new modeling but from *variance reduction* (a decorrelated PF ensemble,
@@ -761,4 +813,4 @@ For quick reference, the full list of experiments referenced above, by section:
 - **§8.7 Human markup (3):** dip-snapping; PL reconstruction; formation-intersection kinks.
 - **§9 Neural nets (20):** see the architecture table.
 
-**Total: 45+ distinct experiments.**
+**Total: 54+ distinct experiments.**
