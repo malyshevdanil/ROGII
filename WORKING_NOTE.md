@@ -37,7 +37,8 @@
   known −Z) and isolating the true difficulty to a single low-frequency per-well surface trend
   (oracle 3.9 ft).
 - **A quantified impossibility argument:** the gamma-ray log's localization error is *broadband and
-  irreducible* (measured from ~10 independent angles), which explains why a weak-GR/strong-continuity prior
+  irreducible* (measured from twelve independent angles, including a signal-processing measurement of the
+  acquisition instrument itself), which explains why a weak-GR/strong-continuity prior
   beats explicit alignment and why every neural architecture caps at the isolated-PF level.
 - **A full experiment catalogue** — 45+ rigorous experiments across baselines, GR-matching, particle-filter
   internals, post-processing, GBM blending, denoising, human-markup reverse-engineering, and a
@@ -235,7 +236,7 @@ are several equally-plausible TVT depths. A 2D receptive field or a Viterbi cont
 path, but there is no signal that tells it *which* ridge is the true one. This is precisely why the 2D-SDF
 approach (§9) caps at ~30 ft.
 
-### 6.1 The wall, confirmed from ten independent angles
+### 6.1 The wall, confirmed from twelve independent angles
 
 | # | Probe | Result | Meaning |
 |---|---|---|---|
@@ -249,11 +250,37 @@ approach (§9) caps at ~30 ft.
 | 8 | Oracle GR window registration | ~31 ft | pure GR matching is weak |
 | 9 | Learned contrastive GR↔typewell matcher | 179 ft localization | GR alone localizes nowhere |
 | 10 | Aligner-error frequency decomposition | −const 31 / −linear 31 / −LF 28 | error is broadband, irreducible |
+| 11 | James–Stein shrinkage of a heel-dip-extrapolation offset estimator | data-optimal shrink a\*=0.025 (≈full shrink to zero) | the estimator itself reports zero exploitable signal |
+| 12 | Gated, gentle bimodal-midpoint hedge (loose two-minima trigger AND high PF/beam disagreement, α=0.2) | pooled 10.83 → 10.83–10.97 (flat to worse) | doesn't transfer to our pipeline even with the correct joint gate |
 
 **The recurring principle.** Across every experiment, **a weak-GR / strong-continuity prior beats explicit
 GR matching.** The PF (and our best NN) anchor to the last known position and only lightly correct with GR
 → ~7–11 ft. Approaches that *trust* GR matching (alignment, 2D contour) → ~30 ft. The exploitable signal is
 continuity, not GR.
+
+### 6.2 The acquisition physics: an independently-measured coherence spectrum
+
+Angle 8–10 show the GR-matching error is broadband from the *statistics* side. We additionally measured
+*why*, from the *instrument* side, using a signal-processing diagnostic in the same spirit as a concurrent
+community writeup on this competition (independently re-derived and verified on our own 773 wells, not
+copied): for every training well we pair the horizontal GR with the typewell GR looked up at the *true*
+depth (available because we hold ground truth on train), then compute the magnitude-squared coherence
+between the two curves (Welch, 1-ft sampling, 256-sample segments, 50% overlap) as a function of GR
+wavelength — separately for the known zone ("heel") and the eval zone ("toe").
+
+![Fig. 15 — coherence spectrum](figures/fig15_coherence_spectrum.png)
+
+**Figure 15 (real, 773 wells, our own measurement).** Correlation between GR and typewell-at-true-depth:
+0.756 full lateral, 0.817 heel, 0.668 toe. The coherence spectrum tells the sharper story: on the heel,
+coherence in the 5–32 ft band (0.16–0.50) is respectable — enough to disambiguate a bedding cycle. On the
+**toe — every row the competition scores** — coherence in that exact band collapses to 0.02–0.04. This is
+the *instrument*, not just the geology, removing the fine-cyclicity information that would break the
+bimodal tie: the recorded GR at usable fidelity simply does not carry the 5–32 ft signal on the section that
+is graded. This gives a physical, acquisition-side mechanism for why heel-calibration (angle 8) and every
+matcher we tried (angles 8–10) hit the same wall specifically on the toe, and it independently corroborates
+a coherence-spectrum measurement reported in a concurrent Working Note on this competition (Anthony Yanza),
+whose full-lateral/heel/toe correlations (0.755/0.81/0.665) and toe-band collapse (0.03–0.11) match ours
+(0.756/0.817/0.668; 0.02–0.04) closely despite fully independent implementations.
 
 ## 7. A Positive Result: the Decorrelated Particle-Filter Ensemble
 
@@ -286,6 +313,23 @@ physics:
    time-boxed code competition, *the runtime budget is part of the model*, and buying back compute is a
    legitimate lever that directly enabled our only transferable gain.
 
+**The honest climb (real public-LB deltas, one component at a time):**
+
+| Step | Component | Public LB | Δ |
+|---|---|---|---|
+| 0 | SP45-only physics pipeline, no companion datasets | 8.270 | — |
+| 1 | + companion datasets (fleongg pretrained + ravaghi artifacts) | 7.475 | −0.795 |
+| 2 | − revert over-aggressive GR denoise (isolated test misled us) | **7.230** | −0.245 |
+| 3 | + decorrelated PF ensemble (lo-noise partner, 0.65/0.35) | **7.096** | −0.134 |
+| 4 | + more seeds (128→160) | 7.091 | −0.005 (≈ seed-noise floor) |
+| 5 | + more seeds (160→192) | **7.080** | −0.011 (≈ seed-noise floor) |
+
+Steps 4–5 sit inside our own measured seed-noise floor (±0.07, §3) — we report them as *directional and
+seed-checked*, matching a caution several concurrent Working Notes on this competition make about their own
+small steps. Steps we tried and *rejected* after they hurt the real pipeline (GBM blend +0.35 to +0.84, the
+4-way decorrelation over-dilution +0.52, twjit/gs partners within noise of step 3) are catalogued in full in
+§8.3 and §8.5 — the same "isolated tests mislead" lesson that step 2 first taught us.
+
 ![Fig. 6 — PF ensemble spread](figures/fig06_pf_spread.png)
 
 **Figure 6 (real, 3 longest-eval wells).** The PF ensemble members (pf3/5/8/12, i.e. different process-noise
@@ -301,7 +345,7 @@ this component — it is the free lunch, and it is exactly what our submissions 
 ![Fig. 8 — our submission ladder](figures/fig08_submissions.png)
 
 **Figure 8 (real LB scores).** Our submission ladder. Decorrelation helped (7.230 → 7.096); over-dilution
-(the 4-way ensemble) hurt (7.752); more seeds gave our best robust submission (7.091).
+(the 4-way ensemble) hurt (7.752); more seeds gave our best robust submission (7.080).
 
 **Where decorrelation stopped.** A 3rd/4th partner (different mechanisms) or an off-base weight always hurt
 on the LB. The single-partner ensemble was the sweet spot; more dilution of the tuned base only hurt. The
@@ -601,12 +645,19 @@ score.
 
 ## 11. Uncertainty Estimation
 
-Two usable uncertainty signals emerged. **(a)** The PF seed-spread correlates **+0.48** with the actual
+Three usable uncertainty signals emerged. **(a)** The PF seed-spread correlates **+0.48** with the actual
 error magnitude (Fig. 7) — we can predict *where* the model is uncertain (though not *which way* to correct,
 §6). **(b)** The MDN head yields a full posterior per point (mixture means/variances/weights); its variance
 flags the bimodal (±15 ft Eagle Ford) mode-ambiguity zones. Crucially, the bimodal tie-break is a coin flip
 (mode correct 48.8%, r=0.054), so the honest uncertainty statement is that a large share of the error is
-*aleatoric* — irreducible from the observations — which is itself a calibrated, useful conclusion.
+*aleatoric* — irreducible from the observations — which is itself a calibrated, useful conclusion. **(c)**
+We trained a LightGBM classifier (5-fold CV) to detect, from leak-free per-well uncertainty features (PF
+seed-spread aggregates, PF/beam disagreement, eval-zone length), whether a well will land in the worst
+quintile by pooled error. It reaches **AUC 0.65** — real, ordered failure detection, on par with a similar
+detection-vs-actuation measurement independently reported for this competition (AUC 0.69) — while, exactly
+as in that measurement, the *sign* of the error stays unpredictable (§6, angle 5). This is the same
+detection/actuation split stated more sharply: **we can rank wells by expected pain; we cannot tell which
+way they will fail.**
 
 ## 12. Physical Meaningfulness
 
@@ -653,7 +704,13 @@ variance-reduction ensemble and the analysis, not a new end-to-end model. (ii) T
 broad, was compute-bounded (a single modest GPU) — larger models / longer schedules might shift absolute
 numbers, though the *relative* ceiling (~isolated-PF) was consistent across scales and architectures. (iii)
 We did not achieve a working synthetic-pretraining pipeline; §9.1 shows *why* — the bottleneck is the
-forward model, not the noise generator.
+forward model, not the noise generator. (iv) The inherited public pipeline contains a train-contact
+override that resolves a well near-exactly (~0.01 RMSE) when its identifier also appears in the training
+set. We checked the gate directly: it fires only on the 3 local placeholder test wells (which are literal
+copies of train wells, present purely so the pipeline runs locally before submission), and never on genuine
+hidden wells, whose identifiers do not overlap the training set except through the shared typewells. This
+mechanism is therefore inert on the graded set — consistent with an independent audit reported in a
+concurrent Working Note for this competition — so none of our reported LB numbers depend on it.
 
 **Future work (the path to the leaders' 5.2–5.4).** Synthetic pretraining remains the most likely route, but
 §9.1 sharpens the target: a better *noise* model (e.g. a 1D diffusion / neural-SDE fit to the residual) is
