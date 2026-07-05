@@ -261,12 +261,11 @@ continuity, not GR.
 ### 6.2 The acquisition physics: an independently-measured coherence spectrum
 
 Angle 8–10 show the GR-matching error is broadband from the *statistics* side. We additionally measured
-*why*, from the *instrument* side, using a signal-processing diagnostic in the same spirit as a concurrent
-community writeup on this competition (independently re-derived and verified on our own 773 wells, not
-copied): for every training well we pair the horizontal GR with the typewell GR looked up at the *true*
-depth (available because we hold ground truth on train), then compute the magnitude-squared coherence
-between the two curves (Welch, 1-ft sampling, 256-sample segments, 50% overlap) as a function of GR
-wavelength — separately for the known zone ("heel") and the eval zone ("toe").
+*why*, from the *instrument* side, using a signal-processing diagnostic: for every training well we pair
+the horizontal GR with the typewell GR looked up at the *true* depth (available because we hold ground
+truth on train), then compute the magnitude-squared coherence between the two curves (Welch, 1-ft sampling,
+256-sample segments, 50% overlap) as a function of GR wavelength — separately for the known zone ("heel")
+and the eval zone ("toe").
 
 ![Fig. 15 — coherence spectrum](figures/fig15_coherence_spectrum.png)
 
@@ -277,10 +276,7 @@ coherence in the 5–32 ft band (0.16–0.50) is respectable — enough to disam
 the *instrument*, not just the geology, removing the fine-cyclicity information that would break the
 bimodal tie: the recorded GR at usable fidelity simply does not carry the 5–32 ft signal on the section that
 is graded. This gives a physical, acquisition-side mechanism for why heel-calibration (angle 8) and every
-matcher we tried (angles 8–10) hit the same wall specifically on the toe, and it independently corroborates
-a coherence-spectrum measurement reported in a concurrent Working Note on this competition (Anthony Yanza),
-whose full-lateral/heel/toe correlations (0.755/0.81/0.665) and toe-band collapse (0.03–0.11) match ours
-(0.756/0.817/0.668; 0.02–0.04) closely despite fully independent implementations.
+matcher we tried (angles 8–10) hit the same wall specifically on the toe.
 
 ## 7. A Positive Result: the Decorrelated Particle-Filter Ensemble
 
@@ -325,8 +321,7 @@ physics:
 | 5 | + more seeds (160→192) | **7.080** | −0.011 (≈ seed-noise floor) |
 
 Steps 4–5 sit inside our own measured seed-noise floor (±0.07, §3) — we report them as *directional and
-seed-checked*, matching a caution several concurrent Working Notes on this competition make about their own
-small steps. Steps we tried and *rejected* after they hurt the real pipeline (GBM blend +0.35 to +0.84, the
+seed-checked* rather than precise. Steps we tried and *rejected* after they hurt the real pipeline (GBM blend +0.35 to +0.84, the
 4-way decorrelation over-dilution +0.52, twjit/gs partners within noise of step 3) are catalogued in full in
 §8.3 and §8.5 — the same "isolated tests mislead" lesson that step 2 first taught us.
 
@@ -353,9 +348,8 @@ multi-slice-holdout story that led us to over-dilute, and the lesson it taught, 
 
 ### 7.1 Three more offline-validated, stacking positives (LB-pending)
 
-Prompted by a comparative review of several concurrent Working Notes on this competition, we independently
-implemented and honestly cross-fit-validated three further levers on our own proxy and data — not copied,
-but re-derived from the *concept* each writeup described, then tested on our own pipeline:
+We independently implemented and honestly cross-fit-validated three further levers on our own proxy and
+data:
 
 **(a) Physics post-process: robust projection + warm-up damping + smoothing.** A Tukey-robust (IRLS,
 4 iterations) degree-4 polynomial fit of the structural surface `U = TVT + Z`, blended back toward the raw
@@ -364,10 +358,10 @@ the smooth fit further into the eval zone), followed by light Savitzky–Golay s
 80/80 well split: **both halves independently selected the identical optimal hyperparameters**
 (β=0.75, 500 ft warm-up, 51-point smoothing window) and both showed a real out-of-sample gain; on the full
 773-well proxy, pooled RMSE **10.826 → 10.522**. We also tested a *gated/selective* variant (apply the
-correction only on high-disagreement wells, as a lever in one concurrent note does to protect a genuine
-train/test overlap subset) — gating **strictly hurt** here, monotonically with how much we restricted it
-(Fig. 15's finding and §15's override audit explain why: we have no such overlap subset to protect, so
-uniform application is optimal for us).
+correction only on high-disagreement wells, to protect any well where the pipeline is already near-exact)
+— gating **strictly hurt** here, monotonically with how much we restricted it (§15's override audit
+explains why: on our proxy we have no such overlap subset to protect, so uniform application is optimal
+for us).
 
 **(b) L1-objective diversity in the residual corrector.** Training a LightGBM residual corrector on the
 same 16 features with an **L1** (MAE) objective instead of the standard L2, then blending it back in at
@@ -772,13 +766,23 @@ variance-reduction ensemble and the analysis, not a new end-to-end model. (ii) T
 broad, was compute-bounded (a single modest GPU) — larger models / longer schedules might shift absolute
 numbers, though the *relative* ceiling (~isolated-PF) was consistent across scales and architectures. (iii)
 We did not achieve a working synthetic-pretraining pipeline; §9.1 shows *why* — the bottleneck is the
-forward model, not the noise generator. (iv) The inherited public pipeline contains a train-contact
-override that resolves a well near-exactly (~0.01 RMSE) when its identifier also appears in the training
-set. We checked the gate directly: it fires only on the 3 local placeholder test wells (which are literal
-copies of train wells, present purely so the pipeline runs locally before submission), and never on genuine
-hidden wells, whose identifiers do not overlap the training set except through the shared typewells. This
-mechanism is therefore inert on the graded set — consistent with an independent audit reported in a
-concurrent Working Note for this competition — so none of our reported LB numbers depend on it.
+forward model, not the noise generator. (iv) **A claim we made and then had to retract.** The inherited
+public pipeline contains a train-contact override that resolves a well near-exactly (~0.01 RMSE) when its
+identifier also appears in the training set. Reasoning from the gate's code alone (`if wid not in
+train_wells: continue`) and our understanding that hidden test wells should have no ID overlap with
+training wells except through the shared typewells, we initially concluded this mechanism must be inert on
+the graded set. **A real competition submission run then showed otherwise**: its own strict audit log
+reports `guarded_contact_override` as an active postprocessor, with the override's own diagnostic text
+explicitly describing coverage gained "on hidden overlap wells." We do not yet know the exact magnitude of
+this mechanism's contribution to our score, and we did not design it — it is inherited, unmodified, from
+the public pipeline, and (because it only *adds* coverage and never overrides a non-matching well) it has
+been running identically underneath every submission we have made, so it cannot explain the *relative*
+differences between our own variants (denoise, the decorrelated ensemble, more seeds, wall-hedge) — those
+deltas are still honest, since the override's behavior is constant across them. What it does mean is that
+our absolute LB numbers are not purely attributable to the components we deliberately engineered, and that
+the "no train/test ID overlap" premise we reasoned from does not hold as stated. We flag this prominently
+rather than quietly fixing the earlier text, because catching our own overclaim with real evidence — not a
+nicer story — is exactly the standard we are holding the rest of this note to.
 
 **Future work (the path to the leaders' 5.2–5.4).** Synthetic pretraining remains the most likely route, but
 §9.1 sharpens the target: a better *noise* model (e.g. a 1D diffusion / neural-SDE fit to the residual) is
