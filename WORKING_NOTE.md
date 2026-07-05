@@ -387,21 +387,30 @@ LB-pending**: gains of this size on the proxy do not guarantee an equal move on 
 the *mechanism* — three genuinely different corrections stacking — is itself a useful, reusable finding
 independent of the eventual leaderboard delta.
 
-**(d) A fourth, partially-negative result worth reporting honestly: `pf_z`, a Z-velocity-coupled second
-particle filter.** Every decorrelated PF partner we had previously built (§8.3: process-noise scale,
-GR-sensitivity, typewell-jitter) reused the *same* near-constant-dip motion model with a different
-noise/sensitivity setting, and all ended up correlated 0.82–0.94 with the base — too similar to buy much
-variance reduction. We built an independent second motion model whose proposed dip rate is pulled toward
+**(d) A fourth finding, upgraded from a partial negative to a real, previously-unexploited positive:
+`pf_z`, a Z-velocity-coupled second particle filter that our own inherited pipeline already computes.**
+Every decorrelated PF partner we had previously built ourselves (§8.3: process-noise scale, GR-sensitivity,
+typewell-jitter) reused the *same* near-constant-dip motion model with a different noise/sensitivity
+setting, and all ended up correlated 0.82–0.94 with the base — too similar to buy much variance reduction.
+We first prototyped an independent second motion model whose proposed dip rate is pulled toward
 `β·dZ/dMD + intercept` (fit per well on the known prefix) rather than pure momentum persistence, so its
-prior comes from the trajectory's own curvature — a genuinely different physical source. Measured on 120
-holdout wells, its error correlation with the base PF is **0.14** — by far the most decorrelated partner we
-have ever produced. However, `pf_z` **alone is far too noisy to be useful** (pooled RMSE 39.6 vs the base's
-10.3): our motion-coupling update is not yet numerically stable enough to track well on its own, so even at
-this low correlation a blend is currently net-negative (mean of the two: 21.2, far worse than the base
-alone). We report this as a genuine, partially-negative result: **the decorrelation mechanism is real and
-promising, but realizing it needs materially more engineering** (smoothing the local dZ/dMD estimate over a
-window rather than raw per-step differences, and tuning the coupling strength) than we could complete in
-this pass — the natural next step for anyone pursuing further variance reduction on this task.
+prior comes from the trajectory's own curvature — a genuinely different physical source. Our own quick
+prototype was too numerically unstable to be useful alone (correlation 0.14 with the base, but its own
+pooled RMSE was 39.6 against the base's 10.3). While tracing through the *inherited* pipeline's own code to
+understand what it already computes, we discovered it **already implements exactly this idea** — a mature,
+tuned, numba-compiled `pf_z` (soft Bayesian velocity-consistency likelihood, dual raw/smoothed-GR emission)
+— but its output was **only ever wired into the largely-inactive GBM stack as a feature** (`pf_z`,
+`pf_z_delta`, `pf_vs_z`), never blended directly into the SP45 prediction. Running the real, verbatim
+`pf_z` on a 160-well holdout: error correlation with the main tracker (`pf_ancc`) is **0.47** — still far
+more decorrelated than any partner we engineered ourselves — and, critically, `pf_z` **alone is a
+perfectly usable tracker** (single-seed pooled RMSE 14.7 vs the main tracker's 13.5, the same order of
+magnitude, not a divergent mess). Blending gives a real single-seed gain: pooled **13.49 → 12.05** at blend
+weight 0.4 (**−10.7% relative**). We built a submission stage that seed-averages `pf_z` (16 seeds, to tame
+its own stochastic noise the same way the main ensemble does, §7) and blends it in at a conservative
+weight (0.15) after the WARP blend and physics post-process. This is, by a wide margin, the most
+decorrelated *and* individually-usable lever surfaced in this entire study — an existing capability in the
+inherited pipeline that nobody (including its original authors, as far as its wiring shows) had connected
+to the final prediction.
 
 ## 8. Full Experiment Catalogue (54+ experiments)
 
