@@ -405,12 +405,19 @@ tuned, numba-compiled `pf_z` (soft Bayesian velocity-consistency likelihood, dua
 more decorrelated than any partner we engineered ourselves — and, critically, `pf_z` **alone is a
 perfectly usable tracker** (single-seed pooled RMSE 14.7 vs the main tracker's 13.5, the same order of
 magnitude, not a divergent mess). Blending gives a real single-seed gain: pooled **13.49 → 12.05** at blend
-weight 0.4 (**−10.7% relative**). We built a submission stage that seed-averages `pf_z` (16 seeds, to tame
-its own stochastic noise the same way the main ensemble does, §7) and blends it in at a conservative
-weight (0.15) after the WARP blend and physics post-process. This is, by a wide margin, the most
-decorrelated *and* individually-usable lever surfaced in this entire study — an existing capability in the
-inherited pipeline that nobody (including its original authors, as far as its wiring shows) had connected
-to the final prediction.
+weight 0.4 (**−10.7% relative**). We then validated the blend weight properly: seed-averaging `pf_z` (8
+seeds) on 300 proxy wells and blending against the real `sp45` output (not just the isolated tracker),
+cross-fit on a 50/50 split — **both halves independently landed in the same 0.10–0.15 optimal range**
+(H1→H2: 9.60 → 9.44; H2→H1: 11.59 → 11.39, both real gains), matching the full-sweep optimum on all 300
+wells (10.66 → 10.47 at a≈0.10–0.15, a near-flat minimum). We built a submission stage that seed-averages
+`pf_z` (16 seeds in the real submission, to tame its own stochastic noise the same way the main ensemble
+does, §7) and blends it in at **weight 0.15** — squarely inside the cross-fit-validated optimum — after the
+WARP blend and physics post-process. On the 160-well WARP-holdout subset, all three stages together
+(physics-pp + WARP(0.3) + `pf_z`(0.15)) reach **9.53**, down from the sp45 baseline's 10.62 (**−10.3%**) —
+the strongest combined offline result of this study. This is, by a wide margin, the most decorrelated *and*
+individually-usable lever surfaced in this entire study — an existing capability in the inherited pipeline
+that nobody (including its original authors, as far as its wiring shows) had connected to the final
+prediction.
 
 ## 8. Full Experiment Catalogue (54+ experiments)
 
