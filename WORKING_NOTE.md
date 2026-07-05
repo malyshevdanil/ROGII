@@ -490,8 +490,49 @@ one.
 **Why naive synthetic pretraining fails (13.2).** A generator with clean `GR = typewell_GR(TVT)` is
 *trivially invertible*, so the pretrained model learns a direct inversion that collapses to flat on real,
 self-similar GR. The joint real+synthetic variant regularizes a little (11.57) but does not transfer new
-skill. **Realistic** synthetic — matching the real ambiguity — is required, and is the open engineering
-problem (§15).
+skill. **Realistic** synthetic — matching the real ambiguity — is required. The obvious next question is
+*which* kind of realism matters, which we isolate in the controlled study below.
+
+### 9.1 A controlled synthetic-pretraining transfer study: it is the forward model, not the noise
+
+Because realistic synthetic pretraining is widely believed to be the decisive ingredient for the leaders'
+scores, we ran a controlled experiment to find *what* about the synthetic is the bottleneck. We first
+verified the premise of the whole "inverse-problem" family with a forward-model diagnostic on 160 wells:
+the calibrated horizontal GR at the *true* TVT correlates 0.70 with the typewell prediction, the forward
+model is locally discriminative (a ±15–40 ft shift raises the misfit by 3.8× on 98% of wells), and — key
+for the diffusion hypothesis — the residual `observed − typewell(TVT)` is *structured*, with an
+autocorrelation length of ~50 samples (i.e. not white noise; a naive Gaussian is the wrong noise model).
+
+We then built a synthetic generator whose TVT paths use our own human-markup findings (§8.7): piecewise-
+linear, near-quantized dips, with rare fault jumps. Onto the clean forward-model GR we added noise two ways:
+**(a)** naive white Gaussian, and **(b)** the *empirically bootstrapped real residual* — i.e. the true,
+autocorrelated geological noise resampled from real wells. Bootstrapping the real residual is the
+best-possible noise realism, an upper bound on what any diffusion noise model could achieve. We evaluated
+transfer to the *real* holdout under two protocols: synthetic-only, and the leaders' recipe of
+synthetic-pretrain → real-finetune, against a real-only WARP anchor.
+
+![Fig. 14 — synthetic transfer gate](figures/fig14_synth_transfer.png)
+
+**Figure 14 (real holdout RMSE).** The result is unambiguous and, at first, counter-intuitive:
+
+| Condition | Real holdout RMSE |
+|---|---|
+| real-only WARP (anchor) | **11.03** |
+| synth-pretrain → real-finetune (the recipe) | 11.47 |
+| synthetic-only, naive Gaussian noise | 14.86 (≈ flat) |
+| synthetic-only, realistic bootstrap noise | 16.69 |
+
+Two things stand out. First, **the more realistic noise transferred *worse*** (16.69 vs 14.86): the naive
+model safely collapsed toward flat, whereas the realistic-noise model confidently learned synthetic-specific
+moves that are wrong on real wells. Second, and decisively, **pretraining then finetuning slightly *hurt*
+the real-only anchor** (11.47 vs 11.03). Feeding the model the *exact empirical noise distribution* — better
+than any diffusion could reproduce — did not help. We therefore conclude that the synthetic bottleneck is
+**not the noise model** but the **forward model**: a single typewell plus synthetic trajectories does not
+reproduce the real joint GR↔TVT structure (lateral geological variation, typewell non-representativeness).
+Closing that gap requires a genuine physical formation simulator (multi-typewell, faulted, laterally
+heterogeneous), not a better noise generator — a substantially larger and less-defined undertaking than the
+"learn the noise with a diffusion model" recipe suggests. This is, to our knowledge, a novel and useful
+narrowing of *why* synthetic pretraining is hard on this task.
 
 ## 10. Leaderboard Context
 
@@ -557,19 +598,21 @@ another competitor (wharekawa); our findings converge with theirs.
 variance-reduction ensemble and the analysis, not a new end-to-end model. (ii) The neural study, though
 broad, was compute-bounded (a single modest GPU) — larger models / longer schedules might shift absolute
 numbers, though the *relative* ceiling (~isolated-PF) was consistent across scales and architectures. (iii)
-We did not achieve a working synthetic-pretraining pipeline; our naive generator produced too-clean,
-trivially-invertible logs that failed to transfer.
+We did not achieve a working synthetic-pretraining pipeline; §9.1 shows *why* — the bottleneck is the
+forward model, not the noise generator.
 
-**Future work (the path to the leaders' 5.2–5.4).** The single most promising direction is **realistic
-synthetic pretraining**: a generator that simulates millions of horizontal trajectories from the ~69 unique
-typewells with drift, faults, ±15 ft bimodal jumps, realistic GR self-similarity, noise, and miscalibration —
-forcing a model to learn continuity + robust matching rather than trivial inversion — then fine-tune on the
-773 real wells. A validation gate should confirm transfer: a synth-trained model must reach ~11 on the real
-holdout, not ~0 on a synthetic holdout. Complementary directions: distilling the *full* 7-pipeline (not the
-isolated PF) into a compact model; and combining the MDN head with a 2D misfit-SDF backbone once realistic
-priors are in place. Our analysis suggests these are necessary because the raw GR signal is
-broadband-unreliable — the gains must come from a better *prior*, learned from synthetic geology, rather than
-from the observation likelihood.
+**Future work (the path to the leaders' 5.2–5.4).** Synthetic pretraining remains the most likely route, but
+§9.1 sharpens the target: a better *noise* model (e.g. a 1D diffusion / neural-SDE fit to the residual) is
+**not** the missing piece — we showed that even the exact empirical noise fails to transfer. What is needed
+is a better *forward* model: a physical formation simulator with multiple typewells, explicit faults, and
+lateral heterogeneity, so that synthetic GR reproduces the real joint GR↔TVT ambiguity rather than a clean,
+single-typewell inversion. Only then should one layer on realistic noise, bimodal ±15 ft jumps, and
+miscalibration, and fine-tune on the 773 real wells behind a transfer gate (a synth-trained model must reach
+~11 on the *real* holdout, not ~0 on a synthetic one). Complementary directions: distilling the *full*
+7-pipeline (not the isolated PF) into a compact model; and combining the MDN head with a 2D misfit-SDF
+backbone once realistic priors are in place. Our analysis suggests these are necessary because the raw GR
+signal is broadband-unreliable — the gains must come from a better *prior*, learned from a genuine synthetic
+*geology*, rather than from the observation likelihood or the noise distribution.
 
 ## 16. Conclusion
 
