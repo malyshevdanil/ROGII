@@ -13,7 +13,9 @@
   7.091 on separate runs).
 - **A real, transferable gain by variance reduction**, not new modeling: a decorrelated particle-filter
   ensemble (7.230 → **7.096**, below the pipeline's own seed-noise floor of 7.168) and a more-seeds
-  robustness variant (7.091).
+  robustness variant (7.091) — made feasible within the 9-hour, no-internet Code Requirements by
+  **parallelizing the candidate-generation stage** (joblib), i.e. buying back the compute the ensemble and
+  extra seeds consume.
 - **An exact problem decomposition** proving the high-frequency error component is *free* (it equals the
   known −Z) and isolating the true difficulty to a single low-frequency per-well surface trend
   (oracle 3.9).
@@ -95,6 +97,15 @@ a LightGBM+CatBoost→Ridge stack + a "gold" visible-prefix calibration. Our gen
    → **7.230 → 7.096**, below the seed-noise floor (7.168): a real improvement, not luck.
 3. **Variance reduction by more seeds** (128→160→192): converges toward the true ensemble mean, less
    luck-dependent → 7.091, and a more robust submission for the private split.
+4. **An engineering enabler under the Code Requirements — parallelized candidate generation.** The
+   competition caps runtime at 9 h with no internet, which normally makes variance reduction (a second
+   decorrelated PF ensemble *and* more seeds) infeasible — it would blow the budget. We parallelized the
+   per-well SP45 candidate-generation stage (`build_sp45_candidate`) across CPU workers via joblib, which
+   roughly recovered the extra wall-clock the ensemble and the higher seed count consume. In other words,
+   the parallelization is what turned "average more decorrelated estimates" from a nice idea into a
+   submission that actually fits the 9-hour limit. This is a small but load-bearing point: on a
+   time-boxed code competition, *the runtime budget is part of the model*, and buying back compute is a
+   legitimate lever that directly enabled our only transferable gain.
 
 **Where decorrelation stopped:** a 3rd/4th partner (different mechanisms) or an off-base weight always
 hurt on the LB. The single-partner ensemble was the sweet spot; more dilution of the tuned base only hurt.
@@ -217,7 +228,11 @@ property of the geology and the measurement, not of modeling effort.
    nothing predicts its sign. That distinction is the whole game.
 4. **Variance reduction beat cleverness.** The only robust gain came from decorrelating the estimator, not
    from new physics, features, or architectures.
-5. **On small geosteering datasets, weak-GR + strong-continuity beats explicit alignment**, and simple
+5. **On a time-boxed code competition, the runtime budget is part of the model.** Parallelizing the
+   candidate-generation stage (joblib) bought back the compute that a decorrelated ensemble and more seeds
+   consume, which is precisely what let our variance-reduction gain fit inside the 9-hour limit — an
+   engineering lever as decisive here as any modeling choice.
+6. **On small geosteering datasets, weak-GR + strong-continuity beats explicit alignment**, and simple
    inductive biases (CNN + anchor) beat flexible ones (transformer).
 
 ## 9. Reproducibility
