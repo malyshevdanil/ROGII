@@ -679,12 +679,31 @@ continuity anchor already supplies that effect. The two should not be stacked.
 7.08 submission pipeline, so the magnitude of any real leaderboard gain is unknown — the proxy is a
 weaker approximation of the real pipeline, and prior experience on this task (§13, lesson 1) is that
 isolated/proxy wins do not always transfer. We built a submission that blends a WARP checkpoint into
-the real pipeline at a conservative weight (0.15, versus the proxy-optimal 0.25–0.30) and placed it
-after the pipeline's final blend but before its train-contact override (so wells the override resolves
-near-exactly remain protected). At the time of writing this submission is pending evaluation; we report
-the offline finding here because the *methodology* — measuring error correlation before blending, and
-cross-fit-validating the weight rather than reading it off a single split — is itself a reusable
-contribution, independent of the eventual leaderboard outcome.
+the real pipeline at a conservative weight (0.15, versus the proxy-optimal 0.25–0.30). At the time of
+writing this submission is pending evaluation; we report the offline finding here because the
+*methodology* — measuring error correlation before blending, and cross-fit-validating the weight rather
+than reading it off a single split — is itself a reusable contribution, independent of the eventual
+leaderboard outcome.
+
+**A real-LB confirmation that pipeline *placement* matters as much as the lever itself.** We first
+placed this WARP blend (and the physics post-process and `pf_z` blend of §7.1) after the pipeline's
+final blend but *before* its train-contact override and its gold visible-prefix calibration stage — the
+same position we had used for the simple wall-hedge (shrink toward last-known TVT on low-confidence
+wells, described just above). We then submitted the wall-hedge variant on its own and it scored **worse
+than the unmodified pipeline** on the real leaderboard, despite the hedge being honestly cross-fit
+validated as a real gain on our proxy (§7, five independent splits agreed). The likely mechanism: the
+gold-calibration stage runs *last* and makes its own per-well decision — by its own design comment, it
+backtests a candidate correction on the visible prefix and only overrides the current submission when
+that backtest says the candidate wins, treating "the current submission" as its anchor. Modifying that
+anchor *before* gold runs, with a lever gold was never calibrated against, plausibly confuses those
+per-well decisions rather than simply adding to them. We therefore moved all three of our new stages —
+WARP blend, physics post-process, and `pf_z` blend — to run **after** gold-calibration completes,
+immediately before the final audit, so they act as a true last-touch correction on the fully-formed
+pipeline output rather than an intermediate value that gold then further reinterprets. This is, in effect,
+a thirteenth angle on the wall from §6.1's table: not just *what* correction you apply, but *where in the
+pipeline* you apply it, can flip a cross-fit-validated gain into a real regression — another confirmation
+that isolated and even proxy-validated wins do not automatically transfer without also validating their
+placement against every downstream stage.
 
 We separately tested a more sophisticated alternative to the simple wall-hedge: a LightGBM meta-model
 trained (via grouped cross-validation, no leakage) to predict the pipeline's absolute error from 16
