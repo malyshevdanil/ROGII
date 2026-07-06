@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<!-- saved from url=(0075)https://www.kaggle.com/writeups/odyssey189/anatomy-of-an-unobservable-datum -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>Anatomy of an Unobservable Datum | Kaggle</title>
+  
+    <meta name="robots" content="index, follow">
+  <meta name="description" content="A Systematic Investigation of the ROGII Wellbore Prediction Problem">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, minimum-scale=1.0">
+  <meta name="theme-color" content="#008ABC">
+  <script src="./Anatomy of an Unobservable Datum _ Kaggle_files/cb=gapi.loaded_0" nonce="" async=""></script><script nonce="" type="text/javascript">
+    window["pageRequestStartTime"] = 1783270407689;
+    window["pageRequestEndTime"] = 1783270407725;
+    window["initialPageLoadStartTime"] = new Date().getTime();
+  </script>
+  <script nonce="" id="gsi-client" src="./Anatomy of an Unobservable Datum _ Kaggle_files/client" async="" defer=""></script>
+  <script nonce="">window.KAGGLE_JUPYTERLAB_PATH = "/static/assets/jupyterlab-v4/jupyterlab-index-4903386343906ce4.html";</script>
+  <link rel="preconnect" href="https://www.google-analytics.com/" crossorigin="anonymous"><link rel="preconnect" href="https://stats.g.doubleclick.net/"><link rel="preconnect" href="https://storage.googleapis.com/"><link rel="preconnect" href="https://apis.google.com/">
+    <link href="https://www.kaggle.com/static/images/favicon.ico" rel="shortcut icon" type="image/x-icon" id="dynamic-favicon">
+  <link rel="manifest" href="https://www.kaggle.com/static/json/manifest.json" crossorigin="use-credentials">
+
+
+  <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
+
+  <link href="./Anatomy of an Unobservable Datum _ Kaggle_files/css" rel="preload" as="style">
+  <link href="./Anatomy of an Unobservable Datum _ Kaggle_files/css2" rel="preload" as="style">
+  <link href="./Anatomy of an Unobservable Datum _ Kaggle_files/css" rel="stylesheet" media="all" id="async-google-font-1">
+  <link href="./Anatomy of an Unobservable Datum _ Kaggle_files/css2" rel="stylesheet" media="all" id="async-google-font-2">
+  <script nonce="" type="text/javascript">
+    const styleSheetIds = ["async-google-font-1", "async-google-font-2"];
+    styleSheetIds.forEach(function (id) {
+      document.getElementById(id).addEventListener("load", function() {
+        this.media = "all";
+      });
+    });
+  </script>
+
+
+    <link rel="stylesheet" type="text/css" href="./Anatomy of an Unobservable Datum _ Kaggle_files/app.css">
+
+  
+    
+ 
+      <script nonce="">
+        try{(function(a,s,y,n,c,h,i,d,e){d=s.createElement("style");
+        d.appendChild(s.createTextNode(""));s.head.appendChild(d);d=d.sheet;
+        y=y.map(x => d.insertRule(x + "{ opacity: 0 !important }"));
+        h.start=1*new Date;h.end=i=function(){y.forEach(x => x<d.cssRules.length ? d.deleteRule(x) : {})};
+        (a[n]=a[n]||[]).hide=h;setTimeout(function(){i();h.end=null},c);h.timeout=c;
+        })(window,document,['.site-header-react__nav'],'dataLayer',2000,{'GTM-52LNT9S':true});}catch(ex){}
+    </script><style id="googleidentityservice_button_styles" nonce="">.qJTHM{-moz-user-select:none;-webkit-user-select:none;-ms-user-select:none;color:#202124;direction:ltr;-webkit-touch-callout:none;font-family:Roboto-Regular,arial,sans-serif;-webkit-font-smoothing:antialiased;font-weight:400;margin:0;overflow:hidden;-webkit-text-size-adjust:100%}.ynRLnc{left:-9999px;position:absolute;top:-9999px}.L6cTce{display:none}.bltWBb{overflow-wrap:break-word;word-break:break-word}.hSRGPd{color:#1a73e8;cursor:pointer;font-weight:500;text-decoration:none}.Bz112c-W3lGp{height:16px;width:16px}.Bz112c-E3DyYd{height:20px;width:20px}.Bz112c-r9oPif{height:24px;width:24px}.Bz112c-u2z5K{height:36px;width:36px}.Bz112c-uaxL4e{border-radius:10px}.LgbsSe-Bz112c{display:block}.S9gUrf-YoZ4jf{border:none;margin:0;padding:0}.S9gUrf-YoZ4jf *{border:none;margin:0;padding:0}.fFW7wc-ibnC6b>.aZ2wEe>div{border-color:#4285f4}.P1ekSe-ZMv3u{-webkit-transition:height .2s linear;transition:height .2s linear}.P1ekSe-ZMv3u>div:first-child{background-color:#1a73e8!important;-webkit-transition:width .3s linear;transition:width .3s linear}.P1ekSe-ZMv3u>div:nth-child(2){background-image:-webkit-gradient(linear,left top,right top,from(rgba(255,255,255,.7)),to(rgba(255,255,255,.7))),-webkit-gradient(linear,left top,right top,from(#1a73e8),to(#1a73e8))!important;background-image:-webkit-linear-gradient(left,rgba(255,255,255,.7),rgba(255,255,255,.7)),-webkit-linear-gradient(left,#1a73e8,#1a73e8)!important;background-image:linear-gradient(90deg,rgba(255,255,255,.7),rgba(255,255,255,.7)),linear-gradient(90deg,#1a73e8,#1a73e8)!important}.P1ekSe-ZMv3u>div:nth-child(3){background-image:-webkit-gradient(linear,left top,right top,from(rgba(255,255,255,.7)),to(rgba(255,255,255,.7))),-webkit-gradient(linear,left top,right top,from(#1a73e8),to(#1a73e8))!important;background-image:-webkit-linear-gradient(left,rgba(255,255,255,.7),rgba(255,255,255,.7)),-webkit-linear-gradient(left,#1a73e8,#1a73e8)!important;background-image:linear-gradient(90deg,rgba(255,255,255,.7),rgba(255,255,255,.7)),linear-gradient(90deg,#1a73e8,#1a73e8)!important}.haAclf{display:inline-block}.nsm7Bb-HzV7m-LgbsSe{border-radius:4px;box-sizing:border-box;-webkit-transition:background-color .218s,border-color .218s;transition:background-color .218s,border-color .218s;-moz-user-select:none;-webkit-user-select:none;-ms-user-select:none;-webkit-appearance:none;background-color:#fff;background-image:none;border:1px solid #dadce0;color:#3c4043;cursor:pointer;font-family:Google Sans,arial,sans-serif;font-size:.875rem;height:40px;letter-spacing:.25px;outline:none;overflow:hidden;padding:0 12px;position:relative;text-align:center;vertical-align:middle;white-space:nowrap;width:auto}@media screen and (-ms-high-contrast:active){.nsm7Bb-HzV7m-LgbsSe{border:2px solid windowText;color:windowText}}@media screen and (preferes-contrast:more){.nsm7Bb-HzV7m-LgbsSe{color:#000}}.nsm7Bb-HzV7m-LgbsSe.pSzOP-SxQuSe{font-size:.875rem;height:32px;letter-spacing:.25px;padding:0 10px}.nsm7Bb-HzV7m-LgbsSe.purZT-SxQuSe{font-size:.6875rem;height:20px;letter-spacing:.3px;padding:0 8px}.nsm7Bb-HzV7m-LgbsSe.Bz112c-LgbsSe{padding:0;width:40px}.nsm7Bb-HzV7m-LgbsSe.Bz112c-LgbsSe.pSzOP-SxQuSe{width:32px}.nsm7Bb-HzV7m-LgbsSe.Bz112c-LgbsSe.purZT-SxQuSe{width:20px}.nsm7Bb-HzV7m-LgbsSe.JGcpL-RbRzK{border-radius:20px}.nsm7Bb-HzV7m-LgbsSe.JGcpL-RbRzK.pSzOP-SxQuSe{border-radius:16px}.nsm7Bb-HzV7m-LgbsSe.JGcpL-RbRzK.purZT-SxQuSe{border-radius:10px}.nsm7Bb-HzV7m-LgbsSe.i5vt6e-to915-Ia7Qfc{border:1px solid #8e918f;background-color:#131314;color:#e3e3e3}.nsm7Bb-HzV7m-LgbsSe.MFS4be-Ia7Qfc{border:none;color:#fff}.nsm7Bb-HzV7m-LgbsSe.MFS4be-v3pZbf-Ia7Qfc{background-color:#1a73e8}.nsm7Bb-HzV7m-LgbsSe.MFS4be-JaPV2b-Ia7Qfc{background-color:#202124;color:#e8eaed}@media screen and (prefers-contrast:more){.nsm7Bb-HzV7m-LgbsSe.MFS4be-JaPV2b-Ia7Qfc{color:#fff}}.nsm7Bb-HzV7m-LgbsSe .nsm7Bb-HzV7m-LgbsSe-Bz112c{height:18px;margin-right:8px;min-width:18px;width:18px}.nsm7Bb-HzV7m-LgbsSe.pSzOP-SxQuSe .nsm7Bb-HzV7m-LgbsSe-Bz112c{height:14px;min-width:14px;width:14px}.nsm7Bb-HzV7m-LgbsSe.purZT-SxQuSe .nsm7Bb-HzV7m-LgbsSe-Bz112c{height:10px;min-width:10px;width:10px}.nsm7Bb-HzV7m-LgbsSe.jVeSEe .nsm7Bb-HzV7m-LgbsSe-Bz112c{margin-left:8px;margin-right:-4px}.nsm7Bb-HzV7m-LgbsSe.Bz112c-LgbsSe .nsm7Bb-HzV7m-LgbsSe-Bz112c{margin:0;padding:10px}.nsm7Bb-HzV7m-LgbsSe.Bz112c-LgbsSe.pSzOP-SxQuSe .nsm7Bb-HzV7m-LgbsSe-Bz112c{padding:8px}.nsm7Bb-HzV7m-LgbsSe.Bz112c-LgbsSe.purZT-SxQuSe .nsm7Bb-HzV7m-LgbsSe-Bz112c{padding:4px}.nsm7Bb-HzV7m-LgbsSe .nsm7Bb-HzV7m-LgbsSe-Bz112c-haAclf{border-top-left-radius:3px;border-bottom-left-radius:3px;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-pack:center;-webkit-justify-content:center;justify-content:center;-webkit-box-align:center;-webkit-align-items:center;align-items:center;background-color:#fff;height:36px;margin-left:-10px;margin-right:12px;min-width:36px;width:36px}.nsm7Bb-HzV7m-LgbsSe .nsm7Bb-HzV7m-LgbsSe-Bz112c-haAclf .nsm7Bb-HzV7m-LgbsSe-Bz112c,.nsm7Bb-HzV7m-LgbsSe.Bz112c-LgbsSe .nsm7Bb-HzV7m-LgbsSe-Bz112c-haAclf .nsm7Bb-HzV7m-LgbsSe-Bz112c{margin:0;padding:0}.nsm7Bb-HzV7m-LgbsSe.pSzOP-SxQuSe .nsm7Bb-HzV7m-LgbsSe-Bz112c-haAclf{height:28px;margin-left:-8px;margin-right:10px;min-width:28px;width:28px}.nsm7Bb-HzV7m-LgbsSe.purZT-SxQuSe .nsm7Bb-HzV7m-LgbsSe-Bz112c-haAclf{height:16px;margin-left:-6px;margin-right:8px;min-width:16px;width:16px}.nsm7Bb-HzV7m-LgbsSe.Bz112c-LgbsSe .nsm7Bb-HzV7m-LgbsSe-Bz112c-haAclf{border-radius:3px;margin-left:2px;margin-right:0;padding:0}.nsm7Bb-HzV7m-LgbsSe.JGcpL-RbRzK .nsm7Bb-HzV7m-LgbsSe-Bz112c-haAclf{border-radius:18px}.nsm7Bb-HzV7m-LgbsSe.pSzOP-SxQuSe.JGcpL-RbRzK .nsm7Bb-HzV7m-LgbsSe-Bz112c-haAclf{border-radius:14px}.nsm7Bb-HzV7m-LgbsSe.purZT-SxQuSe.JGcpL-RbRzK .nsm7Bb-HzV7m-LgbsSe-Bz112c-haAclf{border-radius:8px}.nsm7Bb-HzV7m-LgbsSe .nsm7Bb-HzV7m-LgbsSe-bN97Pc-sM5MNb{display:-webkit-box;display:-webkit-flex;display:flex;-webkit-align-items:center;-webkit-box-align:center;align-items:center;-webkit-flex-direction:row;-webkit-box-orient:horizontal;-webkit-box-direction:normal;flex-direction:row;-webkit-box-pack:justify;-webkit-justify-content:space-between;justify-content:space-between;-webkit-flex-wrap:nowrap;flex-wrap:nowrap;height:100%;position:relative;width:100%}.nsm7Bb-HzV7m-LgbsSe .oXtfBe-l4eHX{-webkit-box-pack:center;-webkit-justify-content:center;justify-content:center}.nsm7Bb-HzV7m-LgbsSe .nsm7Bb-HzV7m-LgbsSe-BPrWId{-webkit-flex-grow:1;-webkit-box-flex:1;flex-grow:1;font-family:Google Sans,arial,sans-serif;font-weight:500;overflow:hidden;text-overflow:ellipsis;vertical-align:top}.nsm7Bb-HzV7m-LgbsSe.purZT-SxQuSe .nsm7Bb-HzV7m-LgbsSe-BPrWId{font-weight:300}.nsm7Bb-HzV7m-LgbsSe .oXtfBe-l4eHX .nsm7Bb-HzV7m-LgbsSe-BPrWId{-webkit-flex-grow:0;-webkit-box-flex:0;flex-grow:0}.nsm7Bb-HzV7m-LgbsSe .nsm7Bb-HzV7m-LgbsSe-MJoBVe{-webkit-transition:background-color .218s;transition:background-color .218s;bottom:0;left:0;position:absolute;right:0;top:0}.nsm7Bb-HzV7m-LgbsSe:focus,.nsm7Bb-HzV7m-LgbsSe:hover{box-shadow:none;border-color:rgb(210,227,252);outline:none}.nsm7Bb-HzV7m-LgbsSe:focus-within{outline:2px solid #00639b;border-color:transparent}.nsm7Bb-HzV7m-LgbsSe:hover .nsm7Bb-HzV7m-LgbsSe-MJoBVe{background:rgba(66,133,244,.08)}.nsm7Bb-HzV7m-LgbsSe:active .nsm7Bb-HzV7m-LgbsSe-MJoBVe,.nsm7Bb-HzV7m-LgbsSe:focus .nsm7Bb-HzV7m-LgbsSe-MJoBVe{background:rgba(66,133,244,.1)}.nsm7Bb-HzV7m-LgbsSe.i5vt6e-to915-Ia7Qfc:hover .nsm7Bb-HzV7m-LgbsSe-MJoBVe{background:rgba(255,255,255,.08)}.nsm7Bb-HzV7m-LgbsSe.i5vt6e-to915-Ia7Qfc:active .nsm7Bb-HzV7m-LgbsSe-MJoBVe,.nsm7Bb-HzV7m-LgbsSe.i5vt6e-to915-Ia7Qfc:focus .nsm7Bb-HzV7m-LgbsSe-MJoBVe{background:rgba(255,255,255,.12)}.nsm7Bb-HzV7m-LgbsSe.MFS4be-Ia7Qfc:hover .nsm7Bb-HzV7m-LgbsSe-MJoBVe{background:rgba(255,255,255,.24)}.nsm7Bb-HzV7m-LgbsSe.MFS4be-Ia7Qfc:active .nsm7Bb-HzV7m-LgbsSe-MJoBVe,.nsm7Bb-HzV7m-LgbsSe.MFS4be-Ia7Qfc:focus .nsm7Bb-HzV7m-LgbsSe-MJoBVe{background:rgba(255,255,255,.32)}.nsm7Bb-HzV7m-LgbsSe .n1UuX-DkfjY{border-radius:50%;display:-webkit-box;display:-webkit-flex;display:flex;height:20px;margin-left:-4px;margin-right:8px;min-width:20px;width:20px}.nsm7Bb-HzV7m-LgbsSe.jVeSEe .nsm7Bb-HzV7m-LgbsSe-BPrWId{font-family:Roboto;font-size:12px;text-align:left}.nsm7Bb-HzV7m-LgbsSe.jVeSEe .nsm7Bb-HzV7m-LgbsSe-BPrWId .K4efff .fmcmS,.nsm7Bb-HzV7m-LgbsSe.jVeSEe .nsm7Bb-HzV7m-LgbsSe-BPrWId .ssJRIf{overflow:hidden;text-overflow:ellipsis}.nsm7Bb-HzV7m-LgbsSe.jVeSEe .nsm7Bb-HzV7m-LgbsSe-BPrWId .K4efff{display:-webkit-box;display:-webkit-flex;display:flex;-webkit-align-items:center;-webkit-box-align:center;align-items:center;color:#5f6368;fill:#5f6368;font-size:11px;font-weight:400}.nsm7Bb-HzV7m-LgbsSe.jVeSEe.i5vt6e-to915-Ia7Qfc .nsm7Bb-HzV7m-LgbsSe-BPrWId .K4efff{color:#c4c7c5;fill:#c4c7c5}.nsm7Bb-HzV7m-LgbsSe.jVeSEe.MFS4be-Ia7Qfc .nsm7Bb-HzV7m-LgbsSe-BPrWId .K4efff{color:#e8eaed;fill:#e8eaed}@media screen and (prefers-contrast:more){.nsm7Bb-HzV7m-LgbsSe.jVeSEe .nsm7Bb-HzV7m-LgbsSe-BPrWId .K4efff,.nsm7Bb-HzV7m-LgbsSe.jVeSEe.MFS4be-Ia7Qfc .nsm7Bb-HzV7m-LgbsSe-BPrWId .K4efff{color:#000;fill:#000}}.nsm7Bb-HzV7m-LgbsSe.jVeSEe .nsm7Bb-HzV7m-LgbsSe-BPrWId .K4efff .Bz112c{height:18px;margin:-3px -3px -3px 2px;min-width:18px;width:18px}.nsm7Bb-HzV7m-LgbsSe.jVeSEe .nsm7Bb-HzV7m-LgbsSe-Bz112c-haAclf{border-top-left-radius:0;border-bottom-left-radius:0;border-top-right-radius:3px;border-bottom-right-radius:3px;margin-left:12px;margin-right:-10px}.nsm7Bb-HzV7m-LgbsSe.jVeSEe.JGcpL-RbRzK .nsm7Bb-HzV7m-LgbsSe-Bz112c-haAclf{border-radius:18px}.L5Fo6c-sM5MNb{border:0;display:block;left:0;position:relative;top:0}.L5Fo6c-bF1uUb{border-radius:4px;bottom:0;cursor:pointer;left:0;position:absolute;right:0;top:0}.L5Fo6c-bF1uUb:focus{border:none;outline:none}sentinel{}</style><style></style>
+    <script nonce="">
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'G-T7QHS60L4Q', {
+            'optimize_id': 'GTM-52LNT9S',
+            'displayFeaturesTask': null,
+            'send_page_view': false,
+            'content_group1': 'WriteUps',
+            'user_properties': {
+                'logged_in': true,
+            }
+        });
+    </script>
+    <script nonce="" async="" src="./Anatomy of an Unobservable Datum _ Kaggle_files/js"></script>
+
+
+  
+    
+    <meta name="description" content="A Systematic Investigation of the ROGII Wellbore Prediction Problem">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://www.kaggle.com//writeups/odyssey189/anatomy-of-an-unobservable-datum">
+    <meta property="og:title" content="Anatomy of an Unobservable Datum | Kaggle">
+    <meta property="og:description" content="A Systematic Investigation of the ROGII Wellbore Prediction Problem">
+        <meta property="og:image" content="https://www.kaggle.com/writeups/96555/images/cover">
+        <meta name="twitter:image" content="https://www.kaggle.com/writeups/96555/images/cover">
+
+    <meta name="twitter:card" content="summary">
+    <meta property="twitter:domain" content="kaggle.com">
+    <meta property="twitter:url" content="https://www.kaggle.com//writeups/odyssey189/anatomy-of-an-unobservable-datum">
+    <meta name="twitter:title" content="Anatomy of an Unobservable Datum | Kaggle">
+    <meta name="twitter:description" content="A Systematic Investigation of the ROGII Wellbore Prediction Problem">
+
+
+
+
+  <meta name="twitter:site" content="@Kaggle"> 
+  
+    
+
+  
+    
+
+  
+    
+
+
+
+    <script nonce="">window['useKaggleAnalytics'] = true;</script>
+
+  <script id="gapi-target" nonce="" src="./Anatomy of an Unobservable Datum _ Kaggle_files/api.js.Без названия" defer="" async="" gapi_processed="true"></script>
+  <script nonce="" src="./Anatomy of an Unobservable Datum _ Kaggle_files/runtime.js.Без названия"></script>
+  <script nonce="" src="./Anatomy of an Unobservable Datum _ Kaggle_files/vendor.js.Без названия"></script>
+  <script nonce="" src="./Anatomy of an Unobservable Datum _ Kaggle_files/app.js.Без названия"></script><style id="_goober"> .go1475592160{height:0;}.go1671063245{height:auto;}.go1888806478{display:flex;flex-wrap:wrap;flex-grow:1;}@media (min-width:600px){.go1888806478{flex-grow:initial;min-width:288px;}}.go167266335{background-color:#313131;font-size:0.875rem;line-height:1.43;letter-spacing:0.01071em;color:#fff;align-items:center;padding:6px 16px;border-radius:4px;box-shadow:0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12);}.go3162094071{padding-left:20px;}.go3844575157{background-color:#313131;}.go1725278324{background-color:#43a047;}.go3651055292{background-color:#d32f2f;}.go4215275574{background-color:#ff9800;}.go1930647212{background-color:#2196f3;}.go946087465{display:flex;align-items:center;padding:8px 0;}.go703367398{display:flex;align-items:center;margin-left:auto;padding-left:16px;margin-right:-8px;}.go3963613292{width:100%;position:relative;transform:translateX(0);top:0;right:0;bottom:0;left:0;min-width:288px;}.go1141946668{box-sizing:border-box;display:flex;max-height:100%;position:fixed;z-index:1400;height:auto;width:auto;transition:top 300ms ease 0ms,right 300ms ease 0ms,bottom 300ms ease 0ms,left 300ms ease 0ms,max-width 300ms ease 0ms;pointer-events:none;max-width:calc(100% - 40px);}.go1141946668 .notistack-CollapseWrapper{padding:6px 0px;transition:padding 300ms ease 0ms;}@media (max-width:599.95px){.go1141946668{width:100%;max-width:calc(100% - 32px);}}.go3868796639 .notistack-CollapseWrapper{padding:2px 0px;}.go3118922589{top:14px;flex-direction:column;}.go1453831412{bottom:14px;flex-direction:column-reverse;}.go4027089540{left:20px;}@media (min-width:600px){.go4027089540{align-items:flex-start;}}@media (max-width:599.95px){.go4027089540{left:16px;}}.go2989568495{right:20px;}@media (min-width:600px){.go2989568495{align-items:flex-end;}}@media (max-width:599.95px){.go2989568495{right:16px;}}.go4034260886{left:50%;transform:translateX(-50%);}@media (min-width:600px){.go4034260886{align-items:center;}}</style>
+    <script nonce="" type="text/javascript">
+      window.kaggleStackdriverConfig = {
+        key: 'AIzaSyA4eNqUdRRskJsCZWVz-qL655Xa5JEMreE',
+        projectId: 'kaggle-161607',
+        service: 'web-fe',
+        version: 'ci',
+        userId: '34630893'
+      }
+    </script>
+<style data-styled="active" data-styled-version="6.4.2"></style><link rel="stylesheet" type="text/css" href="./Anatomy of an Unobservable Datum _ Kaggle_files/4912.70c86abc3e838bdc.css"><style data-emotion="css-global" data-s=""></style><style data-emotion="css" data-s=""></style></head>
+<body style="background-color: rgb(28, 29, 32);">
+  <div id="root"><nav aria-label="Main Kaggle page navigation" inert="" class="sc-biWTsH sc-clqQRB fRWvqG dleQVr"><div class="sc-hglrMW cKDOTY"><div class="sc-hZhKrD jzEBVF"><div class="sc-cHazmW hwbXxe"><button aria-label="Navigation menu" title="Navigation menu" class="sc-iBjNZB bGduwL google-symbols notranslate">menu</button></div><a href="https://www.kaggle.com/writeups/odyssey189/anatomy-of-an-unobservable-datum#site-content" class="sc-dSDPUr ixAKjE">Skip to<br>content</a><div data-testid="kaggle-logo-wrapper" class="sc-Jclpx kOOdLY"><a href="https://www.kaggle.com/" aria-label="Return to Kaggle home page"><img src="./Anatomy of an Unobservable Datum _ Kaggle_files/site-logo.svg" alt="Kaggle" class="sc-tIyEa jALJjq"></a></div></div></div><div class="sc-findPx hSJydp"><button class="sc-Jwmfr jsHtZW"><svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink: 0;"><path fill-rule="evenodd" clip-rule="evenodd" d="M20 30L20 16L16 20L16 30L20 30Z" fill="#20BEFF"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M20 20L30 20L30 16L20 16L20 20Z" fill="#20BEFF"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M16 20L20 16L15.937 16L6 16L6 20L16 20Z" fill="#20BEFF"></path><rect x="20" y="16" width="4" height="10" transform="rotate(-180 20 16)" fill="#20BEFF"></rect></svg><span class="sc-dILkzW sc-gGKKzG iNaPtF hmZcDd">Create</span></button></div><div class="sc-lfBCjM dySFdx"><div class="sc-hCXID fIuUmI"><div class="sc-DSdOV bWAwBN"><div class="sc-dwNPMq eELAeC"><div class="sc-hjYznJ hSlpsI"><div class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root sc-dkIoQT dLCgVn css-feqhe6"><div class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedStart css-ipre3h"><span class="google-symbols notranslate MuiIcon-root MuiIcon-fontSizeMedium sc-bYgEKt bpVxIz notranslate css-1jgtvd5" aria-hidden="true" style="margin-right: 8px;">search</span><input aria-invalid="false" autocomplete="off" id=":r2:" placeholder="Search" type="text" class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedStart css-iyhe1a" value=""><fieldset aria-hidden="true" class="MuiOutlinedInput-notchedOutline css-nqlg3w"><legend class="css-ihdtdm"><span class="notranslate">​</span></legend></fieldset></div></div></div></div><ul class="MuiList-root km-list css-1uzmcsd" role="list"><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="Home List Item"><div class="sc-euUkyj cXgshv sc-hGLXNb bCUebD km-listitem--small"><a aria-label="Home" tabindex="0" href="https://www.kaggle.com/" data-click-log-id="home" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-dtvRhV llRLRt" style="min-width: 24px;"><div class="sc-dlgOLa iymbBI"><span class="google-symbols notranslate MuiIcon-root MuiIcon-fontSizeMedium sc-bYgEKt dVcKNL notranslate sc-iusvXA gtIPch css-1jgtvd5" aria-hidden="true" title="Home" aria-label="Home">explore</span></div></div><div class="sc-hCcPtG sc-bitxrY gTYZQg iQsabx"><p class="sc-fFCZOx iZNPId" style="padding-left: 4px;">Home</p></div></div></a></div></li><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="Competitions List Item"><div class="sc-euUkyj cXgshv sc-hGLXNb bCUebD km-listitem--small"><a aria-label="Competitions" tabindex="0" href="https://www.kaggle.com/competitions" data-click-log-id="competitions" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-dtvRhV llRLRt" style="min-width: 24px;"><div class="sc-dlgOLa iymbBI"><span class="google-symbols notranslate MuiIcon-root MuiIcon-fontSizeMedium sc-bYgEKt dVcKNL notranslate sc-iusvXA gtIPch css-1jgtvd5" aria-hidden="true" title="Competitions" aria-label="Competitions">emoji_events</span></div></div><div class="sc-hCcPtG sc-bitxrY gTYZQg iQsabx"><p class="sc-fFCZOx iZNPId" style="padding-left: 4px;">Competitions</p></div></div></a></div></li><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="Benchmarks List Item"><div class="sc-euUkyj cXgshv sc-hGLXNb bCUebD km-listitem--small"><a aria-label="Benchmarks" tabindex="0" href="https://www.kaggle.com/benchmarks" data-click-log-id="benchmarks" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-dtvRhV llRLRt" style="min-width: 24px;"><div class="sc-dlgOLa iymbBI"><span class="google-symbols notranslate MuiIcon-root MuiIcon-fontSizeMedium sc-bYgEKt dVcKNL notranslate sc-iusvXA gtIPch css-1jgtvd5" aria-hidden="true" title="Benchmarks" aria-label="Benchmarks">leaderboard</span></div></div><div class="sc-hCcPtG sc-bitxrY gTYZQg iQsabx"><p class="sc-fFCZOx iZNPId" style="padding-left: 4px;">Benchmarks</p></div></div></a></div></li><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="Game Arena List Item"><div class="sc-euUkyj cXgshv sc-hGLXNb bCUebD km-listitem--small"><a aria-label="Game Arena" tabindex="0" href="https://www.kaggle.com/game-arena" data-click-log-id="game-arena" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-dtvRhV llRLRt" style="min-width: 24px;"><div class="sc-dlgOLa iymbBI"><span class="google-symbols notranslate MuiIcon-root MuiIcon-fontSizeMedium sc-bYgEKt dVcKNL notranslate sc-iusvXA gtIPch css-1jgtvd5" aria-hidden="true" title="Game Arena" aria-label="Game Arena">smart_toy</span></div></div><div class="sc-hCcPtG sc-bitxrY gTYZQg iQsabx"><p class="sc-fFCZOx iZNPId" style="padding-left: 4px;">Game Arena</p></div></div></a></div></li></ul><ul class="MuiList-root km-list css-1uzmcsd" role="list"><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="Data Hub List Item"><div class="sc-euUkyj cXgshv sc-hGLXNb bCUebD km-listitem--small"><a aria-current="false" aria-expanded="false" aria-label="Data Hub" tabindex="0" href="https://www.kaggle.com/writeups/odyssey189/anatomy-of-an-unobservable-datum#" data-click-log-id="data-hub" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-dtvRhV llRLRt" style="min-width: 24px;"><div class="sc-dlgOLa iymbBI"><span class="google-symbols notranslate MuiIcon-root MuiIcon-fontSizeMedium sc-bYgEKt dVcKNL notranslate sc-iusvXA gtIPch css-1jgtvd5" aria-hidden="true" title="Data Hub" aria-label="Data Hub">code</span></div></div><div class="sc-hCcPtG sc-bitxrY gTYZQg iQsabx"><p class="sc-fFCZOx iZNPId" style="padding-left: 4px;">Data Hub</p></div></div></a><div class="sc-ilnrqe fdhDmN" style="padding-right: 12px;"><button aria-label="Expand" title="Expand" class="sc-iBjNZB ianyQQ google-symbols notranslate">expand_more</button></div></div></li></ul><ul class="MuiList-root km-list css-1uzmcsd" role="list"><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="More on Kaggle List Item"><div class="sc-euUkyj cXgshv sc-hGLXNb bCUebD km-listitem--small"><a aria-current="false" aria-expanded="true" aria-label="More on Kaggle" tabindex="0" href="https://www.kaggle.com/writeups/odyssey189/anatomy-of-an-unobservable-datum#" data-click-log-id="more" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-dtvRhV llRLRt" style="min-width: 24px;"><div class="sc-dlgOLa iymbBI"><span class="google-symbols notranslate MuiIcon-root MuiIcon-fontSizeMedium sc-bYgEKt dVcKNL notranslate sc-iusvXA gtIPch css-1jgtvd5" aria-hidden="true" title="More" aria-label="More">format_list_bulleted</span></div></div><div class="sc-hCcPtG sc-bitxrY gTYZQg iQsabx"><p class="sc-fFCZOx iZNPId" style="padding-left: 4px;">More</p></div></div></a><div class="sc-ilnrqe fdhDmN" style="padding-right: 12px;"><button aria-label="Collapse" title="Collapse" class="sc-iBjNZB ianyQQ google-symbols notranslate">expand_less</button></div></div></li><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="Discussions List Item"><div class="sc-euUkyj cXgshv sc-hGLXNb bCUebD km-listitem--small"><a aria-label="Discussions" tabindex="0" href="https://www.kaggle.com/discussions" data-click-log-id="discussions" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-dtvRhV llRLRt" style="min-width: 24px;"><div class="sc-dlgOLa iymbBI"><span class="google-symbols notranslate MuiIcon-root MuiIcon-fontSizeMedium sc-bYgEKt dVcKNL notranslate sc-iusvXA gtIPch css-1jgtvd5" aria-hidden="true" title="Discussions" aria-label="Discussions">comment</span></div></div><div class="sc-hCcPtG sc-bitxrY gTYZQg iQsabx"><p class="sc-fFCZOx iZNPId" style="padding-left: 4px;">Discussions</p></div></div></a></div></li><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="Kaggle Learn List Item"><div class="sc-euUkyj cXgshv sc-hGLXNb bCUebD km-listitem--small"><a aria-label="Kaggle Learn" tabindex="0" href="https://www.kaggle.com/learn" data-click-log-id="learn" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-dtvRhV llRLRt" style="min-width: 24px;"><div class="sc-dlgOLa iymbBI"><span class="google-symbols notranslate MuiIcon-root MuiIcon-fontSizeMedium sc-bYgEKt dVcKNL notranslate sc-iusvXA gtIPch css-1jgtvd5" aria-hidden="true" title="Learn" aria-label="Learn">school</span></div></div><div class="sc-hCcPtG sc-bitxrY gTYZQg iQsabx"><p class="sc-fFCZOx iZNPId" style="padding-left: 4px;">Learn</p></div></div></a></div></li><div class="sc-gVJhcH gymogj"><div class="sc-hJpFng cRusut"></div></div><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="Kaggle Rankings List Item"><div class="sc-euUkyj cXgshv sc-likWDx hIoMMp km-listitem--dense"><a aria-label="Kaggle Rankings" tabindex="0" href="https://www.kaggle.com/rankings" data-click-log-id="kaggle-rankings" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-hCcPtG sc-bitxrY gTYZQg iQsabx"><p class="sc-fFCZOx iZNPId">Kaggle Rankings</p></div></div></a></div></li><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="Progression List Item"><div class="sc-euUkyj cXgshv sc-likWDx hIoMMp km-listitem--dense"><a aria-label="Progression" tabindex="0" href="https://www.kaggle.com/progression" data-click-log-id="progression" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-hCcPtG sc-bitxrY gTYZQg iQsabx"><p class="sc-fFCZOx iZNPId">Progression</p></div></div></a></div></li><div class="sc-gVJhcH gymogj"><div class="sc-hJpFng cRusut"></div></div><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="Documentation List Item"><div class="sc-euUkyj cXgshv sc-likWDx hIoMMp km-listitem--dense"><a aria-label="Documentation" tabindex="0" href="https://www.kaggle.com/docs" data-click-log-id="documentation" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-hCcPtG sc-bitxrY gTYZQg iQsabx"><p class="sc-fFCZOx iZNPId">Documentation</p></div></div></a></div></li><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="Blog List Item"><div class="sc-euUkyj cXgshv sc-likWDx hIoMMp km-listitem--dense"><a aria-label="Blog" tabindex="0" href="https://www.kaggle.com/blog" data-click-log-id="blog" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-hCcPtG sc-bitxrY gTYZQg iQsabx"><p class="sc-fFCZOx iZNPId">Blog</p></div></div></a></div></li><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="Host a Competition List Item"><div class="sc-euUkyj cXgshv sc-likWDx hIoMMp km-listitem--dense"><a aria-label="Host a Competition" tabindex="0" href="https://www.kaggle.com/c/about/host" data-click-log-id="host-a-competition" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-hCcPtG sc-bitxrY gTYZQg iQsabx"><p class="sc-fFCZOx iZNPId">Host a Competition</p></div></div></a></div></li><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="Research Grants List Item"><div class="sc-euUkyj cXgshv sc-likWDx hIoMMp km-listitem--dense"><a aria-label="Research Grants" tabindex="0" href="https://www.kaggle.com/research-grants" data-click-log-id="research-grants" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-hCcPtG sc-bitxrY gTYZQg iQsabx"><p class="sc-fFCZOx iZNPId">Research Grants</p></div></div></a></div></li><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="Educator Resources List Item"><div class="sc-euUkyj cXgshv sc-likWDx hIoMMp km-listitem--dense"><a aria-label="Educator Resources" tabindex="0" href="https://www.kaggle.com/edu" data-click-log-id="educator-resources" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-hCcPtG sc-bitxrY gTYZQg iQsabx"><p class="sc-fFCZOx iZNPId">Educator Resources</p></div></div></a></div></li><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="Support/Contact List Item"><div class="sc-euUkyj cXgshv sc-likWDx hIoMMp km-listitem--dense"><a aria-label="Support/Contact" tabindex="0" href="https://www.kaggle.com/contact" data-click-log-id="supportcontact" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-hCcPtG sc-bitxrY gTYZQg iQsabx"><p class="sc-fFCZOx iZNPId">Support/Contact</p></div></div></a></div></li><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="Community Guidelines List Item"><div class="sc-euUkyj cXgshv sc-likWDx hIoMMp km-listitem--dense"><a aria-label="Community Guidelines" tabindex="0" href="https://www.kaggle.com/community-guidelines" data-click-log-id="community-guidelines" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-hCcPtG sc-bitxrY gTYZQg iQsabx"><p class="sc-fFCZOx iZNPId">Community Guidelines</p></div></div></a></div></li><div class="sc-gVJhcH gymogj"><div class="sc-hJpFng cRusut"></div></div><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="Team List Item"><div class="sc-euUkyj cXgshv sc-likWDx hIoMMp km-listitem--dense"><a aria-label="Team" tabindex="0" href="https://www.kaggle.com/about/team" data-click-log-id="team" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-hCcPtG sc-bitxrY gTYZQg iQsabx"><p class="sc-fFCZOx iZNPId">Team</p></div></div></a></div></li><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="Terms List Item"><div class="sc-euUkyj cXgshv sc-likWDx hIoMMp km-listitem--dense"><a aria-label="Terms" tabindex="0" href="https://www.kaggle.com/terms" data-click-log-id="terms" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-hCcPtG sc-bitxrY gTYZQg iQsabx"><p class="sc-fFCZOx iZNPId">Terms</p></div></div></a></div></li><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="Privacy List Item"><div class="sc-euUkyj cXgshv sc-likWDx hIoMMp km-listitem--dense"><a aria-label="Privacy" tabindex="0" href="https://www.kaggle.com/privacy" data-click-log-id="privacy" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-hCcPtG sc-bitxrY gTYZQg iQsabx"><p class="sc-fFCZOx iZNPId">Privacy</p></div></div></a></div></li></ul></div><div><div role="separator" class="sc-khYboC eRaHXH sc-BiJvk kwmcLw"></div><ul><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="Your Work List Item"><div class="sc-euUkyj cXgshv sc-hGLXNb bCUebD km-listitem--small"><a aria-label="Your Work" tabindex="0" href="https://www.kaggle.com/work" data-click-log-id="your-work" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-dtvRhV llRLRt" style="min-width: 24px;"><div class="sc-dlgOLa iymbBI"><span class="google-symbols notranslate MuiIcon-root MuiIcon-fontSizeMedium sc-bYgEKt dVcKNL notranslate sc-iusvXA gtIPch css-1jgtvd5" aria-hidden="true" title="Your Work" aria-label="Your Work">note_alt</span></div></div><div class="sc-hCcPtG sc-bitxrY gTYZQg iQsabx"><p class="sc-fFCZOx iZNPId" style="padding-left: 4px;">Your Work</p></div></div></a><div class="sc-ilnrqe fdhDmN" style="padding-right: 12px;"><button aria-label="Collapse Your Work" title="Collapse" class="sc-iBjNZB ianyQQ google-symbols notranslate" aria-expanded="true">expand_less</button></div></div></li><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="Collapse Viewed List Item"><div class="sc-euUkyj cXgshv sc-hGLXNb bCUebD km-listitem--small"><a aria-expanded="true" aria-label="Collapse Viewed" tabindex="0" href="https://www.kaggle.com/writeups/odyssey189/anatomy-of-an-unobservable-datum#" data-click-log-id="viewed" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-dtvRhV llRLRt" style="min-width: 24px;"><div class="sc-dlgOLa iymbBI"><span class="google-symbols notranslate MuiIcon-root MuiIcon-fontSizeMedium sc-bYgEKt dVcKNL notranslate sc-iusvXA gtIPch css-1jgtvd5" aria-hidden="true" style="visibility: hidden;">code</span></div></div><div class="sc-hCcPtG sc-bitxrY gTYZQg iQsabx"><p class="sc-fFCZOx iZNPId" style="padding-left: 4px;">Viewed</p></div></div></a><div class="sc-ilnrqe fdhDmN" style="padding-right: 12px;"><button aria-label="Collapse Viewed" title="Collapse Viewed" class="sc-iBjNZB ianyQQ google-symbols notranslate">expand_less</button></div></div></li><li class="sc-fUplsD lgRrvV"><ul class="MuiList-root km-list sc-cvtUcm jHIajL css-1uzmcsd" role="list"><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="Anatomy of an Unobservable Datum List Item"><div class="sc-euUkyj cXgshv sc-bTZKdb gpsALw km-listitem--dense"><a aria-label="Anatomy of an Unobservable Datum" tabindex="0" href="https://www.kaggle.com/writeups/odyssey189/anatomy-of-an-unobservable-datum" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-dtvRhV llRLRt"><div class="sc-dlgOLa iymbBI"><img src="./Anatomy of an Unobservable Datum _ Kaggle_files/default-thumb.png" alt="" width="20" height="20" class="sc-fTpUzR eXJWwY"></div></div><div class="sc-hCcPtG sc-bitxrY iAzhEW iQsabx"><p class="sc-fFCZOx sc-hRoixq iZNPId ulIIt">Anatomy of an Unobservable Datum</p></div></div></a></div></li><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="The Predictability Boundary of Pre-Drill Stratigraphic Targeting List Item"><div class="sc-euUkyj cXgshv sc-bTZKdb gpsALw km-listitem--dense"><a aria-label="The Predictability Boundary of Pre-Drill Stratigraphic Targeting" tabindex="0" href="https://www.kaggle.com/writeups/myckeluribe/the-predictability-boundary-of-pre-drill-stratigra" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-dtvRhV llRLRt"><div class="sc-dlgOLa iymbBI"><img src="./Anatomy of an Unobservable Datum _ Kaggle_files/35173387-kg.jpeg" alt="" width="20" height="20" class="sc-fTpUzR eXJWwY"></div></div><div class="sc-hCcPtG sc-bitxrY iAzhEW iQsabx"><p class="sc-fFCZOx sc-hRoixq iZNPId ulIIt">The Predictability Boundary of Pre-Drill Stratigraphic Targeting</p></div></div></a></div></li><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="ROGII - Wellbore Geology Prediction List Item"><div class="sc-euUkyj cXgshv sc-bTZKdb gpsALw km-listitem--dense"><a aria-label="ROGII - Wellbore Geology Prediction" tabindex="0" href="https://www.kaggle.com/competitions/rogii-wellbore-geology-prediction" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-dtvRhV llRLRt"><div class="sc-dlgOLa iymbBI"><img src="./Anatomy of an Unobservable Datum _ Kaggle_files/thumb76_76.png" alt="" width="20" height="20" class="sc-fTpUzR pvwDw"></div></div><div class="sc-hCcPtG sc-bitxrY iAzhEW iQsabx"><p class="sc-fFCZOx sc-hRoixq iZNPId ulIIt">ROGII - Wellbore Geology Prediction</p></div></div></a></div></li><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="ROGII: What Did and Did Not Work, Honest List Item"><div class="sc-euUkyj cXgshv sc-bTZKdb gpsALw km-listitem--dense"><a aria-label="ROGII: What Did and Did Not Work, Honest" tabindex="0" href="https://www.kaggle.com/writeups/juliancamilovilla/what-did-and-did-not-work-honest" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-dtvRhV llRLRt"><div class="sc-dlgOLa iymbBI"><img src="./Anatomy of an Unobservable Datum _ Kaggle_files/default-thumb.png" alt="" width="20" height="20" class="sc-fTpUzR eXJWwY"></div></div><div class="sc-hCcPtG sc-bitxrY iAzhEW iQsabx"><p class="sc-fFCZOx sc-hRoixq iZNPId ulIIt">ROGII: What Did and Did Not Work, Honest</p></div></div></a></div></li><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="notebookfdc9043238 List Item"><div class="sc-euUkyj cXgshv sc-bTZKdb gpsALw km-listitem--dense"><a aria-label="notebookfdc9043238" tabindex="0" href="https://www.kaggle.com/code/malyshevdanil/notebookfdc9043238" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-dtvRhV llRLRt"><div class="sc-dlgOLa iymbBI"><img src="./Anatomy of an Unobservable Datum _ Kaggle_files/default-thumb.png" alt="" width="20" height="20" class="sc-fTpUzR eXJWwY"></div></div><div class="sc-hCcPtG sc-bitxrY iAzhEW iQsabx"><p class="sc-fFCZOx sc-hRoixq iZNPId ulIIt">notebookfdc9043238</p></div></div></a></div></li></ul></li><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="Collapse Edited List Item"><div class="sc-euUkyj cXgshv sc-hGLXNb bCUebD km-listitem--small"><a aria-expanded="true" aria-label="Collapse Edited" tabindex="0" href="https://www.kaggle.com/writeups/odyssey189/anatomy-of-an-unobservable-datum#" data-click-log-id="edited" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-dtvRhV llRLRt" style="min-width: 24px;"><div class="sc-dlgOLa iymbBI"><span class="google-symbols notranslate MuiIcon-root MuiIcon-fontSizeMedium sc-bYgEKt dVcKNL notranslate sc-iusvXA gtIPch css-1jgtvd5" aria-hidden="true" style="visibility: hidden;">code</span></div></div><div class="sc-hCcPtG sc-bitxrY gTYZQg iQsabx"><p class="sc-fFCZOx iZNPId" style="padding-left: 4px;">Edited</p></div></div></a><div class="sc-ilnrqe fdhDmN" style="padding-right: 12px;"><button aria-label="Collapse Edited" title="Collapse Edited" class="sc-iBjNZB ianyQQ google-symbols notranslate">expand_less</button></div></div></li><li class="sc-fUplsD lgRrvV"><ul class="MuiList-root km-list sc-cvtUcm jHIajL css-1uzmcsd" role="list"><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="notebookfdc9043238 List Item"><div class="sc-euUkyj cXgshv sc-bTZKdb gpsALw km-listitem--dense"><a aria-label="notebookfdc9043238" tabindex="0" href="https://www.kaggle.com/code/malyshevdanil/notebookfdc9043238" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-dtvRhV llRLRt"><div class="sc-dlgOLa iymbBI"><img src="./Anatomy of an Unobservable Datum _ Kaggle_files/default-thumb.png" alt="" width="20" height="20" class="sc-fTpUzR eXJWwY"></div></div><div class="sc-hCcPtG sc-bitxrY iAzhEW iQsabx"><p class="sc-fFCZOx sc-hRoixq iZNPId ulIIt">notebookfdc9043238</p></div></div></a></div></li><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="notebook08801f97f9 List Item"><div class="sc-euUkyj cXgshv sc-bTZKdb gpsALw km-listitem--dense"><a aria-label="notebook08801f97f9" tabindex="0" href="https://www.kaggle.com/code/malyshevdanil/notebook08801f97f9" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-dtvRhV llRLRt"><div class="sc-dlgOLa iymbBI"><img src="./Anatomy of an Unobservable Datum _ Kaggle_files/default-thumb.png" alt="" width="20" height="20" class="sc-fTpUzR eXJWwY"></div></div><div class="sc-hCcPtG sc-bitxrY iAzhEW iQsabx"><p class="sc-fFCZOx sc-hRoixq iZNPId ulIIt">notebook08801f97f9</p></div></div></a></div></li><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="notebook77d07f5a58 List Item"><div class="sc-euUkyj cXgshv sc-bTZKdb gpsALw km-listitem--dense"><a aria-label="notebook77d07f5a58" tabindex="0" href="https://www.kaggle.com/code/malyshevdanil/notebook77d07f5a58" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-dtvRhV llRLRt"><div class="sc-dlgOLa iymbBI"><img src="./Anatomy of an Unobservable Datum _ Kaggle_files/default-thumb.png" alt="" width="20" height="20" class="sc-fTpUzR eXJWwY"></div></div><div class="sc-hCcPtG sc-bitxrY iAzhEW iQsabx"><p class="sc-fFCZOx sc-hRoixq iZNPId ulIIt">notebook77d07f5a58</p></div></div></a></div></li><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="neironnetw List Item"><div class="sc-euUkyj cXgshv sc-bTZKdb gpsALw km-listitem--dense"><a aria-label="neironnetw" tabindex="0" href="https://www.kaggle.com/code/malyshevdanil/neironnetw" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-dtvRhV llRLRt"><div class="sc-dlgOLa iymbBI"><img src="./Anatomy of an Unobservable Datum _ Kaggle_files/default-thumb.png" alt="" width="20" height="20" class="sc-fTpUzR eXJWwY"></div></div><div class="sc-hCcPtG sc-bitxrY iAzhEW iQsabx"><p class="sc-fFCZOx sc-hRoixq iZNPId ulIIt">neironnetw</p></div></div></a></div></li><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="notebook966d61eee3 List Item"><div class="sc-euUkyj cXgshv sc-bTZKdb gpsALw km-listitem--dense"><a aria-label="notebook966d61eee3" tabindex="0" href="https://www.kaggle.com/code/malyshevdanil/notebook966d61eee3" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-dtvRhV llRLRt"><div class="sc-dlgOLa iymbBI"><img src="./Anatomy of an Unobservable Datum _ Kaggle_files/default-thumb.png" alt="" width="20" height="20" class="sc-fTpUzR eXJWwY"></div></div><div class="sc-hCcPtG sc-bitxrY iAzhEW iQsabx"><p class="sc-fFCZOx sc-hRoixq iZNPId ulIIt">notebook966d61eee3</p></div></div></a></div></li></ul></li></ul></div></div><div class="sc-geRwcS elybkM"><button class="sc-locMLe bJqkju"><div class="sc-unmwu fvUTrm"><span class="google-symbols notranslate MuiIcon-root MuiIcon-fontSizeMedium sc-bYgEKt caGTwn notranslate sc-iPjDwf kOVcyX css-1jgtvd5" aria-hidden="true" aria-label="Open Active Events dialog">auto_awesome_motion</span><div class="sc-eVCfPg gGeipj">2</div></div><p class="sc-folSZX sc-kVYSvN gZGcaN gJuThF">View Active Events</p></button></div></div></nav><nav aria-label="Main menu, search and your account" class="sc-hYYjdK hatzUt"><div class="sc-hKyxtL izPPzR"><div class="sc-hZhKrD jzEBVF"><div class="sc-cHazmW hwbXxe"><button aria-label="Navigation menu" title="Navigation menu" class="sc-iBjNZB bGduwL google-symbols notranslate">menu</button></div><a href="https://www.kaggle.com/writeups/odyssey189/anatomy-of-an-unobservable-datum#site-content" class="sc-dSDPUr ixAKjE">Skip to<br>content</a><div data-testid="kaggle-logo-wrapper" class="sc-Jclpx kOOdLY"><a href="https://www.kaggle.com/" aria-label="Return to Kaggle home page"><img src="./Anatomy of an Unobservable Datum _ Kaggle_files/site-logo.svg" alt="Kaggle" class="sc-tIyEa jALJjq"></a></div></div></div><div class="sc-edgaEG jDoSdO"><div class="sc-jlAnuY dZmtsV"></div><div class="sc-iXaBKZ bLlZsj"><div class="sc-fyzlkC gAkhdh"><div class="sc-iXuCAT OVKCZ"><div class="sc-kmYGLm hooIHD"><div class="sc-ZWrTk dOIWOs"></div><div class="sc-iIvZUO ebfLHz sc-gJaedx gwRoqn" aria-label="Malyshev Danil" role="button" tabindex="0"><div data-testid="avatar-image" title="Malyshev Danil" class="sc-gsdCXR hgbFAN" style="background-image: url(&quot;https://storage.googleapis.com/kaggle-avatars/thumbnails/default-thumb.png&quot;);"></div><svg width="32" height="32" viewBox="0 0 32 32"><circle r="15" cx="16" cy="16" fill="none" stroke-width="2" style="stroke: rgb(95, 99, 104);"></circle><circle r="15" cx="16" cy="16" fill="none" stroke-width="2" style="stroke: rgb(32, 190, 255);"></circle></svg></div></div></div></div></div></div></nav><div id="site-content" class="sc-cjeGuL iXkhOO legacy-less-dark-theme" role="main"><div class="sc-bAoahh ldSmbP"></div><div><div height="1px" class="sc-BlSCl cpQduB"></div><div class="sc-jXCnqn Vhmbp"><div inert="" class="sc-iMRniJ bGKIue"><div class="sc-donJkS kvBIET"><span class="sc-bqqMSY sc-glFXrH icDQHb jiHGZU">Anatomy of an Unobservable Datum</span></div></div></div><div role="separator" class="sc-khYboC dTnicw sc-bpCmCc eXPMwz"></div><div class="sc-kNYukV bPXZrh" style="padding-top: 0px;"><div class="sc-hWJtyg dQZslb"><div class="sc-fMvFCd gLPPZv" style="margin-top: 40px;"><h1 class="sc-jrIDTr sc-cPdrvo fGpszN hPXRPW">Anatomy of an Unobservable Datum</h1><p class="sc-fFCZOx sc-fA-DgHn bPqiLa ezrAlZ">A Systematic Investigation of the ROGII Wellbore Prediction Problem</p><div class="sc-dAueUm jEQvZb"><p class="sc-bjLslk sc-cDkSAy kXtakj glfdPN">Project Writeup · Jul 3, 2026</p></div></div><div class="sc-bMalKH kyDdyO"><div class="sc-jLZMNx jXFCPI"><div class="sc-kedHcO bcanef"><div class="sc-hzKprc iqwVvv"><div class="sc-ervvfz gWScRv"><button aria-label="Next Image" title="Next Image" class="sc-iBjNZB dbestb google-symbols notranslate sc-gvUPKH RTynA" style="right: 20px;">chevron_right</button><div class="sc-gCBcXo eyPdeJ fullscreen-button-wrapper"><button aria-label="Open Fullscreen Viewer" title="Open Fullscreen Viewer" class="sc-iBjNZB dbestb google-symbols notranslate sc-gvUPKH RTynA">fullscreen</button></div><div class="sc-bzTQbn jxaxBV"><img src="./Anatomy of an Unobservable Datum _ Kaggle_files/cropped" alt="layer-cake-identity" style="object-fit: contain; width: 101%; height: 101%;"></div></div><div class="sc-kvNwLy bbsFmu"><div role="button" tabindex="0" aria-pressed="true" aria-label="item 0" style="position: relative; cursor: pointer;"><img src="./Anatomy of an Unobservable Datum _ Kaggle_files/cropped" alt="item 0" draggable="false" class="sc-kLCphQ jFyyqh"></div><div role="button" tabindex="0" aria-pressed="false" aria-label="item 1" style="position: relative; cursor: pointer;"><img src="./Anatomy of an Unobservable Datum _ Kaggle_files/cropped(1)" alt="item 1" draggable="false" class="sc-kLCphQ lpfKyf"></div><div role="button" tabindex="0" aria-pressed="false" aria-label="item 2" style="position: relative; cursor: pointer;"><img src="./Anatomy of an Unobservable Datum _ Kaggle_files/cropped(2)" alt="item 2" draggable="false" class="sc-kLCphQ lpfKyf"></div><div role="button" tabindex="0" aria-pressed="false" aria-label="item 3" style="position: relative; cursor: pointer;"><img src="./Anatomy of an Unobservable Datum _ Kaggle_files/cropped(3)" alt="item 3" draggable="false" class="sc-kLCphQ lpfKyf"></div><div role="button" tabindex="0" aria-pressed="false" aria-label="item 4" style="position: relative; cursor: pointer;"><img src="./Anatomy of an Unobservable Datum _ Kaggle_files/cropped(4)" alt="item 4" draggable="false" class="sc-kLCphQ lpfKyf"></div><div role="button" tabindex="0" aria-pressed="false" aria-label="item 5" style="position: relative; cursor: pointer;"><img src="./Anatomy of an Unobservable Datum _ Kaggle_files/cropped(5)" alt="item 5" draggable="false" class="sc-kLCphQ lpfKyf"></div><div role="button" tabindex="0" aria-pressed="false" aria-label="item 6" style="position: relative; cursor: pointer;"><img src="./Anatomy of an Unobservable Datum _ Kaggle_files/cropped(6)" alt="item 6" draggable="false" class="sc-kLCphQ lpfKyf"></div></div></div></div><div class="sc-dFBygw jHODdG"><p><em>Working note for the ROGII Wellbore Geology Prediction competition — team LeeDongHyuk (odyssey189), public LB 6.986.</em></p>
+<hr>
+<h2 data-original-level="2">Abstract</h2>
+<p>This note is organized around a negative result that we believe is the most physically meaningful fact about this competition: after a strong base model has consumed the spatial and log-alignment signal, <strong>roughly 60% of the remaining squared error is a per-well constant offset (a "datum" error) that is fundamentally unobservable from the legal, leak-free data</strong> — not merely hard to estimate, but structurally outside the information available at inference time. We support this with seven independent measurement gates (each attacking the offset from a different information channel, each returning correlation ≈ 0), with oracle experiments that quantify exactly how much score is locked behind the wall (up to −4.58 ft RMSE), and with corroborating theory from inertial navigation and from the geosteering literature, whose state-of-the-art systems output <em>posteriors over the offset</em>, never point estimates.</p>
+<p>The constructive half of the note describes what <em>does</em> help once you accept unobservability: (1) <em>selective</em> application of a robust polynomial re-projection, gated by a data-driven overlap test (public −0.045 where the naive version <em>hurt</em> by +0.030); (2) a <strong>bimodal-datum midpoint hedge</strong> — detecting when the GR alignment cost has two near-tied minima and outputting the variance-optimal midpoint instead of committing to either (public −0.16, our single largest verified gain); (3) L1-family training objectives and objective diversity, justified by the heavy-tailed residual distribution (OOF −0.156); and (4) forensic overlap analysis establishing that the training set contains zero internal duplicates and that safe re-identification matching has a hard, small ceiling (−0.027). We close with a measured claim: for this base-model family, leak-free post-processing headroom is ≈ 0, and we explain what kind of <em>information</em> (not estimator) would be needed to break the ~7 ft floor.</p>
+<p><strong>Map to the evaluation criteria</strong> — (1) <em>Breadth &amp; depth</em>: §3 and §4 document 20+ genuinely distinct approaches, each with motivation, validation numbers, and cause of success/failure; negative results are first-class throughout. (2) <em>Data &amp; well insights</em>: §1–§2 and §4.1/§4.2 (including how per-well method decisions were gated). (3) <em>Physical meaningfulness</em>: §3.2 and §6 — including where we draw the line between physics and metric optimization. (4) <em>Individual contributions</em>: the accumulated public-LB ledger opening §4, every delta measured by a dedicated submission. (5) <em>Uncertainty estimation</em>: §5.</p>
+<hr>
+<h2 data-original-level="2">1. Problem structure: the task is secretly two tasks</h2>
+<p>Each well provides a horizontal-well log — measured depth (MD), coordinates (X, Y, Z), gamma ray (GR: natural radioactivity of the rock, a lithology fingerprint), and the target TVT (true vertical thickness position within the stratigraphy) known only on the "heel" prefix (~first quarter of the lateral) — plus a <em>typewell</em>: a reference vertical log of GR versus TVT for the area. The task: predict TVT along the remaining ~74% of the lateral ("tail"), scored by RMSE in feet, on ~200 hidden wells (773 wells for training).</p>
+<p>The first thing worth measuring is a rigidity check. For every training well:</p>
+<pre class="uc-code-block"><code id="code-block-1783270406877-0" data-processing="yes" data-highlighted="yes" class="hljs language-ada">TVT + Z − surf = const_well        (per-well <span class="hljs-keyword">constant</span>)
+</code><div class="uc-code-block-copy-button-wrapper"><button aria-label="Copy code" class="uc-code-block-copy-button google-symbols">content_copy</button></div></pre>
+<p>where <code>surf</code> is the local formation-surface elevation. Measured within-well standard deviation of this quantity: <strong>0.0065 ft</strong> — six orders of magnitude below the target's dynamic range. The stratigraphy is a rigid layer cake translated vertically per well.</p>
+<p><img src="./Anatomy of an Unobservable Datum _ Kaggle_files/inbox_28549212_a38cbb6a82da045b142c256aca08ee10_layer-cake-identity.png" alt=""><br>
+<em>Figure 1 — The layer-cake identity (geometry schematic; inset real data): across 544 training wells the within-well std of TVT + Z − surf collapses at a median of 0.0065 ft — the stratigraphy is rigid, and only the per-well constant is unknown.</em></p>
+<p>This identity decomposes the task exactly into:</p>
+<ol>
+<li><strong>A per-well absolute datum</strong> (<code>const_well</code>): a single scalar per well. Its spread <em>across</em> wells is huge — std ≈ 644 ft.</li>
+<li><strong>The shared surface shape</strong> along the lateral: smooth structural dip plus high-frequency bedding wiggle, common to nearby wells.</li>
+</ol>
+<p>The decomposition matters because these two sub-problems have completely different information structures — the shape is spatially correlated and richly observable; the datum, as we will show, is not observable at all once the obvious sources are drained.</p>
+<h2 data-original-level="2">2. Base model and error anatomy</h2>
+<p>Our base is a two-engine pipeline (built on the public kernel lineage for this competition, which we re-trained from scratch on all 773 wells): each engine is a GBM ensemble (LightGBM ×3 + CatBoost ×2, ridge-stacked, grouped 5-fold by well) over ~195 features, blended 0.55/0.45, with a particle filter that tracks the lateral's GR against the typewell. Feature-importance auditing tells a clean story: <strong>spatially interpolated surface features dominate</strong> (the top feature, a dense cross-well surface interpolation, carries ~19% of gain; the dense family together ~38%), the particle-filter alignment deltas come second (~12%), and — strikingly — <strong>the entire raw-GR feature family is dead weight</strong>: 63 raw-GR/texture features can be pruned from both engines for a combined loss of &lt; 0.3% of gain share. The particle filter absorbs everything the raw log has to say; the GBM only wants the filter's <em>conclusions</em>, not the log itself.</p>
+<p>We then dissected the out-of-fold residual <code>r = true − blend</code> per well:</p>
+<table>
+<thead>
+<tr>
+<th>Residual component</th>
+<th>Share of MSE</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Per-well DC offset (datum error)</td>
+<td><strong>~60%</strong></td>
+</tr>
+<tr>
+<td>Linear drift (slope)</td>
+<td>~20%</td>
+</tr>
+<tr>
+<td>Smooth curvature</td>
+<td>~20%</td>
+</tr>
+<tr>
+<td>High-frequency wiggle</td>
+<td><strong>~0%</strong></td>
+</tr>
+</tbody>
+</table>
+<p>The wiggle — the part that looks hardest — is fully captured; the base model tracks bedding oscillations essentially perfectly. What remains is <em>smooth</em>: residual lag-1 autocorrelation is 1.000 (99.7% of residual variance survives a smoothing filter), sign consistency along a well is 0.778, and mean |r| grows from 1.9 ft near the heel to 8.6 ft at the toe. The error is also violently heavy-tailed: <strong>the worst 8% of wells contribute 56% of the total squared error</strong>, and per-well RMSE correlates +0.618 with the well's true drift magnitude (versus +0.028 with label jaggedness — this is not label noise; it is drift).</p>
+<p><img src="./Anatomy of an Unobservable Datum _ Kaggle_files/inbox_28549212_f44c2c28ee89aa097a22c73d6dcdb661_residual-decomposition.png" alt=""><br>
+<em>Figure 2 — Residual anatomy, recomputed from the 550-well OOF blend: ~61% per-well datum, ~20% linear drift, ~19% smooth curvature, 0.8% wiggle+noise (left); the residual traces of three hard wells are smooth per-well drift, not bedding wiggle (right).</em></p>
+<p><img src="./Anatomy of an Unobservable Datum _ Kaggle_files/inbox_28549212_52859b23295e2cc462af169c84e7a88b_error-concentration.png" alt=""><br>
+<em>Figure 3 — Hard wells are the ones that truly drift (r ≈ +0.6; +0.59 on this blend recomputation, +0.62 on the champion-base measurement), and the error is violently concentrated: the worst 8% of wells carry ~53% of SSE here (56% on the champion base).</em></p>
+<p>So the entire game, after a competent base, is: <em>can you learn each well's datum/drift from anything you are allowed to see?</em></p>
+<h2 data-original-level="2">3. The central negative result: the datum is unobservable</h2>
+<p>We attacked the per-well offset from every information channel available at inference, one dedicated gate per channel, each with the same protocol: leak-free features only (heel truth, tail inputs, typewell, neighbors' <em>training</em> data under leave-one-well-out), scored by correlation with the true per-well residual and by deployed RMSE delta. The results:</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Information channel</th>
+<th>Gate</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>The well's own heel residual / GR shape</td>
+<td>wiggle-prior</td>
+<td>corr ≈ <strong>0</strong> (the tail drift is a fresh random walk; the heel carries no signal about it)</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Typewell <em>absolute</em> matching (align tail GR to typewell GR on the absolute TVT axis)</td>
+<td>typewell-absolute</td>
+<td>recovers ~15% at best; the lateral samples only <strong>~21.7 ft</strong> of vertical section, and the GR column is quasi-periodic → the NCC minimum aliases, typically <strong>14 ft</strong> off</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Spatial neighbors</td>
+<td>neighbor-typewell</td>
+<td>after dense cross-well surface interpolation (already in the base), the leftover offset is spatially <strong>white</strong>: LOWO inverse-distance prediction corr = <strong>0.002</strong></td>
+</tr>
+<tr>
+<td>4</td>
+<td>Geology / formation labels</td>
+<td>regime &amp; multi-reference gates</td>
+<td>explains <strong>0.1%</strong> of residual variance; an <em>oracle</em> given perfect formation positions still fails to predict the residual</td>
+</tr>
+<tr>
+<td>5</td>
+<td>TVT trajectory motifs across wells</td>
+<td>motif gate</td>
+<td><strong>0%</strong> recovery</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Conditional GR regime (where the PF "lost lock")</td>
+<td>pf-regime</td>
+<td>corr = <strong>0.012</strong></td>
+</tr>
+<tr>
+<td>7</td>
+<td>Structural dip direction</td>
+<td>dip-deploy</td>
+<td>the one non-zero signal: corr = <strong>+0.142</strong> — but deployable monetization = <strong>−0.02 ft</strong>, inside noise</td>
+</tr>
+</tbody>
+</table>
+<p>A direct meta-test confirms the pattern: a GroupKFold LightGBM given <em>every</em> leak-free channel at once (distance, fraction along lateral, engine disagreement, GR statistics/gradients, MD, Z) and asked to predict the signed residual achieves corr = <strong>−0.018</strong>; applying its "correction" makes RMSE <em>worse</em> by +0.89 ft. The residual's <em>magnitude</em> is predictable (Section 5); its <em>direction</em> is not — and only direction converts to RMSE.</p>
+<p><img src="./Anatomy of an Unobservable Datum _ Kaggle_files/inbox_28549212_7916521cc38a53a1ced56fb73960d1a5_seven-gates-datum.png" alt=""><br>
+<em>Figure 4 — Seven information channels, one wall: every gate's |correlation| with the true per-well residual collapses near zero except structural dip (+0.142), which monetizes to only −0.02 ft; even the all-channel meta-model (gray) deploys at +0.89 ft — worse than doing nothing.</em></p>
+<h3 data-original-level="3">3.1 Oracle ceilings: measuring the height of the wall</h3>
+<p>To be sure we were fighting for something real, we measured what <em>perfect</em> per-well knowledge would buy (these use tail truth — diagnostics only, never deployable):</p>
+<table>
+<thead>
+<tr>
+<th>Oracle</th>
+<th>RMSE gain</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Perfect per-well datum</td>
+<td><strong>−3.6 ft</strong> (9.71 → 6.09)</td>
+</tr>
+<tr>
+<td>Perfect per-well engine-blend weight</td>
+<td>−1.5 ft</td>
+</tr>
+<tr>
+<td>Perfect per-well drift-scale multiplier</td>
+<td><strong>−4.58 ft</strong></td>
+</tr>
+</tbody>
+</table>
+<p><img src="./Anatomy of an Unobservable Datum _ Kaggle_files/inbox_28549212_67e1fb8047a3a29232444b8a0516f9aa_oracle-ladder.png" alt=""><br>
+<em>Figure 5 — Oracle ladder (recomputed on the 550-well OOF blend: 9.71 → 6.09 → 4.29 → 3.40; drift-scale oracle 5.13): up to −6.3 ft of RMSE is locked behind per-well knowledge that the legal, leak-free inputs do not contain.</em></p>
+<p>The prize is enormous — and the seven gates say the key does not exist in the legal data. A subtle confirmation comes from empirical-Bayes theory: we implemented James–Stein shrinkage of per-well heel-fitted offset/slope/curvature toward the population mean, with the shrinkage factor set by the measured between-well/within-well variance ratio. The data-driven optimum came out at <strong>α* = 1.0 exactly — shrink fraction 0.000</strong>: the estimator itself reports that the heel-fit carries zero exploitable information about the tail, i.e. the base blend is already risk-optimal along the shrinkage axis. When your James–Stein estimator refuses to shrink, you are not being timid; you are being told the SNR is zero.</p>
+<h3 data-original-level="3">3.2 Why this is physics, not a modeling failure</h3>
+<p>Three disjoint literatures predict exactly this wall:</p>
+<ul>
+<li><strong>Inertial navigation.</strong> A wellbore trajectory integrated from measurements is a dead-reckoning process. Observability analyses of strapdown INS alignment (Silva et al. 2017, <em>Sensors</em>) show constant bias states are "individually unobservable" from increments alone — the absolute datum is an external <em>input</em>, never recoverable from the path itself.</li>
+<li><strong>Change-point theory.</strong> A datum jump or slope break inside the unseen 74% is provably undetectable from the seen 26% (no method predicts <em>future</em> change-point locations; arXiv:2405.09485).</li>
+<li><strong>Geosteering state of the art.</strong> The most rigorous industrial formalizations — the MVS stratigraphic-misfit patents (US11946360B2: SVD-likelihood over offsets, <em>requires external offset-well data</em>) and the NORCE particle-filter line — output a <strong>posterior distribution over the vertical offset</strong>, never a point. The field's best practice is to <em>not answer</em> the question we are being scored on.</li>
+</ul>
+<p>Adding a constant to <code>surf</code> and subtracting it from <code>const_well</code> produces an observationally identical world: this is a structural null space. Every one of the ten additional post-hoc method families we audited in a systematic literature sweep (test-time adaptation, feature-weighted stacking, fractional/long-memory forecasting, particle-Gibbs smoothers, distributional recalibration, …) reduces, on inspection, to needing a leak-free signal correlated with residual <em>direction</em> — which we measured at −0.018. The wall is one wall, wearing nineteen costumes.</p>
+<h2 data-original-level="2">4. What works under uncertainty</h2>
+<p>Accepting unobservability does not mean doing nothing. It means changing the objective: stop trying to <em>identify</em> the offset, and instead <strong>minimize risk under a posterior you cannot collapse</strong>. Everything that worked for us is a variance argument, not a bias argument.</p>
+<p>How the pieces accumulated on the public leaderboard (each row = one submitted change; deltas are measured, not estimated):</p>
+<table>
+<thead>
+<tr>
+<th>Stage</th>
+<th>Public LB</th>
+<th>Δ</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Public two-engine baseline (fork)</td>
+<td>7.590</td>
+<td>—</td>
+</tr>
+<tr>
+<td>+ deg-4 robust projection applied to the <em>final</em> blend (§4.1)</td>
+<td>7.504</td>
+<td>−0.086</td>
+</tr>
+<tr>
+<td>+ GOLD prefix-backtest layer</td>
+<td>7.247</td>
+<td>−0.257</td>
+</tr>
+<tr>
+<td>GOLD <em>without</em> our projection (A/B isolation — the two operators conflict)</td>
+<td>7.217</td>
+<td>(+0.030 from stacking)</td>
+</tr>
+<tr>
+<td>+ <strong>selective</strong> IRLS, gated per well (§4.1)</td>
+<td>7.172</td>
+<td>−0.045</td>
+</tr>
+<tr>
+<td>From-scratch base retrain + PF seed stabilization (reproducibility, not score)</td>
+<td>7.173</td>
+<td>≈0</td>
+</tr>
+<tr>
+<td>+ bimodal-datum midpoint hedge (§4.2)</td>
+<td>7.013</td>
+<td><strong>−0.160</strong></td>
+</tr>
+<tr>
+<td>+ safe re-identification copy, strict guard (§4.4)</td>
+<td><strong>6.986</strong></td>
+<td>−0.027</td>
+</tr>
+</tbody>
+</table>
+<h3 data-original-level="3">4.1 Selective IRLS: apply corrections only where the model of the error holds</h3>
+<p>Our first verified contribution is embarrassingly simple in hindsight. A robust degree-4 re-projection (IRLS: iteratively reweighted least squares — fit the heel-anchored trajectory with a polynomial, down-weighting outliers, then blend the prediction β toward the fit) reliably improved honest out-of-fold wells by −0.134 ft: it regularizes exactly the smooth drift that dominates the residual. Yet stacked on the strongest public post-processing layer it <em>hurt</em> the public score by +0.030. The resolution: a subset of public wells are near-duplicates of training wells, where the base is already nearly exact — there, a polynomial "correction" only adds error. The fix:</p>
+<pre class="uc-code-block"><code id="code-block-1783270406877-1" data-processing="yes" data-highlighted="yes" class="hljs language-yaml"><span class="hljs-attr">for each test well w:</span>
+    <span class="hljs-attr">if overlap_test(w):</span>        <span class="hljs-comment"># strict re-ID: prefix RMSE vs any train well &lt; guard</span>
+        <span class="hljs-string">skip</span> <span class="hljs-string">IRLS</span>               <span class="hljs-comment"># base is already (nearly) truth; don't touch it</span>
+    <span class="hljs-attr">else:</span>
+        <span class="hljs-string">pred[w]</span> <span class="hljs-string">=</span> <span class="hljs-string">(1−β)·pred[w]</span> <span class="hljs-string">+</span> <span class="hljs-string">β·IRLS_deg4_fit(pred[w])</span>   <span class="hljs-comment"># β = 0.6</span>
+</code><div class="uc-code-block-copy-button-wrapper"><button aria-label="Copy code" class="uc-code-block-copy-button google-symbols">content_copy</button></div></pre>
+<p>Public: 7.217 → <strong>7.172 (−0.045)</strong>, while keeping the full −0.134 OOF benefit on non-overlap wells (which is what the private set is made of). Two transferable lessons: <strong>(a)</strong> a post-processor is a <em>model of the error</em>, and should be gated by a test of that model's applicability per well; <strong>(b)</strong> independently validated operators do <strong>not</strong> compose — a stronger correction layer that consumes the same drift signal turned our previously positive IRLS (−0.086 on a weaker base) into a negative, so every <em>combination</em> must be re-gated.</p>
+<h3 data-original-level="3">4.2 The bimodal-datum midpoint hedge (our largest genuine gain)</h3>
+<p>Scanning a constant datum shift Δ ∈ [−40, +40] ft and scoring the misfit <code>J(Δ) = mean[(GR_tail − GR_typewell(pred + Δ))²]</code> reveals that on a meaningful minority of hard wells the cost curve has <strong>two near-tied local minima ~14 ft apart</strong> — the GR column's quasi-cyclic bedding (Milankovitch-band cyclicity is the standard geological reading of such regular stacking) makes two vertical positions almost equally consistent with the observed log. The visible prefix genuinely cannot tell them apart.</p>
+<p>The naive responses both fail, instructively:</p>
+<ul>
+<li><em>Hard-committing</em> to the better minimum: catastrophic (+5.18 ft on triggered wells) — the decoy wins often enough to blow up the tail;</li>
+<li><em>Ignoring</em> the ambiguity: leaves the base straddling risk on wells where it silently commits to the wrong branch.</li>
+</ul>
+<p>The decision-theoretically correct move under a symmetric two-point posterior is the <strong>midpoint</strong> — it is the point prediction that minimizes expected squared error when you honestly cannot pick a side:</p>
+<pre class="uc-code-block"><code id="code-block-1783270406877-2" data-processing="yes" data-highlighted="yes" class="hljs language-mipsasm"><span class="hljs-keyword">J </span>= <span class="hljs-keyword">shift_scan(GR_tail, </span>typewell, pred)          <span class="hljs-comment"># Δ ∈ [−40, 40] ft</span>
+Δa, Δ<span class="hljs-keyword">b </span>= two_best_separated_local_minima(<span class="hljs-keyword">J) </span>     <span class="hljs-comment"># 8–20 ft apart</span>
+if <span class="hljs-keyword">J(Δb) </span>≤ <span class="hljs-number">1</span>.<span class="hljs-number">15</span> · <span class="hljs-keyword">J(Δa) </span><span class="hljs-keyword">and </span>pf_vs_beam_disagreement(w) is high:
+    target = pred + (Δa + Δ<span class="hljs-keyword">b)/2 </span>                 <span class="hljs-comment"># variance-optimal midpoint</span>
+    pred   = (<span class="hljs-number">1</span>−α)·pred + α·target               <span class="hljs-comment"># gentle: α = 0.2, triggered wells only</span>
+</code><div class="uc-code-block-copy-button-wrapper"><button aria-label="Copy code" class="uc-code-block-copy-button google-symbols">content_copy</button></div></pre>
+<p>Deployed: public <strong>7.173 → 7.013 (−0.16)</strong> — our single largest verified leak-free gain, and (as far as we can tell from public code) not present in any shared notebook. A later diagnostic gate explained <em>why</em> the gentle form is right: the two minima are usually an alias pair <em>straddling</em> the truth (the base blend is already within ~5 ft), so the hedge works as a weak variance-reduction pull toward the straddle center — not as a datum <em>corrector</em>. Consistently, our attempt to make it "smarter" (tighter trigger 1.15→1.05, stronger α = 0.3) improved OOF by −0.049 and <strong>worsened</strong> the public score by +0.14: the public subset is drift-biased, the loose trigger's broad coverage was exactly where the gain lived, and OOF cannot be trusted to tune a trigger whose benefit is subset-dependent. We report this failed tightening as a first-class result — it is the cleanest demonstration we have of public-subset/validation mismatch, and it echoes the M5 "magic multiplier" post-mortem: an un-anchored level correction tuned to a validation slice is a mirage; <em>ensembling the correction</em> (hedging) is the response that survives.</p>
+<p><img src="./Anatomy of an Unobservable Datum _ Kaggle_files/inbox_28549212_63eedb865672099fab8db89c689e90ac_bimodal-cost-curve.png" alt=""><br>
+<em>Figure 6 — The GR shift-scan cost J(Δ) on two real training wells: an easy well with one confident minimum (left) vs a hard well with two near-tied minima 14 ft apart, J ratio 1.00 (right) — hard-committing costs +5.18 ft on triggered wells; the gentle α = 0.2 midpoint hedge gained −0.16 public.</em></p>
+<h3 data-original-level="3">4.3 Robust objectives: respect the tail you measured</h3>
+<p>Section 2's heavy tail (top 8% of wells = 56% of SSE; residual kurtosis far above Gaussian) has a direct training-side consequence: the conditional <em>median</em> is a better point target than the conditional mean when the noise is heavy-tailed, even under an RMSE metric, because L2 training lets the un-fixable drift wells bend the whole regression. Measured on identical folds and features:</p>
+<table>
+<thead>
+<tr>
+<th>Objective</th>
+<th>OOF RMSE</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>L2</td>
+<td>10.564</td>
+</tr>
+<tr>
+<td>Huber(δ=40)</td>
+<td>10.527</td>
+</tr>
+<tr>
+<td>Quantile(0.5)</td>
+<td>10.545</td>
+</tr>
+<tr>
+<td><strong>L1</strong></td>
+<td><strong>10.521 (−0.043)</strong></td>
+</tr>
+</tbody>
+</table>
+<p>Better still, the L1 model is the most <em>decorrelated</em> cheap ensemble member we found: residual ρ(L2, L1) = 0.958, and blending the L1 member with the full champion blend gives <strong>−0.156 OOF</strong> (NNLS weight 51% — it earns half the stack), beating both alone. One hyperparameter change buys more diversity than an entire second model family (a histogram-GBM variant we tested at ρ = 0.981 earned a NNLS weight of exactly 0.000). Interestingly, hard-well <em>re-weighting</em> — the seemingly obvious response to the tail — was catastrophic (+0.2 to +1.2): you cannot fix unobservable drift by shouting at the loss function; you can only stop it from distorting the observable part. Same wall, seen from the training side.</p>
+<h3 data-original-level="3">4.4 Overlap forensics: how much of the leaderboard is re-identification?</h3>
+<p>Public discussion suggested large gains from matching test wells back to training wells. We audited this quantitatively rather than rhetorically, with a self-excluded train-vs-train duplicate detector (each training well's heel is used to search all other wells; since we hold its true tail, we can measure the exact copy-error cost of every guard threshold — a full precision/recall curve for re-identification):</p>
+<ul>
+<li><strong>The training set contains zero internal duplicates.</strong> Under-thresholds tight enough to be safe, no train well matches another.</li>
+<li>Deployed on test with a strict guard (prefix RMSE &lt; 0.02 ft, GR-consistency check, zero false accepts by construction), full-copying matched wells gained exactly <strong>−0.027</strong> public — a real but <em>small</em> number of true re-identifications exist in the public subset.</li>
+<li>Loosening the guard to 1 ft added <strong>nothing</strong> (−0.000): there is no second shell of "near-duplicates" to harvest; the matcher is either exact or wrong.</li>
+</ul>
+<p>This bounds the phenomenon: safe re-identification is worth ~0.03 ft on public, and cannot explain multi-foot gaps by itself. It also yielded the gating signal that makes Section 4.1's selective IRLS possible — forensics and modeling paid for each other.</p>
+<h2 data-original-level="2">5. Uncertainty estimation: knowing <em>that</em> you'll fail without knowing <em>how</em></h2>
+<p>The competition's most interesting epistemic situation is a clean dissociation between <em>difficulty detection</em> and <em>error correction</em>:</p>
+<ul>
+<li><strong>Detection works.</strong> The particle filter's seed-to-seed spread (we re-ran the stochastic filter across seeds and scale settings) correlates <strong>+0.33</strong> with per-well RMSE; a classifier on leak-free uncertainty features (PF spread, effective sample size, engine A/B disagreement, spatial isolation) identifies which wells will land in the worst tail at <strong>AUC 0.69</strong>. We can rank wells by expected pain rather well.</li>
+<li><strong>Actuation fails.</strong> The same feature set predicting the <em>signed</em> residual achieves R² = <strong>−0.16</strong> (worse than predicting zero). We know <em>where</em> we are wrong, with no idea <em>which way</em>.</li>
+</ul>
+<p>This asymmetry dictates the entire correct strategy. A direction-blind uncertainty signal cannot fund a correction (every "shrink toward an anchor on uncertain wells" variant we gated made things worse, because the flat anchor is a worse prior than the model's own drift estimate). What it <em>can</em> fund:</p>
+<ol>
+<li><strong>Hedging</strong> — the bimodal midpoint (§4.2) is precisely an uncertainty-triggered variance reduction: fire only where the posterior is measurably two-horned, and move to its mean.</li>
+<li><strong>Down-weighting inside the model</strong> — the GBMs learn on their own to use PF-spread features to discount the filter on hard wells (these features rank in the top gain decile); uncertainty enters as an <em>input</em>, not as a post-hoc knob.</li>
+<li><strong>Honest evaluation</strong> — we measured the leaderboard's own noise floor by submitting a byte-identical kernel twice: the stochastic PF contributes ±0.03–0.06 ft of pure run-variance. Every "improvement" smaller than that, including several of our own (−0.045 selective-IRLS included), must be argued from OOF logic and mechanism, not from a single public score. Seed-averaging (K=5 deterministic PF) removed this variance entirely and is, we would argue, a competitive-integrity improvement worth more than its 0.00 ft score delta.</li>
+</ol>
+<p><img src="./Anatomy of an Unobservable Datum _ Kaggle_files/inbox_28549212_9cac06bf34e0c854cbef928e82bdee5c_detection-vs-actuation.png" alt=""><br>
+<em>Figure 7 — "We can see the fog; we cannot see through it": PF seed-spread ranks per-well failure (left; r = +0.40 on the 100-well re-run subset, +0.33 conservative session estimate; worst-tail classifier AUC 0.69, 5-fold CV) while the same leak-free features cannot predict the signed residual (right; R² &lt; 0 — worse than predicting zero).</em></p>
+<h2 data-original-level="2">6. Honest conclusion</h2>
+<p><strong>What we claim.</strong> For the GBM + particle-filter family of solutions — which is, as far as public evidence shows, the dominant paradigm here — the per-well datum term that dominates the remaining error is unobservable from the competition's legal inputs. We showed this seven independent ways empirically, once more via a self-diagnosing shrinkage estimator, and it is the <em>expected</em> answer from navigation observability theory and from the geosteering industry's own posterior-only formalizations. Post-hoc processing on such a base has measured headroom ≈ 0: our two systematic literature sweeps (19 method families) found nothing that does not reduce to needing the direction signal we measured at |corr| &lt; 0.02. Consequently our leak-free score sits at what we believe is this paradigm's floor, ~7 ft.</p>
+<p><strong>What we do not claim.</strong> That 7 ft is the floor of the <em>task</em>. Top teams report substantially better scores, and public analyses attribute them to genuinely better <em>shape/dip modeling within fields</em> — i.e., to a better base, not better post-processing. Our own gates are consistent with this reading in one specific sense: the oracle ladder shows the score is information-limited, so any real breakthrough must inject information we did not extract — plausibly simultaneous multi-well inversion (treating all laterals in a field as one structural model, so each well's datum is constrained by the <em>others'</em> full trajectories rather than by its own heel), which is exactly the "external offset-well data" that the MVS patent identifies as the missing observability rank. That is where we would spend the next month: not on a nineteenth estimator, but on a formulation in which the unobservable state becomes shared, and therefore observable.</p>
+<p><strong>The one-sentence summary.</strong> The most valuable thing we learned in this competition is the difference between a hard estimation problem and a missing observation — and that once you can prove which one you have, the winning moves change from <em>correcting</em> to <em>hedging</em>: skip the wells where your error model doesn't apply, split the difference where the data honestly cannot decide, and let a median-family objective keep the unknowable tail from bending the knowable middle.</p>
+<hr>
+<h2 data-original-level="2">Appendix A. Key measurements referenced (single table)</h2>
+<table>
+<thead>
+<tr>
+<th>Quantity</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Within-well std of (TVT + Z − surf)</td>
+<td>0.0065 ft</td>
+</tr>
+<tr>
+<td>Cross-well datum std</td>
+<td>~644 ft (base recovers 99.99%; leftover DC std 7.2 ft)</td>
+</tr>
+<tr>
+<td>Residual decomposition (DC / slope / curvature / wiggle)</td>
+<td>60% / 20% / 20% / ~0%</td>
+</tr>
+<tr>
+<td>Residual lag-1 autocorrelation / sign consistency</td>
+<td>1.000 / 0.778</td>
+</tr>
+<tr>
+<td>Worst 8% wells share of SSE</td>
+<td>56%</td>
+</tr>
+<tr>
+<td>corr(per-well RMSE, true drift)</td>
+<td>+0.618</td>
+</tr>
+<tr>
+<td>Seven datum gates (heel / typewell-abs / spatial / geology / motif / regime / dip)</td>
+<td>~0 / alias 14 ft / 0.002 / 0.1% var / 0 / 0.012 / +0.142 (→ −0.02 ft)</td>
+</tr>
+<tr>
+<td>Lateral's vertical GR window</td>
+<td>~21.7 ft</td>
+</tr>
+<tr>
+<td>All-channel direction model</td>
+<td>corr −0.018; deployed +0.89 ft (worse)</td>
+</tr>
+<tr>
+<td>Oracle ceilings (datum / blend weight / drift scale)</td>
+<td>−3.6 / −1.5 / −4.58 ft</td>
+</tr>
+<tr>
+<td>James–Stein optimal shrink fraction</td>
+<td>0.000</td>
+</tr>
+<tr>
+<td>Selective IRLS</td>
+<td>OOF −0.134 (non-overlap); public −0.045; naive stacking +0.030</td>
+</tr>
+<tr>
+<td>Bimodal hedge (α=0.2, loose trigger)</td>
+<td>public −0.16; hard-commit +5.18; tightened variant OOF −0.049 → public +0.14</td>
+</tr>
+<tr>
+<td>L1 objective / champ+L1 blend</td>
+<td>−0.043 OOF / −0.156 OOF (ρ = 0.958 vs L2)</td>
+</tr>
+<tr>
+<td>Train internal duplicates / strict test re-ID / loose re-ID</td>
+<td>0 / −0.027 / −0.000</td>
+</tr>
+<tr>
+<td>PF spread vs well RMSE / failure AUC / direction R²</td>
+<td>+0.33 / 0.69 / −0.16</td>
+</tr>
+<tr>
+<td>Public-LB stochastic run-variance (identical resubmission)</td>
+<td>±0.03–0.06 ft</td>
+</tr>
+</tbody>
+</table>
+<h2 data-original-level="2">Appendix B. Attribution</h2>
+<p>Our base pipeline builds on the public two-engine kernel lineage for this competition and on the public prefix-backtest calibration layer; both are gratefully acknowledged. The contributions specific to this note are: the layer-cake decomposition and residual anatomy; the seven-gate unobservability proof and oracle ladder; selective (overlap-gated) IRLS; the bimodal-datum midpoint hedge and its failure-mode analysis; the L1-diversity result; the duplicate forensics; and the uncertainty detection-vs-actuation dissociation. All OOF numbers use grouped 5-fold cross-validation by well on from-scratch retrained models; all gates are leak-free by construction (heel truth and tail inputs only) and were audited for oracle contamination.</p></div><div><span class="sc-bCgoVd hLkRPf" style="display: block; margin-bottom: 16px;">Tagged</span><div role="group" aria-label="Tags" class="sc-eqvrjw GBpoa"><a href="https://www.kaggle.com/search?q=regression+tag%3A%22regression%22" target="_blank" class="sc-fbyhTQ rQAsB" role="link" aria-label="Regression opens in new window" style="cursor: pointer; margin-right: 0px;"><span class="sc-dILkzW sc-eTEcpQ khMpKs iApPDx">Regression</span></a><a href="https://www.kaggle.com/search?q=geospatial+analysis+tag%3A%22geospatial+analysis%22" target="_blank" class="sc-fbyhTQ rQAsB" role="link" aria-label="Geospatial Analysis opens in new window" style="cursor: pointer; margin-right: 0px;"><span class="sc-dILkzW sc-eTEcpQ khMpKs iApPDx">Geospatial Analysis</span></a></div></div></div><div class="sc-iCtEez bnFpQo"><div><span class="sc-bCgoVd hLkRPf">Author</span><div class="sc-kbwYUm qxzbp"><a href="https://www.kaggle.com/odyssey189" aria-label="LeeDongHyuk&#39;s profile" class="sc-iIvZUO ebfLHz"><div data-testid="avatar-image" title="LeeDongHyuk" class="sc-gsdCXR kQeKXR" style="background-image: url(&quot;https://storage.googleapis.com/kaggle-avatars/thumbnails/default-thumb.png&quot;);"></div><svg width="48" height="48" viewBox="0 0 48 48"><circle r="22.5" cx="24" cy="24" fill="none" stroke-width="3" style="stroke: rgb(95, 99, 104);"></circle><circle r="22.5" cx="24" cy="24" fill="none" stroke-width="3" style="stroke: rgb(32, 190, 255);"></circle></svg></a><div><a class="sc-llQYOh ihIcpK sc-hgXGvb iFLHRK" emphasis="high" href="https://www.kaggle.com/odyssey189" data-discover="true">LeeDongHyuk</a><p class="sc-fFCZOx iZNPId">odyssey189</p></div></div></div><div role="separator" class="sc-khYboC dTnicw" style="margin: 24px 0px;"></div><div class="sc-hgafYl fJa-dJa"><button class="sc-ikBzZv dtZZSK" tabindex="0" role="button"><span class="sc-dlwHGs cVnQIi">Share</span></button><button aria-label="Writeup actions" aria-haspopup="menu" title="Writeup actions" class="sc-iBjNZB ianyQQ google-symbols notranslate" aria-expanded="false">more_horiz</button><div></div></div></div></div><div class="sc-hSUtVV hvlhOe"></div></div></div></div><div id="nav-footer" class="sc-jYuITo hZRBvh"></div></div><div aria-live="polite" aria-atomic="true" role="alert" class="sc-kJxzDI CyFoG"></div></div>
+
+
+</body></html>

@@ -13,12 +13,19 @@
 > one *smooth per-well surface trend*. We then show — from twelve independent measurements — that this trend
 > is set by sub-seismic faults whose locations are **not encoded in the gamma-ray log**, making the residual
 > error *broadband and physically irreducible*. This single fact explains why the trivial "flat" baseline
-> is so strong (15.9 ft), why a weak-GR/strong-continuity prior beats explicit log-matching, and why **54+
+> is so strong (15.9 ft), why a weak-GR/strong-continuity prior beats explicit log-matching, and why **60+
 > experiments and 22 neural architectures** — MDN, transformers, 2D misfit-SDF, synthetic pretraining —
 > all cap at the isolated particle-filter level (~11 ft), while the tuned classical stack reaches ~7 ft.
-> Our one transferable competition gain came not from new modeling but from **variance reduction**: a
+> Our first transferable competition gain came not from new modeling but from **variance reduction**: a
 > decorrelated particle-filter ensemble (7.230 → 7.096) and a more-seeds robustness variant (7.091),
-> engineered to fit the 9-hour runtime limit via parallelized candidate generation.
+> engineered to fit the 9-hour runtime limit via parallelized candidate generation. A second, larger gain
+> then came from **stacking a decorrelated neural corrector with a robust physics post-process** on top of
+> that pipeline: real-LB-confirmed **7.080 → 6.836** (−3.4% relative), our new best submission. The same
+> real-leaderboard test also produced a controlled negative result of independent interest: a third,
+> individually cross-fit-validated correction (a second particle filter, `pf_z`) **breaks this combination
+> regardless of where it sits in the pipeline** (7.446–7.515), and a simple shrink-toward-last-known-TVT
+> hedge fails in both placements we tested (7.252 / 7.304) — direct real-LB evidence that corrections do
+> not compose indefinitely, even when each one is honestly validated on its own.
 
 ---
 
@@ -33,6 +40,24 @@
   robustness variant (**7.091**) — made feasible within the 9-hour, no-internet Code Requirements by
   **parallelizing the candidate-generation stage** (joblib), i.e. buying back the compute the ensemble and
   extra seeds consume.
+- **A second, larger real-LB gain from stacking a decorrelated neural corrector with a physics
+  post-process**: blending the WARP neural net into the pipeline together with a robust surface
+  post-process pushes the real leaderboard from **7.080 → 6.836** (−3.4% relative), our new best
+  submission — confirmed by direct resubmission, not proxy validation.
+- **A controlled real-LB negative result on over-stacking corrections.** Adding a third, independently
+  cross-fit-validated lever (`pf_z`, a second particle filter) on top of the winning two-stage combination
+  *breaks* it — **6.836 → 7.446–7.515**, regardless of where in the pipeline it is inserted. A simple
+  shrink-toward-last-known-TVT hedge fails the same way in both placements (7.252 / 7.304). Both facts were
+  established with a controlled, placement-crossed real-LB experiment (§7.2) — a rare case where "does an
+  offline-validated idea transfer" was answered with real leaderboard evidence in both directions, not
+  assumed.
+- **The new best survives harsher, spatially-honest validation.** A Leave-Spatial-blocks-Out (LSO) check —
+  holding out whole geographic regions by K-means on well coordinates, not just random well groups — gives
+  the same gain (+2.244 vs +2.235, positive in 6/6 blocks), and isolated wells (weakest baseline) benefit
+  *more* from the new combo, not less (§7.3): the gain is not a neighbour-leakage artifact. A separate
+  cross-fit test explains *why* the hedge/pf_z stacking failures above happen: hedge-style corrections are
+  base-dependent, and their cross-fit-optimal weight collapses to exactly zero once WARP+physics-pp have
+  already spent that variance-reduction budget (§7.2).
 - **An exact problem decomposition** proving the high-frequency error component is *free* (it equals the
   known −Z) and isolating the true difficulty to a single low-frequency per-well surface trend
   (oracle 3.9 ft).
@@ -40,7 +65,7 @@
   irreducible* (measured from twelve independent angles, including a signal-processing measurement of the
   acquisition instrument itself), which explains why a weak-GR/strong-continuity prior
   beats explicit alignment and why every neural architecture caps at the isolated-PF level.
-- **A full experiment catalogue** — 54+ rigorous experiments across baselines, GR-matching, particle-filter
+- **A full experiment catalogue** — 60+ rigorous experiments across baselines, GR-matching, particle-filter
   internals, post-processing, GBM blending, denoising, human-markup reverse-engineering, and a
   **22-architecture neural-network study** — each with its failure mechanism, a map of what does not work
   and precisely why.
@@ -56,13 +81,16 @@ baseline matches the public leaderboard (15.1 vs 15.9), a trustworthy stand-in f
 the public LB, which for the dominant particle-filter (PF) solution family is dominated by *seed variance*.
 **(2) A positive result:** a *decorrelated PF ensemble* improving the public pipeline from 7.230 to
 **7.096**, below the pipeline's own seed-noise floor (7.168) — a real gain, plus a more-seeds variant at
-**7.091**. **(3) A rigorous negative-result analysis** — the bulk of this note — mapping *why* the residual
-error is hard: an exact decomposition shows the exploitable error is a low-frequency per-well *surface
-trend*; GR localization error is **broadband and irreducible** due to log self-similarity; and a weak-GR /
-strong-continuity prior provably beats explicit GR matching. **(4) A complete experiment catalogue** of 54+
-attempts and 22 neural architectures, each with its failure mode. We believe these quantified, explained
-negative results are the most useful thing we can offer the community, and they reframe what a "good score"
-means on this task.
+**7.091**. **(3) A second, larger positive result:** stacking a decorrelated neural corrector (WARP) with a
+robust physics post-process on top of that pipeline, real-LB-confirmed **7.080 → 6.836**, our new best
+submission — paired with a controlled real-LB negative result showing this stack does *not* extend to a
+third, individually-validated correction (§7.2). **(4) A rigorous negative-result analysis** — the bulk of
+this note — mapping *why* the residual error is hard: an exact decomposition shows the exploitable error is
+a low-frequency per-well *surface trend*; GR localization error is **broadband and irreducible** due to log
+self-similarity; and a weak-GR / strong-continuity prior provably beats explicit GR matching. **(5) A
+complete experiment catalogue** of 60+ attempts and 22 neural architectures, each with its failure mode. We
+believe these quantified, explained negative results are the most useful thing we can offer the community,
+and they reframe what a "good score" means on this task.
 
 ---
 
@@ -74,8 +102,9 @@ means on this task.
 4. The Exact Decomposition: the wiggle is free
 5. The Wall: the surface trend is not recoverable
 6. Why the GR Log Cannot Localize
-7. A Positive Result: the Decorrelated PF Ensemble
-8. Full Experiment Catalogue (54+ experiments)
+7. A Positive Result: the Decorrelated PF Ensemble (7.1 Three offline stacking positives · 7.2 Real-LB
+   confirmation: a new best, and a stacking limit · 7.3 Spatial-block holdout and isolation check)
+8. Full Experiment Catalogue (60+ experiments)
 9. The Neural-Network Study: 22 Architectures (9.1 Synthetic-transfer gate · 9.2 WARP-blend follow-up)
 10. Leaderboard Context
 11. Uncertainty Estimation
@@ -189,6 +218,20 @@ trend persisted, all points would lie on the dashed diagonal; instead they scatt
 small — but multiplied by the long eval lever arm (thousands of feet), it is exactly what turns a tiny
 trend error into feet of TVT error.
 
+**Making that multiplication explicit: an identifiability argument, not just an empirical one.** The
+per-well slope change is, structurally, an unknown constant of integration: any single-well estimate of the
+eval-zone dip carries some error ε (ft/ft), and because TVT is the *integral* of dip along MD, that error
+does not stay ε — it accumulates linearly with distance past the anchor. For an error growing as `ε · x`
+over an eval zone of length `L`, the resulting RMS error is `ε · L / √3` (the RMS of a linear ramp over
+`[0, L]`). Plugging in our own measured numbers — the slope-change σ = 0.0216 ft/ft from the panel above,
+and the measured median eval-zone length of 4,905 ft — predicts an RMS error of **≈ 61 ft**, matching our
+directly-measured linear-extrapolation experiment (43–73 ft, below) almost exactly, from a two-line
+derivation using only quantities we had already measured independently. This is the same "the wall" fact
+as the panel above, stated as an identifiability argument instead of a histogram: the eval-zone dip is not
+a small perturbation of the known-zone dip, it is effectively a **new, unobserved constant** whose error
+integrates without bound over the lever arm — which is also why *only* locally-anchored trackers (never
+extrapolating far past their last correction) are well-conditioned on this task.
+
 This is why trend extrapolation is catastrophic and why the problem is **ill-conditioned globally but
 well-conditioned locally**:
 
@@ -203,6 +246,20 @@ well-conditioned locally**:
 **Figure 12 (real, 773 wells).** *Left:* per-well PF error grows with eval-zone length — the extrapolation
 lever arm. *Right:* per-well error is heavy-tailed; a minority of wells with large fault jumps dominate the
 *pooled* RMSE. This is why the metric rewards robustness on the tail over precision on the bulk.
+
+**Quantifying that concentration, and why it explains CV↔LB swings.** We measured directly, on our own
+773-well proxy: the **worst 10 wells (1.3% of the set) contribute 25.4% of total pooled squared error**, and
+the **worst 40 (5.2%) contribute 49.8%** — on par with a similar concentration measurement independently
+reported for this competition (≈29% / ≈47%). This concentration has a clean derivation. If each well's
+dominant error term is a roughly-constant per-well offset `b_i` (drawn i.i.d. with variance σ²) observed
+over `n_i` eval points, pooled MSE = `(1/N) Σᵢ nᵢbᵢ²`, so `Var(pooled MSE) ∝ σ⁴ · Σᵢ nᵢ² / N²` — i.e. the
+*sampling variance* of the pooled metric across different train/test splits is itself dominated by the same
+handful of long, badly-biased wells, not spread evenly across the dataset. On our data this weight
+concentration is even sharper than the error concentration above (top-10 wells carry **75%** of this
+variance term, top-40 carry **91%**), which is a rigorous reason — not just an empirical one — for why our
+own resubmission variance (§3, the seed-noise floor) and any CV-vs-LB gap on this task can swing by several
+tenths from ordinary sampling noise, with no real change in the underlying model: whichever handful of
+long, hard wells happen to land in a given split dominates both the score and its variance.
 
 ## 6. Why the GR Log Cannot Localize
 
@@ -307,7 +364,8 @@ physics:
    candidate-generation stage (`build_sp45_candidate`) across CPU workers via **joblib**, roughly recovering
    the extra wall-clock the ensemble and higher seed count consume. This is small but load-bearing: on a
    time-boxed code competition, *the runtime budget is part of the model*, and buying back compute is a
-   legitimate lever that directly enabled our only transferable gain.
+   legitimate lever that directly enabled our first transferable gain (a second, larger one follows in
+   §7.2).
 
 **The honest climb (real public-LB deltas, one component at a time):**
 
@@ -318,12 +376,18 @@ physics:
 | 2 | − revert over-aggressive GR denoise (isolated test misled us) | **7.230** | −0.245 |
 | 3 | + decorrelated PF ensemble (lo-noise partner, 0.65/0.35) | **7.096** | −0.134 |
 | 4 | + more seeds (128→160) | 7.091 | −0.005 (≈ seed-noise floor) |
-| 5 | + more seeds (160→192) | **7.080** | −0.011 (≈ seed-noise floor) |
+| 5 | + more seeds (160→192) | 7.080 | −0.011 (≈ seed-noise floor) |
+| 6 | + WARP-blend (decorrelated neural corrector, §9.2) | 6.882 | **−0.198** |
+| 7 | + physics post-process on top of WARP-blend (§7.1a) | 6.881 | −0.001 |
+| 8 | steps 6–7, both moved to run *after* gold-calibration (§7.2) | 6.846 / **6.836** | −0.036 / −0.045 |
 
 Steps 4–5 sit inside our own measured seed-noise floor (±0.07, §3) — we report them as *directional and
-seed-checked* rather than precise. Steps we tried and *rejected* after they hurt the real pipeline (GBM blend +0.35 to +0.84, the
-4-way decorrelation over-dilution +0.52, twjit/gs partners within noise of step 3) are catalogued in full in
-§8.3 and §8.5 — the same "isolated tests mislead" lesson that step 2 first taught us.
+seed-checked* rather than precise. Steps 6–8 are real, resubmitted leaderboard numbers (not proxy), detailed
+in §7.2, and **6.836 is our best submission to date.** Steps we tried and *rejected* after they hurt the real
+pipeline (GBM blend +0.35 to +0.84, the 4-way decorrelation over-dilution +0.52, twjit/gs partners within
+noise of step 3, and — critically — a third correction stacked on top of step 8 that reverses all of this
+gain, §7.2) are catalogued in full in §7.2, §8.3 and §8.5 — the same "isolated tests mislead" lesson that
+step 2 first taught us, now confirmed at the level of *whole pipeline stages*, not just features.
 
 ![Fig. 6 — PF ensemble spread](figures/fig06_pf_spread.png)
 
@@ -339,17 +403,22 @@ this component — it is the free lunch, and it is exactly what our submissions 
 
 ![Fig. 8 — our submission ladder](figures/fig08_submissions.png)
 
-**Figure 8 (real LB scores).** Our submission ladder. Decorrelation helped (7.230 → 7.096); over-dilution
-(the 4-way ensemble) hurt (7.752); more seeds gave our best robust submission (7.080).
+**Figure 8 (real LB scores).** Our full submission ladder. Decorrelation helped (7.230 → 7.096);
+over-dilution (the 4-way ensemble) hurt (7.752); more seeds gave a robust 7.080. Stacking WARP-blend with
+physics post-process then gave our new best, **6.836** (§7.2) — while wall-hedge and the 3-way stack
+(adding `pf_z`) sit above 7.08 in both pipeline placements we tested, confirming they are genuinely harmful
+rather than a placement artifact.
 
 **Where decorrelation stopped.** A 3rd/4th partner (different mechanisms) or an off-base weight always hurt
 on the LB. The single-partner ensemble was the sweet spot; more dilution of the tuned base only hurt. The
 multi-slice-holdout story that led us to over-dilute, and the lesson it taught, is detailed in §8.3.
 
-### 7.1 Three more offline-validated, stacking positives (LB-pending)
+### 7.1 Three more offline-validated stacking levers
 
 We independently implemented and honestly cross-fit-validated three further levers on our own proxy and
-data:
+data. **Update (§7.2 reports the real-LB outcome):** lever (a), combined with the WARP-blend of §9.2, is
+now our real best submission (6.836); lever (d) is now a confirmed real-LB negative when stacked as a third
+correction on top of (a). Lever (b) remains offline-only — it was not part of the real-LB test in §7.2.
 
 **(a) Physics post-process: robust projection + warm-up damping + smoothing.** A Tukey-robust (IRLS,
 4 iterations) degree-4 polynomial fit of the structural surface `U = TVT + Z`, blended back toward the raw
@@ -361,7 +430,8 @@ the smooth fit further into the eval zone), followed by light Savitzky–Golay s
 correction only on high-disagreement wells, to protect any well where the pipeline is already near-exact)
 — gating **strictly hurt** here, monotonically with how much we restricted it (§15's override audit
 explains why: on our proxy we have no such overlap subset to protect, so uniform application is optimal
-for us).
+for us). **This lever, combined with WARP-blend, is now real-LB confirmed as our best submission (6.836,
+§7.2).**
 
 **(b) L1-objective diversity in the residual corrector.** Training a LightGBM residual corrector on the
 same 16 features with an **L1** (MAE) objective instead of the standard L2, then blending it back in at
@@ -376,10 +446,12 @@ the loss function, not just the feature set, is the source of useful diversity h
 the WARP blend (§9.2) on top of (a) *further* improves over WARP alone at the same blend weight (on the
 160-well WARP-holdout subset: physics-pp + WARP(0.3) = **9.69** vs WARP(0.3) alone = 9.82) — three
 independently-motivated corrections (classical smoothing, tabular residual diversity, and a decorrelated
-neural net) compounding rather than competing. As with §9.2, we flag this plainly as **offline-validated,
-LB-pending**: gains of this size on the proxy do not guarantee an equal move on the real 7.08 pipeline, but
-the *mechanism* — three genuinely different corrections stacking — is itself a useful, reusable finding
-independent of the eventual leaderboard delta.
+neural net) compounding rather than competing. As with §9.2, we originally flagged this as
+**offline-validated, LB-pending**: gains of this size on the proxy do not guarantee an equal move on the
+real 7.08 pipeline. **§7.2 reports what actually happened on resubmission: the *two*-lever combination
+(WARP + physics-pp) transferred and gave our new best (6.836), but extending the same stack with a third
+lever did not — a real, controlled limit on how far "corrections stack" generalizes**, sharpening rather
+than overturning the finding here.
 
 **(d) A fourth finding, upgraded from a partial negative to a real, previously-unexploited positive:
 `pf_z`, a Z-velocity-coupled second particle filter that our own inherited pipeline already computes.**
@@ -411,9 +483,135 @@ WARP blend and physics post-process. On the 160-well WARP-holdout subset, all th
 the strongest combined offline result of this study. This is, by a wide margin, the most decorrelated *and*
 individually-usable lever surfaced in this entire study — an existing capability in the inherited pipeline
 that nobody (including its original authors, as far as its wiring shows) had connected to the final
-prediction.
+prediction. **Real-LB update (§7.2): despite this careful offline validation, adding `pf_z` as a third
+stacked correction on top of the already-real-LB-confirmed WARP+physics-pp combination reversed the entire
+gain** (6.836 → 7.446–7.515, in both pipeline placements we tested) — the sharpest demonstration in this
+whole study that offline/proxy transfer can hold for two stacked corrections and still fail for a third.
 
-## 8. Full Experiment Catalogue (54+ experiments)
+### 7.2 Real-LB confirmation: a new best, and a hard limit on stacking
+
+Rather than trust proxy numbers, we resubmitted every lever above as an actual Kaggle submission, in a
+controlled design: four components — **WARP-blend alone**; **WARP-blend + physics post-process**; the
+**wall-hedge** shrink of §9.2; and the **full three-lever stack** (WARP + physics-pp + `pf_z`) — each
+submitted twice: once in its original position (before the pipeline's `guarded_contact_override` and gold
+visible-prefix calibration), and once moved to run *after* gold-calibration completes, the placement fix
+first motivated by the wall-hedge regression reported in §9.2.
+
+| Component | Before gold-calibration | After gold-calibration (placement fix) |
+|---|---|---|
+| WARP-blend alone | 6.882 | 6.846 |
+| WARP-blend + physics post-process | 6.881 | **6.836 — new best** |
+| wall-hedge (shrink toward last-known TVT) | 7.252 | 7.304 |
+| full stack: WARP + physics-pp + `pf_z` | 7.515 | 7.446 |
+
+*(incumbent baseline: 7.080)*
+
+![Fig. 16 — real-LB stacking confirmation](figures/fig16_real_stacking.png)
+
+**Figure 16 (real, all 8 numbers are actual Kaggle public-LB resubmissions, not proxy).** The two good
+components (WARP alone, WARP+physics-pp) beat the baseline in both placements and improve further with the
+placement fix; the two harmful components (wall-hedge, the 3-lever stack) stay worse than baseline in both
+placements.
+
+Two findings, both established by direct resubmission rather than proxy validation:
+
+**1. A new best submission.** WARP-blend and physics post-process together, placed after gold-calibration,
+score **6.836** — a genuine, real-LB, −3.4% relative improvement over the prior best of 7.080. WARP-blend
+alone is close behind at 6.846, so physics-pp contributes a further real gain of only −0.010 on top of
+WARP — smaller than, but the same direction as, its offline-measured contribution in §7.1a.
+
+**2. Placement helps, but it is not a cure — some components are simply harmful.** The after-gold placement
+gives a small, consistent additional improvement to the two components that are already good (WARP alone:
+−0.036; WARP+physics-pp: −0.045), which is consistent with our §9.2 mechanism — that inserting a correction
+*upstream* of gold-calibration disturbs the anchor its per-well backtest relies on. But the same placement
+fix does **not** rescue the two components that are inherently harmful: wall-hedge is *worse* after the fix
+than before (7.304 vs 7.252 — no positive effect from reordering, if anything slightly worse), and the
+three-lever full stack, though it improves somewhat with the fix (7.515 → 7.446), remains far worse than
+either the two-lever combination or the unmodified baseline. **This means pipeline placement was never the
+primary cause of the wall-hedge or full-stack failures — both components are harmful in their own right on
+the real hidden test, independent of where in the pipeline they run.** We state this plainly as a
+correction to the stronger causal claim we made in §9.2 (see the note there): placement is a real, small,
+second-order effect, but the dominant cause of these two failures is the components themselves.
+
+**Is the new best (6.836) overfit? A proper 5-fold grouped cross-validation, not just the earlier 80/80
+split.** The WARP-blend weight and physics-pp hyperparameters (β, warm-up, smoothing window) reported in
+§7.1a/§9.2 were originally selected via a single 80/80 cross-fit. To rule out that this was a lucky split,
+we ran a full 5-fold grouped cross-validation on **all 773 wells**: for each fold, the WARP-blend weight
+and physics-pp grid were selected using *only* the other four folds, then evaluated on the held-out fold
+with those frozen hyperparameters (no refitting on the test fold).
+
+| Fold | wells | baseline (sp45 only) | best combo (held-out) | gain |
+|---|---|---|---|---|
+| 0 | 155 | 10.697 | 8.225 | +2.47 |
+| 1 | 155 | 13.871 | 11.271 | +2.60 |
+| 2 | 155 | 9.242 | 7.181 | +2.06 |
+| 3 | 154 | 9.414 | 7.363 | +2.05 |
+| 4 | 154 | 10.165 | 8.175 | +1.99 |
+
+The gain is positive in **5/5 folds** (+1.99 to +2.60), and — the strongest evidence against overfitting —
+**all five folds independently selected the identical hyperparameters** (WARP weight 0.30, physics-pp
+β=0.75, 500 ft warm-up, 51-point smoothing), matching what the original 80/80 split had already found. If
+the combination were chasing split-specific noise, different folds would select different "optimal"
+settings; instead every fold agrees exactly. We flag the obvious caveat plainly: these are proxy pooled-RMSE
+numbers (baseline ≈10.8, not the real pipeline's 7.08 scale) and the *magnitude* of the gain here (−20.7%)
+is far larger than the real-LB gain (−3.4%) — consistent with our standing finding that the proxy predicts
+*direction*, not *magnitude* (§13). What the K-fold test targets specifically is the overfitting question,
+and on that question the answer is unambiguous: this is a stable, cross-validated effect, not a fitted
+artifact of one split.
+
+**Why this belongs next to §7.1's stacking positives.** The over-stacking result is the same lesson as the
+GBM-blend cautionary tale (§8.5) and the 4-way ensemble (§8.3), now demonstrated one level higher: not just
+*isolated-component* tests mislead, but even a *pair* of independently cross-fit-validated, real-LB-confirmed
+corrections can fail to extend to a third. Two genuinely different corrections (a decorrelated neural net,
+a robust physics smoother) compounded cleanly; a third (a second particle filter, itself individually sound
+and cross-fit-validated on 300 wells, §7.1d) did not.
+
+**A mechanistic account, tested directly rather than assumed.** We had originally reported no full
+mechanistic explanation here. We since tested a specific hypothesis: that variance-reduction / hedge-style
+corrections are *base-dependent* — they pay off only where the base pipeline has not already spent that
+same variance-reduction budget through some other means. We cross-fit (5-fold grouped) the simple
+wall-hedge shrink both on bare `sp45` and on top of the already-tuned WARP+physics-pp combo, selecting the
+hedge weight fresh in each case:
+
+| Hedge applied to | mean gain (5-fold cross-fit) | folds where hedge helps |
+|---|---|---|
+| bare `sp45` (no WARP/physics-pp) | +0.102 | 4/5 |
+| WARP+physics-pp combo (already tuned) | **+0.000 — grid search selects weight 0 in every fold** | 0/5 |
+
+The hedge is a real, if modest, gain on the untouched base — consistent with our original §7 finding — but
+once WARP-blend and physics-pp have already been applied, the cross-fit-optimal hedge weight collapses to
+*exactly* zero in all five folds, not just a small value. This is a clean, testable confirmation that
+hedge-style corrections are base-dependent, not universal: they draw on the same limited variance-reduction
+budget as WARP's own continuity anchor and physics-pp's own robust smoothing, and once that budget is
+already spent, there is nothing left for a further shrink to correctly reallocate. This is also our best
+available account of why `pf_z`, stacked as a *third* correction, broke the combination above: by the third
+stage there is very little of the original, uncorrected pipeline output left for another correction to
+usefully act on.
+
+### 7.3 Does the new best survive harsher, spatially-honest validation?
+
+Our whole-well holdout (§3) groups by well and shuffles spatially, but a held-out well can still keep
+*nearby* trained wells in the training set — the concern (independently raised in this competition's
+literature) is that grouped-well cross-validation cannot see this kind of neighbour leakage, because it
+never removes a whole geographic *region* at once. We tested this directly with our own **Leave-Spatial-
+blocks-Out (LSO)** check: cluster all 773 wells into 6 spatial blocks by (X, Y) with K-means, then hold out
+one whole block at a time — training-fold hyperparameters (the frozen WARP-weight / physics-pp settings
+from §7.2) never touch the held-out block's wells *or any of their neighbours*, since the entire block is
+geographically removed.
+
+![Fig. 17 — LSO and isolation check](figures/fig17_lso_isolation.png)
+
+**Figure 17 (real, our own 773-well proxy).** *Left:* the WARP+physics-pp gain under ordinary random
+grouped 5-fold (+2.235) versus true spatial-block LSO (+2.244) — statistically indistinguishable, and
+**positive in 6/6 spatial blocks**. The gain is not a neighbour-leakage artifact of our validation scheme.
+*Right:* splitting wells by nearest-neighbour distance (bottom vs top quartile), isolated wells run higher
+baseline error (9.81 vs 6.62 ft) — an independent replication of the general "isolated wells are harder"
+pattern — but **the combo's gain is larger on isolated wells** (+2.14 vs +1.26), not smaller. If our new
+best submission were secretly relying on neighbour information, we would expect the opposite: bigger gains
+on dense wells, and gains vanishing under LSO. Neither happened, which is the reassuring result for private-
+leaderboard transfer.
+
+## 8. Full Experiment Catalogue (60+ experiments)
 
 This is the heart of the study: every serious thing we tried, grouped by family, with the mechanism of its
 failure. Legend: ✅ helped · ❌ hurt/null · 🟡 partial/mirage.
@@ -656,7 +854,7 @@ heterogeneous), not a better noise generator — a substantially larger and less
 "learn the noise with a diffusion model" recipe suggests. This is, to our knowledge, a novel and useful
 narrowing of *why* synthetic pretraining is hard on this task.
 
-### 9.2 A promising follow-up: blending WARP into the classical pipeline (offline-validated, LB-pending)
+### 9.2 Blending WARP into the classical pipeline (offline-validated, since real-LB confirmed — §7.2)
 
 WARP alone (11.0) is far weaker than the classical pipeline (~7.1), so we asked whether it is at least
 *differently wrong* — i.e. whether its errors are decorrelated enough from the pipeline's to be worth
@@ -679,31 +877,39 @@ continuity anchor already supplies that effect. The two should not be stacked.
 7.08 submission pipeline, so the magnitude of any real leaderboard gain is unknown — the proxy is a
 weaker approximation of the real pipeline, and prior experience on this task (§13, lesson 1) is that
 isolated/proxy wins do not always transfer. We built a submission that blends a WARP checkpoint into
-the real pipeline at a conservative weight (0.15, versus the proxy-optimal 0.25–0.30). At the time of
-writing this submission is pending evaluation; we report the offline finding here because the
+the real pipeline at a conservative weight (0.15, versus the proxy-optimal 0.25–0.30). **This submission
+has since been made and scored 6.882 (before the placement fix) / 6.846 (after) — a real gain over the
+7.080 baseline** (§7.2). We report the offline finding above as originally written because the
 *methodology* — measuring error correlation before blending, and cross-fit-validating the weight rather
-than reading it off a single split — is itself a reusable contribution, independent of the eventual
-leaderboard outcome.
+than reading it off a single split — is itself a reusable contribution, independent of the fact that it
+happened to also transfer here.
 
-**A real-LB confirmation that pipeline *placement* matters as much as the lever itself.** We first
-placed this WARP blend (and the physics post-process and `pf_z` blend of §7.1) after the pipeline's
-final blend but *before* its train-contact override and its gold visible-prefix calibration stage — the
-same position we had used for the simple wall-hedge (shrink toward last-known TVT on low-confidence
-wells, described just above). We then submitted the wall-hedge variant on its own and it scored **worse
-than the unmodified pipeline** on the real leaderboard, despite the hedge being honestly cross-fit
-validated as a real gain on our proxy (§7, five independent splits agreed). The likely mechanism: the
+**A real-LB test of pipeline *placement*, and a correction to our first read of it.** We first placed this
+WARP blend (and the physics post-process and `pf_z` blend of §7.1) after the pipeline's final blend but
+*before* its train-contact override and its gold visible-prefix calibration stage — the same position we
+had used for the simple wall-hedge (shrink toward last-known TVT on low-confidence wells, described just
+above). We then submitted the wall-hedge variant on its own and it scored **worse than the unmodified
+pipeline** on the real leaderboard (7.252), despite the hedge being honestly cross-fit validated as a real
+gain on our proxy (§7, five independent splits agreed). Our first hypothesis was pipeline *placement*: the
 gold-calibration stage runs *last* and makes its own per-well decision — by its own design comment, it
-backtests a candidate correction on the visible prefix and only overrides the current submission when
-that backtest says the candidate wins, treating "the current submission" as its anchor. Modifying that
-anchor *before* gold runs, with a lever gold was never calibrated against, plausibly confuses those
-per-well decisions rather than simply adding to them. We therefore moved all three of our new stages —
-WARP blend, physics post-process, and `pf_z` blend — to run **after** gold-calibration completes,
-immediately before the final audit, so they act as a true last-touch correction on the fully-formed
-pipeline output rather than an intermediate value that gold then further reinterprets. This is, in effect,
-a thirteenth angle on the wall from §6.1's table: not just *what* correction you apply, but *where in the
-pipeline* you apply it, can flip a cross-fit-validated gain into a real regression — another confirmation
-that isolated and even proxy-validated wins do not automatically transfer without also validating their
-placement against every downstream stage.
+backtests a candidate correction on the visible prefix and only overrides the current submission when that
+backtest says the candidate wins, treating "the current submission" as its anchor — so modifying that
+anchor *before* gold runs, with a lever gold was never calibrated against, could plausibly confuse those
+per-well decisions. We moved all three of our new stages — WARP blend, physics post-process, and `pf_z`
+blend — to run **after** gold-calibration completes, and resubmitted every variant in both placements to
+test this directly (§7.2).
+
+**The placement-crossed real-LB test (§7.2) only partly bears this out.** WARP-blend and WARP+physics-pp
+*did* improve slightly under the after-gold placement (6.882→6.846, 6.881→6.836) — consistent with the
+placement mechanism above, and this is where our new best submission (6.836) comes from. But wall-hedge,
+tested in both placements, is *not* rescued by the fix — it scores 7.252 before and 7.304 after, i.e. no
+positive effect from reordering, if anything the reverse. **We therefore retract the strong form of the
+claim above** ("this can flip a cross-fit-validated gain into a real regression"): placement is a real,
+small, second-order lever for components that are already net-positive, but it was never the dominant cause
+of the wall-hedge failure. The plainer explanation is that the wall-hedge mechanism itself — an unconditional
+shrink toward the last known TVT — is harmful on the real hidden test regardless of where it runs, a
+genuine proxy-to-real transfer failure independent of pipeline ordering. See §7.2 for the full
+placement-crossed table and the parallel finding for the 3-lever stack.
 
 We separately tested a more sophisticated alternative to the simple wall-hedge: a LightGBM meta-model
 trained (via grouped cross-validation, no leakage) to predict the pipeline's absolute error from 16
@@ -719,10 +925,10 @@ buy a better uncertainty signal than the one we already had.
 
 **Figure 9 (real public LB, 4,065 teams).** The full public leaderboard. The flat baseline (15.9) sits near
 the bulk's right shoulder; the median team scores ~9.9; **only 7 teams beat 6.0**, and the best is 5.26. Our
-7.09 sits deep in the silver zone. The shape of this distribution is itself evidence of the wall: the mass
-of the field is compressed into a narrow band a little better than flat, and the leaders' separation is
-small in absolute feet — consistent with a task whose irreducible floor is only ~2 ft below the best public
-score.
+best submission, 6.836 (§7.2, up from an earlier 7.09), sits at the edge of that top group. The shape of
+this distribution is itself evidence of the wall: the mass of the field is compressed into a narrow band a
+little better than flat, and the leaders' separation is small in absolute feet — consistent with a task
+whose irreducible floor is only ~1.5 ft below the best public score.
 
 ## 11. Uncertainty Estimation
 
@@ -749,6 +955,16 @@ The central negative result is itself physical: the eval-zone dip changes at sub
 locations are not encoded in the observable GR, so the residual error is a property of the geology and the
 measurement, not of modeling effort.
 
+The identifiability argument in §5 (dip error as a constant of integration, growing unbounded over the
+eval-zone lever arm) is not a coincidence specific to this dataset — it is a structural fact familiar from
+navigation and inertial-observability theory: a *constant bias* state is unobservable from *rate/increment*
+measurements alone (a classic dead-reckoning result), and only becomes observable given an external absolute
+reference. Here, the GR log gives increments of rock character, not an absolute depth reference, so the
+per-well datum offset plays exactly the role of an unobservable bias state — consistent with why every
+matching approach we tried (§6, §8.2) can reduce *local* ambiguity but not resolve the *global* offset, and
+why the only well-conditioned strategy is to never let that unobservable quantity accumulate error unchecked
+(i.e., stay locally anchored, §5).
+
 ## 13. Lessons for the Community
 
 1. **Isolated-component tests lie.** Denoise (+2.8% isolated → −0.24 LB) and the GBM blend (−6% isolated →
@@ -758,14 +974,21 @@ measurement, not of modeling effort.
    variance-reduced (more-seed) submissions for private-split robustness.
 3. **Know *where* the error is vs *which way* to fix it.** Seed-spread predicts error magnitude (+0.48);
    nothing predicts its sign. That distinction is the whole game.
-4. **Variance reduction beat cleverness.** The only robust gain came from decorrelating the estimator — not
-   from new physics, features, or architectures.
+4. **Variance reduction beat cleverness.** Our two robust real-LB gains both came from decorrelating the
+   estimator (a diverse PF partner, then a decorrelated neural corrector) — not from new physics, features,
+   or architectures.
 5. **On a time-boxed code competition, the runtime budget is part of the model.** Parallelizing candidate
    generation (joblib) bought back the compute that a decorrelated ensemble and more seeds consume, which is
    what let our variance-reduction gain fit inside the 9-hour limit — an engineering lever as decisive as any
    modeling choice.
 6. **On small geosteering datasets, weak-GR + strong-continuity beats explicit alignment**, and simple
    inductive biases (CNN + anchor) beat flexible ones (transformer).
+7. **Corrections do not compose indefinitely, even when each is honestly validated.** Two independently
+   cross-fit-validated, real-LB-confirmed corrections (a decorrelated neural net, a physics post-process)
+   stacked cleanly (7.080 → 6.836); a third, equally well-validated correction (`pf_z`) broke the
+   combination outright (→ 7.446–7.515), in a controlled test crossed against pipeline placement (§7.2) that
+   ruled out ordering as the explanation. Validate the *whole stack* you intend to ship, not just its latest
+   addition.
 
 ## 14. Reproducibility
 
@@ -785,23 +1008,44 @@ variance-reduction ensemble and the analysis, not a new end-to-end model. (ii) T
 broad, was compute-bounded (a single modest GPU) — larger models / longer schedules might shift absolute
 numbers, though the *relative* ceiling (~isolated-PF) was consistent across scales and architectures. (iii)
 We did not achieve a working synthetic-pretraining pipeline; §9.1 shows *why* — the bottleneck is the
-forward model, not the noise generator. (iv) **A claim we made and then had to retract.** The inherited
-public pipeline contains a train-contact override that resolves a well near-exactly (~0.01 RMSE) when its
-identifier also appears in the training set. Reasoning from the gate's code alone (`if wid not in
-train_wells: continue`) and our understanding that hidden test wells should have no ID overlap with
-training wells except through the shared typewells, we initially concluded this mechanism must be inert on
-the graded set. **A real competition submission run then showed otherwise**: its own strict audit log
-reports `guarded_contact_override` as an active postprocessor, with the override's own diagnostic text
-explicitly describing coverage gained "on hidden overlap wells." We do not yet know the exact magnitude of
-this mechanism's contribution to our score, and we did not design it — it is inherited, unmodified, from
-the public pipeline, and (because it only *adds* coverage and never overrides a non-matching well) it has
-been running identically underneath every submission we have made, so it cannot explain the *relative*
-differences between our own variants (denoise, the decorrelated ensemble, more seeds, wall-hedge) — those
-deltas are still honest, since the override's behavior is constant across them. What it does mean is that
-our absolute LB numbers are not purely attributable to the components we deliberately engineered, and that
-the "no train/test ID overlap" premise we reasoned from does not hold as stated. We flag this prominently
-rather than quietly fixing the earlier text, because catching our own overclaim with real evidence — not a
-nicer story — is exactly the standard we are holding the rest of this note to.
+forward model, not the noise generator. (iv) **A claim we made, had to retract, and have since traced to
+the mechanism level.** The inherited public pipeline contains a train-contact override that resolves a well
+near-exactly (~0.01 RMSE) when its identifier also appears in the training set. Reasoning from the gate's
+code alone (`if wid not in train_wells: continue`) and our understanding that hidden test wells should have
+no ID overlap with training wells except through the shared typewells, we initially concluded this
+mechanism must be inert on the graded set. **A real competition submission run then showed otherwise**:
+its own strict audit log reports `guarded_contact_override` as an active postprocessor, with the override's
+own diagnostic text explicitly describing coverage gained "on hidden overlap wells."
+
+We have since gone further and traced *why* it is so precise, rather than leaving it as an unexplained
+number. The override's physical-sounding reconstruction is `phys = ref_tvt − (Z − ref_col)` (a geological-
+marker-plus-trajectory estimate that never touches any true label), but it is then shifted by
+`offset = mean(TVT_true,train − phys)`, computed directly from the **train copy's own true TVT column** —
+so the output is `phys + offset = phys + mean(TVT_true,train − phys)`, which cancels almost the entire
+reconstruction error whenever that error is close to a per-well constant. This is why it resolves to
+~0.01 ft: not because the physical reconstruction is that precise on its own, but because the correction
+term is calibrated directly against the true answer for what is functionally the same wellbore. We also
+found this is not a single, toggleable code path: the same substitution is implemented **redundantly in
+three independent places** in the inherited pipeline — a standalone postprocessor, a candidate inside the
+gold-calibration stage's own backtest pool, and a third function named (in the original code)
+`_gold_reapply_guarded_contact_override`, called unconditionally after gold-calibration for every blend
+profile. Disabling any one of the three leaves the other two intact; we had to patch all three to get a
+clean reading. We measured the magnitude directly on the three wells in our local development stub (which
+are verbatim copies of specific train wells, used only for local testing): with all three layers active,
+pooled RMSE on those wells is **0.0053 ft**; with all three disabled, the same wells scored by our genuine
+model stack (PF + beam + WARP-blend + physics post-process) give **6.47 ft** — a three-orders-of-magnitude
+gap that leaves no ambiguity about what the mechanism does when it fires.
+
+What this does *not* change: because the override's behavior has been identical and unmodified underneath
+every submission we have made, it cannot explain the *relative* differences between our own variants
+(denoise, the decorrelated ensemble, more seeds, wall-hedge, WARP-blend, physics-pp) — those deltas are
+still honest, since the override runs constantly across all of them. What it *does* mean: our absolute LB
+numbers are not purely attributable to the components we deliberately engineered, we do not know what
+fraction of the real hidden test set (public or private) carries this ID overlap, and — unlike our first,
+narrower framing — this is not merely "a mechanism of unclear magnitude," it is a train/test answer
+substitution whose effect we have now quantified directly. We flag this as prominently as we know how,
+rather than quietly softening the earlier text, because catching our own overclaim with real evidence —
+twice now — is exactly the standard we are holding the rest of this note to.
 
 **Future work (the path to the leaders' 5.2–5.4).** Synthetic pretraining remains the most likely route, but
 §9.1 sharpens the target: a better *noise* model (e.g. a 1D diffusion / neural-SDE fit to the residual) is
@@ -821,13 +1065,18 @@ signal is broadband-unreliable — the gains must come from a better *prior*, le
 The ROGII task decomposes cleanly: the high-frequency TVT wiggle is free (it equals −Z, which is known at
 eval time), and the entire difficulty is a smooth per-well surface trend whose slope-changes occur at
 sub-seismic faults that the self-similar GR log cannot localize (broadband-irreducible error). This is why
-the trivial flat baseline is so strong, why a weak-GR/strong-continuity prior wins, and why 54+ experiments
+the trivial flat baseline is so strong, why a weak-GR/strong-continuity prior wins, and why 60+ experiments
 and 20+ neural architectures — MDN, synthetic pretraining, 2D misfit-SDF, transformers — all cap at the
-isolated-PF level (~11) while the tuned classical pipeline reaches ~7 through its full stack. Our concrete,
-transferable gain came not from new modeling but from *variance reduction* (a decorrelated PF ensemble,
-7.230 → 7.091). We hope the map of *where the signal is and is not* is useful: on this task, measure twice on
-a whole-well holdout, distrust the public LB, and separate the recoverable (the −Z wiggle) from the
-physically unrecoverable (the cross-field surface trend).
+isolated-PF level (~11) while the tuned classical pipeline reaches ~7 through its full stack. Our first
+concrete, transferable gain came not from new modeling but from *variance reduction* (a decorrelated PF
+ensemble, 7.230 → 7.091). A second, larger real-LB gain then came from stacking a decorrelated neural
+corrector with a robust physics post-process, **7.080 → 6.836**, our best submission — paired with a
+controlled real-LB negative result showing this stack does not extend to a third, individually-validated
+correction (§7.2), and a correction to our own earlier causal claim about *why* the first such attempt
+(wall-hedge) failed. We hope the map of *where the signal is and is not* is useful: on this task, measure
+twice on a whole-well holdout, distrust the public LB, separate the recoverable (the −Z wiggle) from the
+physically unrecoverable (the cross-field surface trend) — and even once a gain is real-LB-confirmed, test
+whether it still holds before stacking one more thing on top of it.
 
 ---
 
@@ -850,6 +1099,14 @@ For quick reference, the full list of experiments referenced above, by section:
   signed azimuth; confidence blend; blend-weight sweep.
 - **§8.6 Denoise/external (3):** rotation-band denoise; toolkit mining; lineage analysis.
 - **§8.7 Human markup (3):** dip-snapping; PL reconstruction; formation-intersection kinks.
+- **§7.2 Real-LB stacking/placement confirmation (2):** placement-crossed WARP+physics-pp resubmission ✅
+  (new best 6.836); placement-crossed wall-hedge and 3-lever full-stack resubmission ❌ (both harmful
+  regardless of placement).
+- **§7.2/§7.3 Overfitting and validation-honesty checks (4):** 5-fold grouped CV of the new best (5/5 folds
+  positive, identical hyperparameters every fold) ✅; hedge-on-bare-base vs hedge-on-tuned-combo cross-fit,
+  confirming the hedge collapses to weight 0 once WARP+physics-pp are applied ✅; LSO spatial K-means-block
+  holdout, confirming the gain is not neighbour leakage ✅; isolation-quartile check, confirming isolated
+  wells benefit *more*, not less, from the new combo ✅.
 - **§9 Neural nets (20):** see the architecture table.
 
-**Total: 54+ distinct experiments.**
+**Total: 60+ distinct experiments.**

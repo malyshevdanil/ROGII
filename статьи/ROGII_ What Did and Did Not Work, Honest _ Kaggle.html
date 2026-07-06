@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<!-- saved from url=(0199)https://www.kaggle.com/writeups/juliancamilovilla/what-did-and-did-not-work-honest?_gl=1*wgesk*_ga*MzA0NzU1Njg2LjE3ODEzNTA0Njc.*_ga_T7QHS60L4Q*czE3ODMyNjg3MTAkbzQ3JGcxJHQxNzgzMjcwMDAyJGo1MCRsMCRoMA.. -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>ROGII: What Did and Did Not Work, Honest | Kaggle</title>
+  
+    <meta name="robots" content="index, follow">
+  <meta name="description" content="Tracking the structural surface from GR: an honest particle-filter pipeline and a map of what generalizes (and what doesn&#39;t).">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, minimum-scale=1.0">
+  <meta name="theme-color" content="#008ABC">
+  <script src="./ROGII_ What Did and Did Not Work, Honest _ Kaggle_files/cb=gapi.loaded_0" nonce="" async=""></script><script nonce="" type="text/javascript">
+    window["pageRequestStartTime"] = 1783270052594;
+    window["pageRequestEndTime"] = 1783270052630;
+    window["initialPageLoadStartTime"] = new Date().getTime();
+  </script>
+  <script nonce="" id="gsi-client" src="./ROGII_ What Did and Did Not Work, Honest _ Kaggle_files/client" async="" defer=""></script>
+  <script nonce="">window.KAGGLE_JUPYTERLAB_PATH = "/static/assets/jupyterlab-v4/jupyterlab-index-4903386343906ce4.html";</script>
+  <link rel="preconnect" href="https://www.google-analytics.com/" crossorigin="anonymous"><link rel="preconnect" href="https://stats.g.doubleclick.net/"><link rel="preconnect" href="https://storage.googleapis.com/"><link rel="preconnect" href="https://apis.google.com/">
+    <link href="https://www.kaggle.com/static/images/favicon.ico" rel="shortcut icon" type="image/x-icon" id="dynamic-favicon">
+  <link rel="manifest" href="https://www.kaggle.com/static/json/manifest.json" crossorigin="use-credentials">
+
+
+  <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
+
+  <link href="./ROGII_ What Did and Did Not Work, Honest _ Kaggle_files/css" rel="preload" as="style">
+  <link href="./ROGII_ What Did and Did Not Work, Honest _ Kaggle_files/css2" rel="preload" as="style">
+  <link href="./ROGII_ What Did and Did Not Work, Honest _ Kaggle_files/css" rel="stylesheet" media="all" id="async-google-font-1">
+  <link href="./ROGII_ What Did and Did Not Work, Honest _ Kaggle_files/css2" rel="stylesheet" media="all" id="async-google-font-2">
+  <script nonce="" type="text/javascript">
+    const styleSheetIds = ["async-google-font-1", "async-google-font-2"];
+    styleSheetIds.forEach(function (id) {
+      document.getElementById(id).addEventListener("load", function() {
+        this.media = "all";
+      });
+    });
+  </script>
+
+
+    <link rel="stylesheet" type="text/css" href="./ROGII_ What Did and Did Not Work, Honest _ Kaggle_files/app.css">
+
+  
+    
+ 
+      <script nonce="">
+        try{(function(a,s,y,n,c,h,i,d,e){d=s.createElement("style");
+        d.appendChild(s.createTextNode(""));s.head.appendChild(d);d=d.sheet;
+        y=y.map(x => d.insertRule(x + "{ opacity: 0 !important }"));
+        h.start=1*new Date;h.end=i=function(){y.forEach(x => x<d.cssRules.length ? d.deleteRule(x) : {})};
+        (a[n]=a[n]||[]).hide=h;setTimeout(function(){i();h.end=null},c);h.timeout=c;
+        })(window,document,['.site-header-react__nav'],'dataLayer',2000,{'GTM-52LNT9S':true});}catch(ex){}
+    </script><style id="googleidentityservice_button_styles" nonce="">.qJTHM{-moz-user-select:none;-webkit-user-select:none;-ms-user-select:none;color:#202124;direction:ltr;-webkit-touch-callout:none;font-family:Roboto-Regular,arial,sans-serif;-webkit-font-smoothing:antialiased;font-weight:400;margin:0;overflow:hidden;-webkit-text-size-adjust:100%}.ynRLnc{left:-9999px;position:absolute;top:-9999px}.L6cTce{display:none}.bltWBb{overflow-wrap:break-word;word-break:break-word}.hSRGPd{color:#1a73e8;cursor:pointer;font-weight:500;text-decoration:none}.Bz112c-W3lGp{height:16px;width:16px}.Bz112c-E3DyYd{height:20px;width:20px}.Bz112c-r9oPif{height:24px;width:24px}.Bz112c-u2z5K{height:36px;width:36px}.Bz112c-uaxL4e{border-radius:10px}.LgbsSe-Bz112c{display:block}.S9gUrf-YoZ4jf{border:none;margin:0;padding:0}.S9gUrf-YoZ4jf *{border:none;margin:0;padding:0}.fFW7wc-ibnC6b>.aZ2wEe>div{border-color:#4285f4}.P1ekSe-ZMv3u{-webkit-transition:height .2s linear;transition:height .2s linear}.P1ekSe-ZMv3u>div:first-child{background-color:#1a73e8!important;-webkit-transition:width .3s linear;transition:width .3s linear}.P1ekSe-ZMv3u>div:nth-child(2){background-image:-webkit-gradient(linear,left top,right top,from(rgba(255,255,255,.7)),to(rgba(255,255,255,.7))),-webkit-gradient(linear,left top,right top,from(#1a73e8),to(#1a73e8))!important;background-image:-webkit-linear-gradient(left,rgba(255,255,255,.7),rgba(255,255,255,.7)),-webkit-linear-gradient(left,#1a73e8,#1a73e8)!important;background-image:linear-gradient(90deg,rgba(255,255,255,.7),rgba(255,255,255,.7)),linear-gradient(90deg,#1a73e8,#1a73e8)!important}.P1ekSe-ZMv3u>div:nth-child(3){background-image:-webkit-gradient(linear,left top,right top,from(rgba(255,255,255,.7)),to(rgba(255,255,255,.7))),-webkit-gradient(linear,left top,right top,from(#1a73e8),to(#1a73e8))!important;background-image:-webkit-linear-gradient(left,rgba(255,255,255,.7),rgba(255,255,255,.7)),-webkit-linear-gradient(left,#1a73e8,#1a73e8)!important;background-image:linear-gradient(90deg,rgba(255,255,255,.7),rgba(255,255,255,.7)),linear-gradient(90deg,#1a73e8,#1a73e8)!important}.haAclf{display:inline-block}.nsm7Bb-HzV7m-LgbsSe{border-radius:4px;box-sizing:border-box;-webkit-transition:background-color .218s,border-color .218s;transition:background-color .218s,border-color .218s;-moz-user-select:none;-webkit-user-select:none;-ms-user-select:none;-webkit-appearance:none;background-color:#fff;background-image:none;border:1px solid #dadce0;color:#3c4043;cursor:pointer;font-family:Google Sans,arial,sans-serif;font-size:.875rem;height:40px;letter-spacing:.25px;outline:none;overflow:hidden;padding:0 12px;position:relative;text-align:center;vertical-align:middle;white-space:nowrap;width:auto}@media screen and (-ms-high-contrast:active){.nsm7Bb-HzV7m-LgbsSe{border:2px solid windowText;color:windowText}}@media screen and (preferes-contrast:more){.nsm7Bb-HzV7m-LgbsSe{color:#000}}.nsm7Bb-HzV7m-LgbsSe.pSzOP-SxQuSe{font-size:.875rem;height:32px;letter-spacing:.25px;padding:0 10px}.nsm7Bb-HzV7m-LgbsSe.purZT-SxQuSe{font-size:.6875rem;height:20px;letter-spacing:.3px;padding:0 8px}.nsm7Bb-HzV7m-LgbsSe.Bz112c-LgbsSe{padding:0;width:40px}.nsm7Bb-HzV7m-LgbsSe.Bz112c-LgbsSe.pSzOP-SxQuSe{width:32px}.nsm7Bb-HzV7m-LgbsSe.Bz112c-LgbsSe.purZT-SxQuSe{width:20px}.nsm7Bb-HzV7m-LgbsSe.JGcpL-RbRzK{border-radius:20px}.nsm7Bb-HzV7m-LgbsSe.JGcpL-RbRzK.pSzOP-SxQuSe{border-radius:16px}.nsm7Bb-HzV7m-LgbsSe.JGcpL-RbRzK.purZT-SxQuSe{border-radius:10px}.nsm7Bb-HzV7m-LgbsSe.i5vt6e-to915-Ia7Qfc{border:1px solid #8e918f;background-color:#131314;color:#e3e3e3}.nsm7Bb-HzV7m-LgbsSe.MFS4be-Ia7Qfc{border:none;color:#fff}.nsm7Bb-HzV7m-LgbsSe.MFS4be-v3pZbf-Ia7Qfc{background-color:#1a73e8}.nsm7Bb-HzV7m-LgbsSe.MFS4be-JaPV2b-Ia7Qfc{background-color:#202124;color:#e8eaed}@media screen and (prefers-contrast:more){.nsm7Bb-HzV7m-LgbsSe.MFS4be-JaPV2b-Ia7Qfc{color:#fff}}.nsm7Bb-HzV7m-LgbsSe .nsm7Bb-HzV7m-LgbsSe-Bz112c{height:18px;margin-right:8px;min-width:18px;width:18px}.nsm7Bb-HzV7m-LgbsSe.pSzOP-SxQuSe .nsm7Bb-HzV7m-LgbsSe-Bz112c{height:14px;min-width:14px;width:14px}.nsm7Bb-HzV7m-LgbsSe.purZT-SxQuSe .nsm7Bb-HzV7m-LgbsSe-Bz112c{height:10px;min-width:10px;width:10px}.nsm7Bb-HzV7m-LgbsSe.jVeSEe .nsm7Bb-HzV7m-LgbsSe-Bz112c{margin-left:8px;margin-right:-4px}.nsm7Bb-HzV7m-LgbsSe.Bz112c-LgbsSe .nsm7Bb-HzV7m-LgbsSe-Bz112c{margin:0;padding:10px}.nsm7Bb-HzV7m-LgbsSe.Bz112c-LgbsSe.pSzOP-SxQuSe .nsm7Bb-HzV7m-LgbsSe-Bz112c{padding:8px}.nsm7Bb-HzV7m-LgbsSe.Bz112c-LgbsSe.purZT-SxQuSe .nsm7Bb-HzV7m-LgbsSe-Bz112c{padding:4px}.nsm7Bb-HzV7m-LgbsSe .nsm7Bb-HzV7m-LgbsSe-Bz112c-haAclf{border-top-left-radius:3px;border-bottom-left-radius:3px;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-pack:center;-webkit-justify-content:center;justify-content:center;-webkit-box-align:center;-webkit-align-items:center;align-items:center;background-color:#fff;height:36px;margin-left:-10px;margin-right:12px;min-width:36px;width:36px}.nsm7Bb-HzV7m-LgbsSe .nsm7Bb-HzV7m-LgbsSe-Bz112c-haAclf .nsm7Bb-HzV7m-LgbsSe-Bz112c,.nsm7Bb-HzV7m-LgbsSe.Bz112c-LgbsSe .nsm7Bb-HzV7m-LgbsSe-Bz112c-haAclf .nsm7Bb-HzV7m-LgbsSe-Bz112c{margin:0;padding:0}.nsm7Bb-HzV7m-LgbsSe.pSzOP-SxQuSe .nsm7Bb-HzV7m-LgbsSe-Bz112c-haAclf{height:28px;margin-left:-8px;margin-right:10px;min-width:28px;width:28px}.nsm7Bb-HzV7m-LgbsSe.purZT-SxQuSe .nsm7Bb-HzV7m-LgbsSe-Bz112c-haAclf{height:16px;margin-left:-6px;margin-right:8px;min-width:16px;width:16px}.nsm7Bb-HzV7m-LgbsSe.Bz112c-LgbsSe .nsm7Bb-HzV7m-LgbsSe-Bz112c-haAclf{border-radius:3px;margin-left:2px;margin-right:0;padding:0}.nsm7Bb-HzV7m-LgbsSe.JGcpL-RbRzK .nsm7Bb-HzV7m-LgbsSe-Bz112c-haAclf{border-radius:18px}.nsm7Bb-HzV7m-LgbsSe.pSzOP-SxQuSe.JGcpL-RbRzK .nsm7Bb-HzV7m-LgbsSe-Bz112c-haAclf{border-radius:14px}.nsm7Bb-HzV7m-LgbsSe.purZT-SxQuSe.JGcpL-RbRzK .nsm7Bb-HzV7m-LgbsSe-Bz112c-haAclf{border-radius:8px}.nsm7Bb-HzV7m-LgbsSe .nsm7Bb-HzV7m-LgbsSe-bN97Pc-sM5MNb{display:-webkit-box;display:-webkit-flex;display:flex;-webkit-align-items:center;-webkit-box-align:center;align-items:center;-webkit-flex-direction:row;-webkit-box-orient:horizontal;-webkit-box-direction:normal;flex-direction:row;-webkit-box-pack:justify;-webkit-justify-content:space-between;justify-content:space-between;-webkit-flex-wrap:nowrap;flex-wrap:nowrap;height:100%;position:relative;width:100%}.nsm7Bb-HzV7m-LgbsSe .oXtfBe-l4eHX{-webkit-box-pack:center;-webkit-justify-content:center;justify-content:center}.nsm7Bb-HzV7m-LgbsSe .nsm7Bb-HzV7m-LgbsSe-BPrWId{-webkit-flex-grow:1;-webkit-box-flex:1;flex-grow:1;font-family:Google Sans,arial,sans-serif;font-weight:500;overflow:hidden;text-overflow:ellipsis;vertical-align:top}.nsm7Bb-HzV7m-LgbsSe.purZT-SxQuSe .nsm7Bb-HzV7m-LgbsSe-BPrWId{font-weight:300}.nsm7Bb-HzV7m-LgbsSe .oXtfBe-l4eHX .nsm7Bb-HzV7m-LgbsSe-BPrWId{-webkit-flex-grow:0;-webkit-box-flex:0;flex-grow:0}.nsm7Bb-HzV7m-LgbsSe .nsm7Bb-HzV7m-LgbsSe-MJoBVe{-webkit-transition:background-color .218s;transition:background-color .218s;bottom:0;left:0;position:absolute;right:0;top:0}.nsm7Bb-HzV7m-LgbsSe:focus,.nsm7Bb-HzV7m-LgbsSe:hover{box-shadow:none;border-color:rgb(210,227,252);outline:none}.nsm7Bb-HzV7m-LgbsSe:focus-within{outline:2px solid #00639b;border-color:transparent}.nsm7Bb-HzV7m-LgbsSe:hover .nsm7Bb-HzV7m-LgbsSe-MJoBVe{background:rgba(66,133,244,.08)}.nsm7Bb-HzV7m-LgbsSe:active .nsm7Bb-HzV7m-LgbsSe-MJoBVe,.nsm7Bb-HzV7m-LgbsSe:focus .nsm7Bb-HzV7m-LgbsSe-MJoBVe{background:rgba(66,133,244,.1)}.nsm7Bb-HzV7m-LgbsSe.i5vt6e-to915-Ia7Qfc:hover .nsm7Bb-HzV7m-LgbsSe-MJoBVe{background:rgba(255,255,255,.08)}.nsm7Bb-HzV7m-LgbsSe.i5vt6e-to915-Ia7Qfc:active .nsm7Bb-HzV7m-LgbsSe-MJoBVe,.nsm7Bb-HzV7m-LgbsSe.i5vt6e-to915-Ia7Qfc:focus .nsm7Bb-HzV7m-LgbsSe-MJoBVe{background:rgba(255,255,255,.12)}.nsm7Bb-HzV7m-LgbsSe.MFS4be-Ia7Qfc:hover .nsm7Bb-HzV7m-LgbsSe-MJoBVe{background:rgba(255,255,255,.24)}.nsm7Bb-HzV7m-LgbsSe.MFS4be-Ia7Qfc:active .nsm7Bb-HzV7m-LgbsSe-MJoBVe,.nsm7Bb-HzV7m-LgbsSe.MFS4be-Ia7Qfc:focus .nsm7Bb-HzV7m-LgbsSe-MJoBVe{background:rgba(255,255,255,.32)}.nsm7Bb-HzV7m-LgbsSe .n1UuX-DkfjY{border-radius:50%;display:-webkit-box;display:-webkit-flex;display:flex;height:20px;margin-left:-4px;margin-right:8px;min-width:20px;width:20px}.nsm7Bb-HzV7m-LgbsSe.jVeSEe .nsm7Bb-HzV7m-LgbsSe-BPrWId{font-family:Roboto;font-size:12px;text-align:left}.nsm7Bb-HzV7m-LgbsSe.jVeSEe .nsm7Bb-HzV7m-LgbsSe-BPrWId .K4efff .fmcmS,.nsm7Bb-HzV7m-LgbsSe.jVeSEe .nsm7Bb-HzV7m-LgbsSe-BPrWId .ssJRIf{overflow:hidden;text-overflow:ellipsis}.nsm7Bb-HzV7m-LgbsSe.jVeSEe .nsm7Bb-HzV7m-LgbsSe-BPrWId .K4efff{display:-webkit-box;display:-webkit-flex;display:flex;-webkit-align-items:center;-webkit-box-align:center;align-items:center;color:#5f6368;fill:#5f6368;font-size:11px;font-weight:400}.nsm7Bb-HzV7m-LgbsSe.jVeSEe.i5vt6e-to915-Ia7Qfc .nsm7Bb-HzV7m-LgbsSe-BPrWId .K4efff{color:#c4c7c5;fill:#c4c7c5}.nsm7Bb-HzV7m-LgbsSe.jVeSEe.MFS4be-Ia7Qfc .nsm7Bb-HzV7m-LgbsSe-BPrWId .K4efff{color:#e8eaed;fill:#e8eaed}@media screen and (prefers-contrast:more){.nsm7Bb-HzV7m-LgbsSe.jVeSEe .nsm7Bb-HzV7m-LgbsSe-BPrWId .K4efff,.nsm7Bb-HzV7m-LgbsSe.jVeSEe.MFS4be-Ia7Qfc .nsm7Bb-HzV7m-LgbsSe-BPrWId .K4efff{color:#000;fill:#000}}.nsm7Bb-HzV7m-LgbsSe.jVeSEe .nsm7Bb-HzV7m-LgbsSe-BPrWId .K4efff .Bz112c{height:18px;margin:-3px -3px -3px 2px;min-width:18px;width:18px}.nsm7Bb-HzV7m-LgbsSe.jVeSEe .nsm7Bb-HzV7m-LgbsSe-Bz112c-haAclf{border-top-left-radius:0;border-bottom-left-radius:0;border-top-right-radius:3px;border-bottom-right-radius:3px;margin-left:12px;margin-right:-10px}.nsm7Bb-HzV7m-LgbsSe.jVeSEe.JGcpL-RbRzK .nsm7Bb-HzV7m-LgbsSe-Bz112c-haAclf{border-radius:18px}.L5Fo6c-sM5MNb{border:0;display:block;left:0;position:relative;top:0}.L5Fo6c-bF1uUb{border-radius:4px;bottom:0;cursor:pointer;left:0;position:absolute;right:0;top:0}.L5Fo6c-bF1uUb:focus{border:none;outline:none}sentinel{}</style><style></style>
+    <script nonce="">
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'G-T7QHS60L4Q', {
+            'optimize_id': 'GTM-52LNT9S',
+            'displayFeaturesTask': null,
+            'send_page_view': false,
+            'content_group1': 'WriteUps',
+            'user_properties': {
+                'logged_in': true,
+            }
+        });
+    </script>
+    <script nonce="" async="" src="./ROGII_ What Did and Did Not Work, Honest _ Kaggle_files/js"></script>
+
+
+  
+    
+    <meta name="description" content="Tracking the structural surface from GR: an honest particle-filter pipeline and a map of what generalizes (and what doesn&#39;t).">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://www.kaggle.com//writeups/juliancamilovilla/what-did-and-did-not-work-honest">
+    <meta property="og:title" content="ROGII: What Did and Did Not Work, Honest | Kaggle">
+    <meta property="og:description" content="Tracking the structural surface from GR: an honest particle-filter pipeline and a map of what generalizes (and what doesn&#39;t).">
+        <meta property="og:image" content="https://www.kaggle.com/writeup-links/155178/images/cropped">
+        <meta name="twitter:image" content="https://www.kaggle.com/writeup-links/155178/images/cropped">
+
+    <meta name="twitter:card" content="summary">
+    <meta property="twitter:domain" content="kaggle.com">
+    <meta property="twitter:url" content="https://www.kaggle.com//writeups/juliancamilovilla/what-did-and-did-not-work-honest">
+    <meta name="twitter:title" content="ROGII: What Did and Did Not Work, Honest | Kaggle">
+    <meta name="twitter:description" content="Tracking the structural surface from GR: an honest particle-filter pipeline and a map of what generalizes (and what doesn&#39;t).">
+
+
+
+
+  <meta name="twitter:site" content="@Kaggle"> 
+  
+    
+
+  
+    
+
+  
+    
+
+
+
+    <script nonce="">window['useKaggleAnalytics'] = true;</script>
+
+  <script id="gapi-target" nonce="" src="./ROGII_ What Did and Did Not Work, Honest _ Kaggle_files/api.js.Без названия" defer="" async="" gapi_processed="true"></script>
+  <script nonce="" src="./ROGII_ What Did and Did Not Work, Honest _ Kaggle_files/runtime.js.Без названия"></script>
+  <script nonce="" src="./ROGII_ What Did and Did Not Work, Honest _ Kaggle_files/vendor.js.Без названия"></script>
+  <script nonce="" src="./ROGII_ What Did and Did Not Work, Honest _ Kaggle_files/app.js.Без названия"></script><style id="_goober"> .go1475592160{height:0;}.go1671063245{height:auto;}.go1888806478{display:flex;flex-wrap:wrap;flex-grow:1;}@media (min-width:600px){.go1888806478{flex-grow:initial;min-width:288px;}}.go167266335{background-color:#313131;font-size:0.875rem;line-height:1.43;letter-spacing:0.01071em;color:#fff;align-items:center;padding:6px 16px;border-radius:4px;box-shadow:0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12);}.go3162094071{padding-left:20px;}.go3844575157{background-color:#313131;}.go1725278324{background-color:#43a047;}.go3651055292{background-color:#d32f2f;}.go4215275574{background-color:#ff9800;}.go1930647212{background-color:#2196f3;}.go946087465{display:flex;align-items:center;padding:8px 0;}.go703367398{display:flex;align-items:center;margin-left:auto;padding-left:16px;margin-right:-8px;}.go3963613292{width:100%;position:relative;transform:translateX(0);top:0;right:0;bottom:0;left:0;min-width:288px;}.go1141946668{box-sizing:border-box;display:flex;max-height:100%;position:fixed;z-index:1400;height:auto;width:auto;transition:top 300ms ease 0ms,right 300ms ease 0ms,bottom 300ms ease 0ms,left 300ms ease 0ms,max-width 300ms ease 0ms;pointer-events:none;max-width:calc(100% - 40px);}.go1141946668 .notistack-CollapseWrapper{padding:6px 0px;transition:padding 300ms ease 0ms;}@media (max-width:599.95px){.go1141946668{width:100%;max-width:calc(100% - 32px);}}.go3868796639 .notistack-CollapseWrapper{padding:2px 0px;}.go3118922589{top:14px;flex-direction:column;}.go1453831412{bottom:14px;flex-direction:column-reverse;}.go4027089540{left:20px;}@media (min-width:600px){.go4027089540{align-items:flex-start;}}@media (max-width:599.95px){.go4027089540{left:16px;}}.go2989568495{right:20px;}@media (min-width:600px){.go2989568495{align-items:flex-end;}}@media (max-width:599.95px){.go2989568495{right:16px;}}.go4034260886{left:50%;transform:translateX(-50%);}@media (min-width:600px){.go4034260886{align-items:center;}}</style>
+    <script nonce="" type="text/javascript">
+      window.kaggleStackdriverConfig = {
+        key: 'AIzaSyA4eNqUdRRskJsCZWVz-qL655Xa5JEMreE',
+        projectId: 'kaggle-161607',
+        service: 'web-fe',
+        version: 'ci',
+        userId: '34630893'
+      }
+    </script>
+<style data-styled="active" data-styled-version="6.4.2"></style><link rel="stylesheet" type="text/css" href="./ROGII_ What Did and Did Not Work, Honest _ Kaggle_files/4912.70c86abc3e838bdc.css"><style data-emotion="css-global" data-s=""></style><style data-emotion="css" data-s=""></style></head>
+<body style="background-color: rgb(28, 29, 32);">
+  <div id="root"><nav aria-label="Main Kaggle page navigation" inert="" class="sc-biWTsH sc-clqQRB fRWvqG dleQVr"><div class="sc-hglrMW cKDOTY"><div class="sc-hZhKrD jzEBVF"><div class="sc-cHazmW hwbXxe"><button aria-label="Navigation menu" title="Navigation menu" class="sc-iBjNZB bGduwL google-symbols notranslate">menu</button></div><a href="https://www.kaggle.com/writeups/juliancamilovilla/what-did-and-did-not-work-honest?_gl=1*wgesk*_ga*MzA0NzU1Njg2LjE3ODEzNTA0Njc.*_ga_T7QHS60L4Q*czE3ODMyNjg3MTAkbzQ3JGcxJHQxNzgzMjcwMDAyJGo1MCRsMCRoMA..#site-content" class="sc-dSDPUr ixAKjE">Skip to<br>content</a><div data-testid="kaggle-logo-wrapper" class="sc-Jclpx kOOdLY"><a href="https://www.kaggle.com/" aria-label="Return to Kaggle home page"><img src="./ROGII_ What Did and Did Not Work, Honest _ Kaggle_files/site-logo.svg" alt="Kaggle" class="sc-tIyEa jALJjq"></a></div></div></div><div class="sc-findPx hSJydp"><button class="sc-Jwmfr jsHtZW"><svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink: 0;"><path fill-rule="evenodd" clip-rule="evenodd" d="M20 30L20 16L16 20L16 30L20 30Z" fill="#20BEFF"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M20 20L30 20L30 16L20 16L20 20Z" fill="#20BEFF"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M16 20L20 16L15.937 16L6 16L6 20L16 20Z" fill="#20BEFF"></path><rect x="20" y="16" width="4" height="10" transform="rotate(-180 20 16)" fill="#20BEFF"></rect></svg><span class="sc-dILkzW sc-gGKKzG iNaPtF hmZcDd">Create</span></button></div><div class="sc-lfBCjM dySFdx"><div class="sc-hCXID fIuUmI"><div class="sc-DSdOV bWAwBN"><div class="sc-dwNPMq eELAeC"><div class="sc-hjYznJ hSlpsI"><div class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root sc-dkIoQT dLCgVn css-feqhe6"><div class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedStart css-ipre3h"><span class="google-symbols notranslate MuiIcon-root MuiIcon-fontSizeMedium sc-bYgEKt bpVxIz notranslate css-1jgtvd5" aria-hidden="true" style="margin-right: 8px;">search</span><input aria-invalid="false" autocomplete="off" id=":r2:" placeholder="Search" type="text" class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedStart css-iyhe1a" value=""><fieldset aria-hidden="true" class="MuiOutlinedInput-notchedOutline css-nqlg3w"><legend class="css-ihdtdm"><span class="notranslate">​</span></legend></fieldset></div></div></div></div><ul class="MuiList-root km-list css-1uzmcsd" role="list"><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="Home List Item"><div class="sc-euUkyj cXgshv sc-hGLXNb bCUebD km-listitem--small"><a aria-label="Home" tabindex="0" href="https://www.kaggle.com/" data-click-log-id="home" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-dtvRhV llRLRt" style="min-width: 24px;"><div class="sc-dlgOLa iymbBI"><span class="google-symbols notranslate MuiIcon-root MuiIcon-fontSizeMedium sc-bYgEKt dVcKNL notranslate sc-iusvXA gtIPch css-1jgtvd5" aria-hidden="true" title="Home" aria-label="Home">explore</span></div></div><div class="sc-hCcPtG sc-bitxrY gTYZQg iQsabx"><p class="sc-fFCZOx iZNPId" style="padding-left: 4px;">Home</p></div></div></a></div></li><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="Competitions List Item"><div class="sc-euUkyj cXgshv sc-hGLXNb bCUebD km-listitem--small"><a aria-label="Competitions" tabindex="0" href="https://www.kaggle.com/competitions" data-click-log-id="competitions" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-dtvRhV llRLRt" style="min-width: 24px;"><div class="sc-dlgOLa iymbBI"><span class="google-symbols notranslate MuiIcon-root MuiIcon-fontSizeMedium sc-bYgEKt dVcKNL notranslate sc-iusvXA gtIPch css-1jgtvd5" aria-hidden="true" title="Competitions" aria-label="Competitions">emoji_events</span></div></div><div class="sc-hCcPtG sc-bitxrY gTYZQg iQsabx"><p class="sc-fFCZOx iZNPId" style="padding-left: 4px;">Competitions</p></div></div></a></div></li><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="Benchmarks List Item"><div class="sc-euUkyj cXgshv sc-hGLXNb bCUebD km-listitem--small"><a aria-label="Benchmarks" tabindex="0" href="https://www.kaggle.com/benchmarks" data-click-log-id="benchmarks" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-dtvRhV llRLRt" style="min-width: 24px;"><div class="sc-dlgOLa iymbBI"><span class="google-symbols notranslate MuiIcon-root MuiIcon-fontSizeMedium sc-bYgEKt dVcKNL notranslate sc-iusvXA gtIPch css-1jgtvd5" aria-hidden="true" title="Benchmarks" aria-label="Benchmarks">leaderboard</span></div></div><div class="sc-hCcPtG sc-bitxrY gTYZQg iQsabx"><p class="sc-fFCZOx iZNPId" style="padding-left: 4px;">Benchmarks</p></div></div></a></div></li><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="Game Arena List Item"><div class="sc-euUkyj cXgshv sc-hGLXNb bCUebD km-listitem--small"><a aria-label="Game Arena" tabindex="0" href="https://www.kaggle.com/game-arena" data-click-log-id="game-arena" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-dtvRhV llRLRt" style="min-width: 24px;"><div class="sc-dlgOLa iymbBI"><span class="google-symbols notranslate MuiIcon-root MuiIcon-fontSizeMedium sc-bYgEKt dVcKNL notranslate sc-iusvXA gtIPch css-1jgtvd5" aria-hidden="true" title="Game Arena" aria-label="Game Arena">smart_toy</span></div></div><div class="sc-hCcPtG sc-bitxrY gTYZQg iQsabx"><p class="sc-fFCZOx iZNPId" style="padding-left: 4px;">Game Arena</p></div></div></a></div></li></ul><ul class="MuiList-root km-list css-1uzmcsd" role="list"><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="Data Hub List Item"><div class="sc-euUkyj cXgshv sc-hGLXNb bCUebD km-listitem--small"><a aria-current="false" aria-expanded="false" aria-label="Data Hub" tabindex="0" href="https://www.kaggle.com/writeups/juliancamilovilla/what-did-and-did-not-work-honest?_gl=1*wgesk*_ga*MzA0NzU1Njg2LjE3ODEzNTA0Njc.*_ga_T7QHS60L4Q*czE3ODMyNjg3MTAkbzQ3JGcxJHQxNzgzMjcwMDAyJGo1MCRsMCRoMA..#" data-click-log-id="data-hub" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-dtvRhV llRLRt" style="min-width: 24px;"><div class="sc-dlgOLa iymbBI"><span class="google-symbols notranslate MuiIcon-root MuiIcon-fontSizeMedium sc-bYgEKt dVcKNL notranslate sc-iusvXA gtIPch css-1jgtvd5" aria-hidden="true" title="Data Hub" aria-label="Data Hub">code</span></div></div><div class="sc-hCcPtG sc-bitxrY gTYZQg iQsabx"><p class="sc-fFCZOx iZNPId" style="padding-left: 4px;">Data Hub</p></div></div></a><div class="sc-ilnrqe fdhDmN" style="padding-right: 12px;"><button aria-label="Expand" title="Expand" class="sc-iBjNZB ianyQQ google-symbols notranslate">expand_more</button></div></div></li></ul><ul class="MuiList-root km-list css-1uzmcsd" role="list"><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="More on Kaggle List Item"><div class="sc-euUkyj cXgshv sc-hGLXNb bCUebD km-listitem--small"><a aria-current="false" aria-expanded="true" aria-label="More on Kaggle" tabindex="0" href="https://www.kaggle.com/writeups/juliancamilovilla/what-did-and-did-not-work-honest?_gl=1*wgesk*_ga*MzA0NzU1Njg2LjE3ODEzNTA0Njc.*_ga_T7QHS60L4Q*czE3ODMyNjg3MTAkbzQ3JGcxJHQxNzgzMjcwMDAyJGo1MCRsMCRoMA..#" data-click-log-id="more" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-dtvRhV llRLRt" style="min-width: 24px;"><div class="sc-dlgOLa iymbBI"><span class="google-symbols notranslate MuiIcon-root MuiIcon-fontSizeMedium sc-bYgEKt dVcKNL notranslate sc-iusvXA gtIPch css-1jgtvd5" aria-hidden="true" title="More" aria-label="More">format_list_bulleted</span></div></div><div class="sc-hCcPtG sc-bitxrY gTYZQg iQsabx"><p class="sc-fFCZOx iZNPId" style="padding-left: 4px;">More</p></div></div></a><div class="sc-ilnrqe fdhDmN" style="padding-right: 12px;"><button aria-label="Collapse" title="Collapse" class="sc-iBjNZB ianyQQ google-symbols notranslate">expand_less</button></div></div></li><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="Discussions List Item"><div class="sc-euUkyj cXgshv sc-hGLXNb bCUebD km-listitem--small"><a aria-label="Discussions" tabindex="0" href="https://www.kaggle.com/discussions" data-click-log-id="discussions" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-dtvRhV llRLRt" style="min-width: 24px;"><div class="sc-dlgOLa iymbBI"><span class="google-symbols notranslate MuiIcon-root MuiIcon-fontSizeMedium sc-bYgEKt dVcKNL notranslate sc-iusvXA gtIPch css-1jgtvd5" aria-hidden="true" title="Discussions" aria-label="Discussions">comment</span></div></div><div class="sc-hCcPtG sc-bitxrY gTYZQg iQsabx"><p class="sc-fFCZOx iZNPId" style="padding-left: 4px;">Discussions</p></div></div></a></div></li><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="Kaggle Learn List Item"><div class="sc-euUkyj cXgshv sc-hGLXNb bCUebD km-listitem--small"><a aria-label="Kaggle Learn" tabindex="0" href="https://www.kaggle.com/learn" data-click-log-id="learn" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-dtvRhV llRLRt" style="min-width: 24px;"><div class="sc-dlgOLa iymbBI"><span class="google-symbols notranslate MuiIcon-root MuiIcon-fontSizeMedium sc-bYgEKt dVcKNL notranslate sc-iusvXA gtIPch css-1jgtvd5" aria-hidden="true" title="Learn" aria-label="Learn">school</span></div></div><div class="sc-hCcPtG sc-bitxrY gTYZQg iQsabx"><p class="sc-fFCZOx iZNPId" style="padding-left: 4px;">Learn</p></div></div></a></div></li><div class="sc-gVJhcH gymogj"><div class="sc-hJpFng cRusut"></div></div><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="Kaggle Rankings List Item"><div class="sc-euUkyj cXgshv sc-likWDx hIoMMp km-listitem--dense"><a aria-label="Kaggle Rankings" tabindex="0" href="https://www.kaggle.com/rankings" data-click-log-id="kaggle-rankings" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-hCcPtG sc-bitxrY gTYZQg iQsabx"><p class="sc-fFCZOx iZNPId">Kaggle Rankings</p></div></div></a></div></li><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="Progression List Item"><div class="sc-euUkyj cXgshv sc-likWDx hIoMMp km-listitem--dense"><a aria-label="Progression" tabindex="0" href="https://www.kaggle.com/progression" data-click-log-id="progression" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-hCcPtG sc-bitxrY gTYZQg iQsabx"><p class="sc-fFCZOx iZNPId">Progression</p></div></div></a></div></li><div class="sc-gVJhcH gymogj"><div class="sc-hJpFng cRusut"></div></div><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="Documentation List Item"><div class="sc-euUkyj cXgshv sc-likWDx hIoMMp km-listitem--dense"><a aria-label="Documentation" tabindex="0" href="https://www.kaggle.com/docs" data-click-log-id="documentation" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-hCcPtG sc-bitxrY gTYZQg iQsabx"><p class="sc-fFCZOx iZNPId">Documentation</p></div></div></a></div></li><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="Blog List Item"><div class="sc-euUkyj cXgshv sc-likWDx hIoMMp km-listitem--dense"><a aria-label="Blog" tabindex="0" href="https://www.kaggle.com/blog" data-click-log-id="blog" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-hCcPtG sc-bitxrY gTYZQg iQsabx"><p class="sc-fFCZOx iZNPId">Blog</p></div></div></a></div></li><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="Host a Competition List Item"><div class="sc-euUkyj cXgshv sc-likWDx hIoMMp km-listitem--dense"><a aria-label="Host a Competition" tabindex="0" href="https://www.kaggle.com/c/about/host" data-click-log-id="host-a-competition" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-hCcPtG sc-bitxrY gTYZQg iQsabx"><p class="sc-fFCZOx iZNPId">Host a Competition</p></div></div></a></div></li><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="Research Grants List Item"><div class="sc-euUkyj cXgshv sc-likWDx hIoMMp km-listitem--dense"><a aria-label="Research Grants" tabindex="0" href="https://www.kaggle.com/research-grants" data-click-log-id="research-grants" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-hCcPtG sc-bitxrY gTYZQg iQsabx"><p class="sc-fFCZOx iZNPId">Research Grants</p></div></div></a></div></li><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="Educator Resources List Item"><div class="sc-euUkyj cXgshv sc-likWDx hIoMMp km-listitem--dense"><a aria-label="Educator Resources" tabindex="0" href="https://www.kaggle.com/edu" data-click-log-id="educator-resources" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-hCcPtG sc-bitxrY gTYZQg iQsabx"><p class="sc-fFCZOx iZNPId">Educator Resources</p></div></div></a></div></li><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="Support/Contact List Item"><div class="sc-euUkyj cXgshv sc-likWDx hIoMMp km-listitem--dense"><a aria-label="Support/Contact" tabindex="0" href="https://www.kaggle.com/contact" data-click-log-id="supportcontact" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-hCcPtG sc-bitxrY gTYZQg iQsabx"><p class="sc-fFCZOx iZNPId">Support/Contact</p></div></div></a></div></li><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="Community Guidelines List Item"><div class="sc-euUkyj cXgshv sc-likWDx hIoMMp km-listitem--dense"><a aria-label="Community Guidelines" tabindex="0" href="https://www.kaggle.com/community-guidelines" data-click-log-id="community-guidelines" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-hCcPtG sc-bitxrY gTYZQg iQsabx"><p class="sc-fFCZOx iZNPId">Community Guidelines</p></div></div></a></div></li><div class="sc-gVJhcH gymogj"><div class="sc-hJpFng cRusut"></div></div><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="Team List Item"><div class="sc-euUkyj cXgshv sc-likWDx hIoMMp km-listitem--dense"><a aria-label="Team" tabindex="0" href="https://www.kaggle.com/about/team" data-click-log-id="team" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-hCcPtG sc-bitxrY gTYZQg iQsabx"><p class="sc-fFCZOx iZNPId">Team</p></div></div></a></div></li><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="Terms List Item"><div class="sc-euUkyj cXgshv sc-likWDx hIoMMp km-listitem--dense"><a aria-label="Terms" tabindex="0" href="https://www.kaggle.com/terms" data-click-log-id="terms" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-hCcPtG sc-bitxrY gTYZQg iQsabx"><p class="sc-fFCZOx iZNPId">Terms</p></div></div></a></div></li><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="Privacy List Item"><div class="sc-euUkyj cXgshv sc-likWDx hIoMMp km-listitem--dense"><a aria-label="Privacy" tabindex="0" href="https://www.kaggle.com/privacy" data-click-log-id="privacy" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-hCcPtG sc-bitxrY gTYZQg iQsabx"><p class="sc-fFCZOx iZNPId">Privacy</p></div></div></a></div></li></ul></div><div><div role="separator" class="sc-khYboC eRaHXH sc-BiJvk kwmcLw"></div><ul><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="Your Work List Item"><div class="sc-euUkyj cXgshv sc-hGLXNb bCUebD km-listitem--small"><a aria-label="Your Work" tabindex="0" href="https://www.kaggle.com/work" data-click-log-id="your-work" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-dtvRhV llRLRt" style="min-width: 24px;"><div class="sc-dlgOLa iymbBI"><span class="google-symbols notranslate MuiIcon-root MuiIcon-fontSizeMedium sc-bYgEKt dVcKNL notranslate sc-iusvXA gtIPch css-1jgtvd5" aria-hidden="true" title="Your Work" aria-label="Your Work">note_alt</span></div></div><div class="sc-hCcPtG sc-bitxrY gTYZQg iQsabx"><p class="sc-fFCZOx iZNPId" style="padding-left: 4px;">Your Work</p></div></div></a><div class="sc-ilnrqe fdhDmN" style="padding-right: 12px;"><button aria-label="Collapse Your Work" title="Collapse" class="sc-iBjNZB ianyQQ google-symbols notranslate" aria-expanded="true">expand_less</button></div></div></li><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="Collapse Viewed List Item"><div class="sc-euUkyj cXgshv sc-hGLXNb bCUebD km-listitem--small"><a aria-expanded="true" aria-label="Collapse Viewed" tabindex="0" href="https://www.kaggle.com/writeups/juliancamilovilla/what-did-and-did-not-work-honest?_gl=1*wgesk*_ga*MzA0NzU1Njg2LjE3ODEzNTA0Njc.*_ga_T7QHS60L4Q*czE3ODMyNjg3MTAkbzQ3JGcxJHQxNzgzMjcwMDAyJGo1MCRsMCRoMA..#" data-click-log-id="viewed" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-dtvRhV llRLRt" style="min-width: 24px;"><div class="sc-dlgOLa iymbBI"><span class="google-symbols notranslate MuiIcon-root MuiIcon-fontSizeMedium sc-bYgEKt dVcKNL notranslate sc-iusvXA gtIPch css-1jgtvd5" aria-hidden="true" style="visibility: hidden;">code</span></div></div><div class="sc-hCcPtG sc-bitxrY gTYZQg iQsabx"><p class="sc-fFCZOx iZNPId" style="padding-left: 4px;">Viewed</p></div></div></a><div class="sc-ilnrqe fdhDmN" style="padding-right: 12px;"><button aria-label="Collapse Viewed" title="Collapse Viewed" class="sc-iBjNZB ianyQQ google-symbols notranslate">expand_less</button></div></div></li><li class="sc-fUplsD lgRrvV"><ul class="MuiList-root km-list sc-cvtUcm jHIajL css-1uzmcsd" role="list"><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="ROGII: What Did and Did Not Work, Honest List Item"><div class="sc-euUkyj cXgshv sc-bTZKdb gpsALw km-listitem--dense"><a aria-label="ROGII: What Did and Did Not Work, Honest" tabindex="0" href="https://www.kaggle.com/writeups/juliancamilovilla/what-did-and-did-not-work-honest" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-dtvRhV llRLRt"><div class="sc-dlgOLa iymbBI"><img src="./ROGII_ What Did and Did Not Work, Honest _ Kaggle_files/default-thumb.png" alt="" width="20" height="20" class="sc-fTpUzR eXJWwY"></div></div><div class="sc-hCcPtG sc-bitxrY iAzhEW iQsabx"><p class="sc-fFCZOx sc-hRoixq iZNPId ulIIt">ROGII: What Did and Did Not Work, Honest</p></div></div></a></div></li><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="ROGII - Wellbore Geology Prediction List Item"><div class="sc-euUkyj cXgshv sc-bTZKdb gpsALw km-listitem--dense"><a aria-label="ROGII - Wellbore Geology Prediction" tabindex="0" href="https://www.kaggle.com/competitions/rogii-wellbore-geology-prediction" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-dtvRhV llRLRt"><div class="sc-dlgOLa iymbBI"><img src="./ROGII_ What Did and Did Not Work, Honest _ Kaggle_files/thumb76_76.png" alt="" width="20" height="20" class="sc-fTpUzR pvwDw"></div></div><div class="sc-hCcPtG sc-bitxrY iAzhEW iQsabx"><p class="sc-fFCZOx sc-hRoixq iZNPId ulIIt">ROGII - Wellbore Geology Prediction</p></div></div></a></div></li><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="notebookfdc9043238 List Item"><div class="sc-euUkyj cXgshv sc-bTZKdb gpsALw km-listitem--dense"><a aria-label="notebookfdc9043238" tabindex="0" href="https://www.kaggle.com/code/malyshevdanil/notebookfdc9043238" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-dtvRhV llRLRt"><div class="sc-dlgOLa iymbBI"><img src="./ROGII_ What Did and Did Not Work, Honest _ Kaggle_files/default-thumb.png" alt="" width="20" height="20" class="sc-fTpUzR eXJWwY"></div></div><div class="sc-hCcPtG sc-bitxrY iAzhEW iQsabx"><p class="sc-fFCZOx sc-hRoixq iZNPId ulIIt">notebookfdc9043238</p></div></div></a></div></li><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="How to submit your Writeup for the Working Note Award List Item"><div class="sc-euUkyj cXgshv sc-bTZKdb gpsALw km-listitem--dense"><a aria-label="How to submit your Writeup for the Working Note Award" tabindex="0" href="https://www.kaggle.com/competitions/rogii-wellbore-geology-prediction/discussion/716699" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-dtvRhV llRLRt"><div class="sc-dlgOLa iymbBI"><img src="./ROGII_ What Did and Did Not Work, Honest _ Kaggle_files/19579895-kg.jpg" alt="" width="20" height="20" class="sc-fTpUzR eXJWwY"></div></div><div class="sc-hCcPtG sc-bitxrY iAzhEW iQsabx"><p class="sc-fFCZOx sc-hRoixq iZNPId ulIIt">How to submit your Writeup for the Working Note Award</p></div></div></a></div></li><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="ROGII Wellbore Prediction: Anchors, GR Alignment, and Guarded Geosteering List Item"><div class="sc-euUkyj cXgshv sc-bTZKdb gpsALw km-listitem--dense"><a aria-label="ROGII Wellbore Prediction: Anchors, GR Alignment, and Guarded Geosteering" tabindex="0" href="https://www.kaggle.com/writeups/foysalemonshanto/rogii-wellbore-prediction-anchors-gr-alignment" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-dtvRhV llRLRt"><div class="sc-dlgOLa iymbBI"><img src="./ROGII_ What Did and Did Not Work, Honest _ Kaggle_files/27966974-kg.png" alt="" width="20" height="20" class="sc-fTpUzR eXJWwY"></div></div><div class="sc-hCcPtG sc-bitxrY iAzhEW iQsabx"><p class="sc-fFCZOx sc-hRoixq iZNPId ulIIt">ROGII Wellbore Prediction: Anchors, GR Alignment, and Guarded Geosteering</p></div></div></a></div></li></ul></li><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="Collapse Edited List Item"><div class="sc-euUkyj cXgshv sc-hGLXNb bCUebD km-listitem--small"><a aria-expanded="true" aria-label="Collapse Edited" tabindex="0" href="https://www.kaggle.com/writeups/juliancamilovilla/what-did-and-did-not-work-honest?_gl=1*wgesk*_ga*MzA0NzU1Njg2LjE3ODEzNTA0Njc.*_ga_T7QHS60L4Q*czE3ODMyNjg3MTAkbzQ3JGcxJHQxNzgzMjcwMDAyJGo1MCRsMCRoMA..#" data-click-log-id="edited" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-dtvRhV llRLRt" style="min-width: 24px;"><div class="sc-dlgOLa iymbBI"><span class="google-symbols notranslate MuiIcon-root MuiIcon-fontSizeMedium sc-bYgEKt dVcKNL notranslate sc-iusvXA gtIPch css-1jgtvd5" aria-hidden="true" style="visibility: hidden;">code</span></div></div><div class="sc-hCcPtG sc-bitxrY gTYZQg iQsabx"><p class="sc-fFCZOx iZNPId" style="padding-left: 4px;">Edited</p></div></div></a><div class="sc-ilnrqe fdhDmN" style="padding-right: 12px;"><button aria-label="Collapse Edited" title="Collapse Edited" class="sc-iBjNZB ianyQQ google-symbols notranslate">expand_less</button></div></div></li><li class="sc-fUplsD lgRrvV"><ul class="MuiList-root km-list sc-cvtUcm jHIajL css-1uzmcsd" role="list"><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="notebookfdc9043238 List Item"><div class="sc-euUkyj cXgshv sc-bTZKdb gpsALw km-listitem--dense"><a aria-label="notebookfdc9043238" tabindex="0" href="https://www.kaggle.com/code/malyshevdanil/notebookfdc9043238" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-dtvRhV llRLRt"><div class="sc-dlgOLa iymbBI"><img src="./ROGII_ What Did and Did Not Work, Honest _ Kaggle_files/default-thumb.png" alt="" width="20" height="20" class="sc-fTpUzR eXJWwY"></div></div><div class="sc-hCcPtG sc-bitxrY iAzhEW iQsabx"><p class="sc-fFCZOx sc-hRoixq iZNPId ulIIt">notebookfdc9043238</p></div></div></a></div></li><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="notebook08801f97f9 List Item"><div class="sc-euUkyj cXgshv sc-bTZKdb gpsALw km-listitem--dense"><a aria-label="notebook08801f97f9" tabindex="0" href="https://www.kaggle.com/code/malyshevdanil/notebook08801f97f9" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-dtvRhV llRLRt"><div class="sc-dlgOLa iymbBI"><img src="./ROGII_ What Did and Did Not Work, Honest _ Kaggle_files/default-thumb.png" alt="" width="20" height="20" class="sc-fTpUzR eXJWwY"></div></div><div class="sc-hCcPtG sc-bitxrY iAzhEW iQsabx"><p class="sc-fFCZOx sc-hRoixq iZNPId ulIIt">notebook08801f97f9</p></div></div></a></div></li><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="notebook77d07f5a58 List Item"><div class="sc-euUkyj cXgshv sc-bTZKdb gpsALw km-listitem--dense"><a aria-label="notebook77d07f5a58" tabindex="0" href="https://www.kaggle.com/code/malyshevdanil/notebook77d07f5a58" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-dtvRhV llRLRt"><div class="sc-dlgOLa iymbBI"><img src="./ROGII_ What Did and Did Not Work, Honest _ Kaggle_files/default-thumb.png" alt="" width="20" height="20" class="sc-fTpUzR eXJWwY"></div></div><div class="sc-hCcPtG sc-bitxrY iAzhEW iQsabx"><p class="sc-fFCZOx sc-hRoixq iZNPId ulIIt">notebook77d07f5a58</p></div></div></a></div></li><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="neironnetw List Item"><div class="sc-euUkyj cXgshv sc-bTZKdb gpsALw km-listitem--dense"><a aria-label="neironnetw" tabindex="0" href="https://www.kaggle.com/code/malyshevdanil/neironnetw" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-dtvRhV llRLRt"><div class="sc-dlgOLa iymbBI"><img src="./ROGII_ What Did and Did Not Work, Honest _ Kaggle_files/default-thumb.png" alt="" width="20" height="20" class="sc-fTpUzR eXJWwY"></div></div><div class="sc-hCcPtG sc-bitxrY iAzhEW iQsabx"><p class="sc-fFCZOx sc-hRoixq iZNPId ulIIt">neironnetw</p></div></div></a></div></li><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="notebook966d61eee3 List Item"><div class="sc-euUkyj cXgshv sc-bTZKdb gpsALw km-listitem--dense"><a aria-label="notebook966d61eee3" tabindex="0" href="https://www.kaggle.com/code/malyshevdanil/notebook966d61eee3" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-dtvRhV llRLRt"><div class="sc-dlgOLa iymbBI"><img src="./ROGII_ What Did and Did Not Work, Honest _ Kaggle_files/default-thumb.png" alt="" width="20" height="20" class="sc-fTpUzR eXJWwY"></div></div><div class="sc-hCcPtG sc-bitxrY iAzhEW iQsabx"><p class="sc-fFCZOx sc-hRoixq iZNPId ulIIt">notebook966d61eee3</p></div></div></a></div></li></ul></li></ul></div></div><div class="sc-geRwcS elybkM"><button class="sc-locMLe bJqkju"><div class="sc-unmwu fvUTrm"><span class="google-symbols notranslate MuiIcon-root MuiIcon-fontSizeMedium sc-bYgEKt caGTwn notranslate sc-iPjDwf kOVcyX css-1jgtvd5" aria-hidden="true" aria-label="Open Active Events dialog">auto_awesome_motion</span><div class="sc-eVCfPg gGeipj">2</div></div><p class="sc-folSZX sc-kVYSvN gZGcaN gJuThF">View Active Events</p></button></div></div></nav><nav aria-label="Main menu, search and your account" class="sc-hYYjdK hatzUt"><div class="sc-hKyxtL izPPzR"><div class="sc-hZhKrD jzEBVF"><div class="sc-cHazmW hwbXxe"><button aria-label="Navigation menu" title="Navigation menu" class="sc-iBjNZB bGduwL google-symbols notranslate">menu</button></div><a href="https://www.kaggle.com/writeups/juliancamilovilla/what-did-and-did-not-work-honest?_gl=1*wgesk*_ga*MzA0NzU1Njg2LjE3ODEzNTA0Njc.*_ga_T7QHS60L4Q*czE3ODMyNjg3MTAkbzQ3JGcxJHQxNzgzMjcwMDAyJGo1MCRsMCRoMA..#site-content" class="sc-dSDPUr ixAKjE">Skip to<br>content</a><div data-testid="kaggle-logo-wrapper" class="sc-Jclpx kOOdLY"><a href="https://www.kaggle.com/" aria-label="Return to Kaggle home page"><img src="./ROGII_ What Did and Did Not Work, Honest _ Kaggle_files/site-logo.svg" alt="Kaggle" class="sc-tIyEa jALJjq"></a></div></div></div><div class="sc-edgaEG jDoSdO"><div class="sc-jlAnuY dZmtsV"></div><div class="sc-iXaBKZ bLlZsj"><div class="sc-fyzlkC gAkhdh"><div class="sc-iXuCAT OVKCZ"><div class="sc-kmYGLm hooIHD"><div class="sc-ZWrTk dOIWOs"></div><div class="sc-iIvZUO ebfLHz sc-gJaedx gwRoqn" aria-label="Malyshev Danil" role="button" tabindex="0"><div data-testid="avatar-image" title="Malyshev Danil" class="sc-gsdCXR hgbFAN" style="background-image: url(&quot;https://storage.googleapis.com/kaggle-avatars/thumbnails/default-thumb.png&quot;);"></div><svg width="32" height="32" viewBox="0 0 32 32"><circle r="15" cx="16" cy="16" fill="none" stroke-width="2" style="stroke: rgb(95, 99, 104);"></circle><circle r="15" cx="16" cy="16" fill="none" stroke-width="2" style="stroke: rgb(32, 190, 255);"></circle></svg></div></div></div></div></div></div></nav><div id="site-content" class="sc-cjeGuL iXkhOO legacy-less-dark-theme" role="main"><div class="sc-bAoahh ldSmbP"></div><div><div height="1px" class="sc-BlSCl cpQduB"></div><div class="sc-jXCnqn Vhmbp"><div class="sc-iMRniJ bGKIue" inert=""><div class="sc-donJkS kvBIET"><span class="sc-bqqMSY sc-glFXrH icDQHb jiHGZU">ROGII: What Did and Did Not Work, Honest</span></div></div></div><div role="separator" class="sc-khYboC dTnicw sc-bpCmCc eXPMwz"></div><div class="sc-kNYukV bPXZrh" style="padding-top: 0px;"><div class="sc-hWJtyg dQZslb"><div class="sc-fMvFCd gLPPZv" style="margin-top: 40px;"><h1 class="sc-jrIDTr sc-cPdrvo fGpszN hPXRPW">ROGII: What Did and Did Not Work, Honest</h1><p class="sc-fFCZOx sc-fA-DgHn bPqiLa ezrAlZ">Tracking the structural surface from GR: an honest particle-filter pipeline and a map of what generalizes (and what doesn't).</p><div class="sc-dAueUm jEQvZb"><p class="sc-bjLslk sc-cDkSAy kXtakj glfdPN">Project Writeup · Jul 4, 2026</p></div></div><div class="sc-bMalKH kyDdyO"><div class="sc-jLZMNx jXFCPI"><div class="sc-kedHcO bcanef"><div class="sc-hzKprc iqwVvv"><div class="sc-ervvfz gWScRv"><div class="sc-gCBcXo eyPdeJ fullscreen-button-wrapper"><button aria-label="Open Fullscreen Viewer" title="Open Fullscreen Viewer" class="sc-iBjNZB dbestb google-symbols notranslate sc-gvUPKH RTynA">fullscreen</button></div><div class="sc-bzTQbn jxaxBV"><img src="./ROGII_ What Did and Did Not Work, Honest _ Kaggle_files/cropped" alt="" style="object-fit: contain; width: 101%; height: 101%;"></div></div></div></div><div class="sc-dFBygw jHODdG"><h2 data-original-level="1">Reading the Structural Surface: an Honest Particle-Filter Pipeline for Wellbore TVT, and What Did and Did Not Transfer</h2>
+<p><em>Working Note — ROGII Wellbore Geology Prediction (Kaggle).</em><br>
+<strong>Author:</strong> Julian Camilo Villa Duque.</p>
+<hr>
+<h3 data-original-level="2">The problem in plain terms (a 60-second primer)</h3>
+<p><strong>Geosteering</strong> means steering a horizontal well to stay inside a thin target rock layer while drilling.<br>
+The well drops vertically, curves to horizontal, and then runs along the layer for thousands of feet. The<br>
+rock's <strong>gamma-ray (GR)</strong> log is a fingerprint of <em>which</em> layer the bit is in; a nearby vertical<br>
+<strong>type-well</strong> gives the reference mapping <code>GR → TVT</code> (which GR pattern corresponds to which stratigraphic<br>
+depth).</p>
+<p><strong>What we predict.</strong> For each 1-ft step along the horizontal, the target is <strong>TVT — the bit's
+stratigraphic position</strong> (where it sits within the rock column). TVT is given only up to a<br>
+<strong>Prediction-Start (PS)</strong> point; past PS it is hidden and must be predicted from the GR trace and the<br>
+type-well. The score is the RMSE of the predicted TVT.</p>
+<p><img src="./ROGII_ What Did and Did Not Work, Honest _ Kaggle_files/inbox_23131100_4fb28f80963a679d9722b8236a471d6d_well_geometry.png" alt="Geosteering cross-section: a horizontal well steered inside a target layer; predict its stratigraphic position TVT past the PS point."></p>
+<p><em>Figure 0 — The setup. A horizontal well is steered inside a target layer (orange). Its map position, its
+true vertical depth <code>Z</code>, and its <code>GR</code> are known everywhere; its stratigraphic position <code>TVT</code> is known only
+up to the PS point and must be predicted afterward (red zone), by matching the <code>GR</code> trace against the
+vertical type-well.</em></p>
+<p><strong>What is measured at each point (and what is known at test time):</strong></p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>What it is</th>
+<th>Known at test?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>MD</code></td>
+<td>distance drilled along the well (1-ft steps)</td>
+<td>yes, always</td>
+</tr>
+<tr>
+<td><code>X, Y</code></td>
+<td>map position (plan view)</td>
+<td>yes, always</td>
+</tr>
+<tr>
+<td><code>Z</code></td>
+<td>true vertical depth (TVD)</td>
+<td>yes — the whole lateral</td>
+</tr>
+<tr>
+<td><code>GR</code></td>
+<td>gamma-ray (rock radioactivity) — the layer "fingerprint"</td>
+<td>yes (~29% missing)</td>
+</tr>
+<tr>
+<td><code>TVT</code></td>
+<td>the bit's stratigraphic position = <strong>the target</strong></td>
+<td>only up to PS; hidden after</td>
+</tr>
+<tr>
+<td>type-well</td>
+<td>vertical reference: <code>GR(TVT)</code> + geology</td>
+<td>yes, always</td>
+</tr>
+<tr>
+<td><code>ANCC…BUDA</code></td>
+<td>formation-top depths (the structural surface)</td>
+<td><strong>train only</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>The one identity that makes it tractable:</strong> <code>TVT = S − Z</code>, where <code>S = TVT + Z</code> is the smooth<br>
+<strong>structural surface</strong> (it changes slowly as the layer dips). Since <code>Z</code> is known along the whole lateral,<br>
+predicting the smooth <code>S</code> and subtracting the known <code>Z</code> is far easier than predicting the oscillating<br>
+<code>TVT</code> directly — the backbone of everything below.</p>
+<hr>
+<h3 data-original-level="2">Abstract</h3>
+<p>I predict True Vertical Thickness (TVT) along the un-logged tail of a horizontal well from the<br>
+gamma-ray (GR) log. My final pipeline is a <strong>sequential particle filter (PF)</strong> that tracks the smooth<br>
+structural surface <code>S = TVT + Z</code> and a local dip, weighted by GR likelihood against the type-well,<br>
+augmented by a confidence-gated spatial prior, a physics post-process, a gradient-boosted meta-layer,<br>
+and a decorrelated beam tracker (public LB <strong>7.72</strong>). This note is deliberately weighted toward<br>
+<strong>what I learned and what failed</strong>, because on this task the negative results are where the value is.<br>
+My headline conclusions: (1) the target reduces to a per-well offset plus a piecewise dip read off the<br>
+type-well, and the six "formation" columns are a <strong>single surface</strong> with constant offsets, not six<br>
+degrees of freedom; (2) the hard part is a <strong>bimodal stratigraphic datum</strong> on a minority of wells that<br>
+is largely irreducible; (3) the disciplined validation lesson — <strong>only distribution-shift hold-outs are
+trustworthy, and run-to-run PF seed variance (~0.1 ft) swamps most "improvements"</strong> — is what kept me<br>
+honest; and (4) a broad sweep of plausible additions (learned residual correctors, DTW/NCC matchers, a<br>
+second "decorrelated" PF, richer formation features, more training data, and a bimodal heel-calibration<br>
+hedge) <strong>did not transfer</strong>, for reasons that line up with the community's own findings. I report the<br>
+per-component contribution of everything that did work, and I am candid that my result sits in the<br>
+public fork cluster rather than at the board heads.</p>
+<p><em>A note on scope: I share the reasoning, the data insights, and every negative result in full — that is
+where the community value lies. I describe the architecture and each component's quantified
+contribution; exact features and constants are omitted while the competition is live and will be
+provided to the Sponsor with the reproducible solution as required.</em></p>
+<hr>
+<h3 data-original-level="2">1. The task, and the physical identity it reduces to (Criterion 3)</h3>
+<p>Each well is a horizontal trajectory with <code>MD, X, Y, Z, GR</code>, a known <code>TVT_input</code> up to a<br>
+prediction-start point, and a vertical type-well (GR vs TVT). I predict TVT on the hidden tail, where<br>
+<code>X/Y/Z</code> are known. The metric is pooled row-wise RMSE.</p>
+<p>Two physical facts shaped everything:</p>
+<ul>
+<li><strong><code>S = TVT + Z</code> is a smooth structural surface.</strong> Since Z is known on the tail, predicting the smooth<br>
+<code>S</code> and recovering <code>TVT = S − Z</code> is far better-posed than predicting the oscillating TVT directly.<br>
+The task becomes tracking a slowly-varying surface plus a dip.</li>
+<li><strong><code>TVT = surface − Z + b_well</code>, with <code>b_well</code> constant per well</strong> (residual std ≈ 0.006 ft). The<br>
+offset is pinned by the heel; the surface and its dip are what must be read. I build every component<br>
+in these terms, which keeps the solution a physically-meaningful interpretation rather than a<br>
+metric-optimizer.</li>
+</ul>
+<p><img src="./ROGII_ What Did and Did Not Work, Honest _ Kaggle_files/inbox_23131100_1f9297a5da531503214b30905c7efdbe_s_tvt_z.png" alt="Predict the smooth structural surface S = TVT + Z and recover TVT = S - Z, since Z is known on the tail."></p>
+<p><em>Figure 1 — The structural surface <code>S = TVT + Z</code> is smooth and the well's <code>Z</code> (TVD) is known everywhere,
+so predicting <code>S</code> and subtracting the known <code>Z</code> is far better-posed than predicting the oscillating <code>TVT</code>
+directly. Every component of my pipeline is expressed in terms of this surface and its dip.</em></p>
+<p>I treat these as community-established (franticXu, Tabish, pilkwang, souldrive) and take no credit for<br>
+them; my contribution is the pipeline and the map of what is and is not recoverable.</p>
+<hr>
+<h3 data-original-level="2">2. Insights about the data and the wells (Criterion 2)</h3>
+<p><strong>2.1 The six "formation" columns are one surface, not six.</strong> <code>ANCC, ASTNU, ASTNL, EGFDU, EGFDL, BUDA</code><br>
+collapse to one base surface plus five constant per-well offsets (layer-thickness std &lt; 0.01 ft) — one<br>
+degree of freedom, derived from the type-well's TVT boundaries, not measured 3D surfaces. This is why<br>
+(2.5) my attempt to use all six as independent structural priors added nothing over one.</p>
+<p><strong>2.2 The columns are absent at test.</strong> Train wells carry the six surfaces and TVT; <strong>test wells ship
+with only <code>MD, X, Y, Z, GR, TVT_input</code>.</strong> Any structural prior must therefore be <em>imputed from offset
+wells</em>, not read from the well's own columns — a subtlety that silently invalidates otherwise-attractive<br>
+features (I learned this the hard way, §5).</p>
+<p><strong>2.3 The recoverable/irreducible split.</strong> A calibrated oracle ladder (fit the simplest shape to the<br>
+true tail) reads roughly: carry-last ~16, best per-well offset ~9, best per-well line ~6.6, robust<br>
+smooth fit ~3.0. The public fork cluster (~7.2) has captured offset + dominant slope; the recoverable<br>
+floor for the median well is ~3–5 ft. So the gap below the cluster is a <strong>matching-quality</strong> problem on<br>
+the median wells, not a wall. (Ladder and framing after Georgy Mamarin's public diagnostic.)</p>
+<p><img src="./ROGII_ What Did and Did Not Work, Honest _ Kaggle_files/inbox_23131100_108f0b54b35bd24c3cb7f6da145c855d_oracle_ladder.png" alt="Oracle ladder: carry-last ~16, best offset ~9, best line ~6.6, robust smooth ~3.0, with the honest public-LB markers"></p>
+<p>*Figure 2 — The recoverable / irreducible map. <strong>Bars</strong> are train oracle ceilings (each fits the<br>
+simplest shape to the *true* tail, so it is unreachable for that shape). <strong>Dashed lines</strong> are honest<br>
+public-LB scores. The fork cluster (~7.2) has captured offset + dominant slope; the smooth oracle at<br>
+~3.0 says real structure remains below even the board heads — the gap is matching quality on the<br>
+median wells, not a wall. My pipeline (7.72) sits in the cluster.*</p>
+<p><strong>2.4 The hard part is a bimodal datum.</strong> The Eagle Ford is rhythmically bedded (Milankovitch couplets,<br>
+~15–25 ft), so the horizontal GR lines up with the type-well at <strong>two stratigraphic positions ~one
+bundle apart (±~15 ft)</strong>, and on a truly ambiguous well it is close to a coin-flip which is real. This<br>
+minority (~10% of wells) carries ~40% of the squared error. The decision-theoretic consequence<br>
+(pilkwang): on such a well the squared-loss-optimal estimate is the <strong>posterior mean</strong> <code>p·a + (1−p)·b</code>,<br>
+not a committed mode; committing to a mode is a trap that <em>raises</em> expected error (§5, §4-below).</p>
+<p><strong>2.5 The GR match is confounded with absolute position.</strong> The GR fingerprints lithology, but GR(TVT)<br>
+<em>repeats</em>, so the best global GR match points confidently at a <em>wrong</em> depth. An oracle registration<br>
+that sees the true eval GR and grid-searches offset+slope scores ~31 ft (worse than carrying flat),<br>
+recovering the slope at ~zero correlation. What GR carries is <em>relative and coarse</em>, best read<br>
+sequentially with the offset pinned — which is exactly what a particle filter does, and why unbounded<br>
+matchers "lie confidently." This is the single most important thing I internalized, and it explains<br>
+several of my negative results below.</p>
+<p><img src="./ROGII_ What Did and Did Not Work, Honest _ Kaggle_files/inbox_23131100_f457ce04d29fe9cad4447f54e20a58ba_bimodal_datum.png" alt="The GR fingerprint repeats every ~15 ft, so the observed window matches the type-well at two depths one bundle apart; the GR-misfit has two comparable minima - a coin flip."></p>
+<p><em>Figure 3 — Why the best GR fit can be the wrong depth. The Eagle Ford's rhythmic bedding makes
+<code>GR(TVT)</code> repeat (left), so the observed GR window matches the type-well at two stratigraphic positions
+~one bundle apart (~±15 ft). The GR-misfit as a function of a datum shift (right) then has two
+comparable minima — an irreducible coin-flip on the ~10% of wells that carry ~40% of the error. The
+squared-loss-optimal response is the posterior mean <code>p·a+(1−p)·b</code>, not a committed mode.</em></p>
+<hr>
+<h3 data-original-level="2">3. Method (Criterion 3 — every stage has a physical reading)</h3>
+<p>The pipeline is a physical tracker with a bounded meta-layer on top — the learned part <em>corrects</em>, it<br>
+does not <em>replace</em>:</p>
+<pre class="uc-code-block"><code id="code-block-1783270051381-0" data-processing="yes" data-highlighted="yes" class="hljs language-stata">  per-well <span class="hljs-keyword">GR</span> + <span class="hljs-keyword">type</span>-well ─▶ ┌──────────────────┐
+                             │  PARTICLE FILTER │  track S = TVT+Z + dip,
+                             │   (multi-seed)   │  <span class="hljs-keyword">GR</span>-likelihood, BOUNDED <span class="hljs-keyword">search</span>
+                             └────────┬─────────┘
+   offset wells ─▶ gated structural prior ─┐  (blend only where neighbours dense)
+                                           ▼
+                             ┌────────────────────────┐
+                             │  PHYSICS <span class="hljs-keyword">POST</span>-PROCESS  │  robust projection of S
+                             │  (project + damp + <span class="hljs-keyword">smooth</span>) │  + warm-up + smoothing   ═▶  B
+                             └───────────┬────────────┘
+   beam tracker ┐                        │
+   PF @ scales  ┼─▶ GBDT <span class="hljs-keyword">META</span>-LAYER ─────┤  (heavily regularized, predicts TVT-delta)
+   geometry/<span class="hljs-keyword">GR</span>  ┘   (bounded correction) │
+                             ▼            ▼
+                    final  =  B  ⊕  GBDT   (blended toward the physics model B)
+</code><div class="uc-code-block-copy-button-wrapper"><button aria-label="Copy code" class="uc-code-block-copy-button google-symbols">content_copy</button></div></pre>
+<ol>
+<li><strong>Particle filter on <code>S = TVT + Z</code> + dip rate.</strong> State = (structural position, dip). Particles<br>
+propagate along MD with a near-constant-dip model and small process noise, reweighted by the GR<br>
+likelihood against the type-well; systematic resampling; a multi-seed likelihood-weighted ensemble.<br>
+The search is <strong>bounded</strong> so it cannot chase a far-away decoy (§2.5).</li>
+<li><strong>Confidence-gated structural prior.</strong> A neighbour surface imputed from offset wells is blended with<br>
+the PF <strong>only where offset neighbours are dense</strong> (a distance gate) and clipped to a physical band —<br>
+pure PF where the spatial evidence is weak.</li>
+<li><strong>Physics post-process.</strong> A robust (IRLS/Tukey) low-degree projection of the <em>structural surface</em><br>
+tames wrong-branch excursions; a warm-up damping term suppresses spurious drift right after the<br>
+anchor; light smoothing removes resampling jitter. All are distribution-independent regularizers.</li>
+<li><strong>Gradient-boosted meta-layer.</strong> A heavily-regularized LightGBM+CatBoost on the TVT-delta target<br>
+combines the PF (at several likelihood temperatures), the spatial prior, the beam tracker, and<br>
+geometry/GR descriptors — <strong>blended toward the physics model, not replacing it.</strong></li>
+<li><strong>Beam-search tracker.</strong> A deterministic top-K dip-rate search, decorrelated from the Monte-Carlo PF;<br>
+useful as a feature precisely because its errors are partially independent.</li>
+</ol>
+<p>I deliberately included a component only if it had a physical reading and improved a <em>distribution-shift</em><br>
+evaluation — not merely the leaderboard.</p>
+<hr>
+<h3 data-original-level="2">4. Breadth and depth of exploration (Criterion 1 — negatives valued equally)</h3>
+<p>Each entry is a genuinely distinct approach with its motivation, how I validated it, and the lesson.<br>
+Minor tuning is not counted as an approach.</p>
+<p><strong>What worked (transferred to the public test):</strong></p>
+<ul>
+<li><strong>PF on <code>S = TVT + Z</code>.</strong> The right state parameterization mattered more than any downstream model:<br>
+a large, consistent gain over a geometric baseline and over a neural regressor.</li>
+<li><strong>Confidence-gated spatial prior.</strong> Gating a spatial prior by <em>local reliability</em> transferred where a<br>
+<em>uniform</em> blend hurt — lesson: never blend a spatial prior ungated.</li>
+<li><strong>Physics post-process (robust projection + damping + smoothing).</strong> My single largest honest gain;<br>
+distribution-independent physics regularizers transfer.</li>
+<li><strong>GBDT meta over tracker features.</strong> A learned model helps only as a <strong>bounded meta-layer over
+physical predictors</strong>, not as a standalone regressor.</li>
+<li><strong>Beam tracker as a feature.</strong> Independence from the PF — a different search over the same cue — is<br>
+what made a second tracker earn its keep.</li>
+</ul>
+<p><strong>What did NOT transfer (with analysis — and these corroborate the community consensus):</strong></p>
+<ul>
+<li><p><strong>Neural regressor (1D U-Net + attention to the reference GR).</strong> Under-predicted drift and generalized<br>
+poorly. Consistent with the board finding that self-trained heavy-ML tends to land <em>below</em> the fork<br>
+wave (a Grandmaster's CNN/MTP stack reportedly sat mid-pack).</p></li>
+<li><p><strong>Pattern-match trackers (NCC, DTW) as predictors or anchored features.</strong> Individually catastrophic<br>
+(no absolute anchor); as features they helped inconsistently because they are <em>correlated with</em> the PF<br>
+(same GR-level cue). Lesson: a new tracker must use a <em>different cue</em>, not a re-alignment of the same<br>
+one. (The board's aligner tournaments reach the same verdict — DTW invents movement; only a bounded,<br>
+windowed shape-matcher earns a small, gated delta.)</p></li>
+<li><p><strong>A second, "decorrelated" particle filter (including a fuzzy-logic likelihood).</strong> A fuzzy/robust<br>
+likelihood was as accurate as the Gaussian but ~0.96-correlated with it, so blending gained nothing;<br>
+a pure-shape firing decorrelated (~0.3) but had no absolute anchor and diverged. <strong>This is a
+single-cue problem</strong> — only GR-level-vs-reference anchors absolute TVT, so any <em>good</em> PF is correlated<br>
+with the base PF. (The board's own diagnosis: the two strongest public engines correlate ρ≈0.89, so<br>
+re-blending them is flat — more signal needs a genuinely decorrelated source.)</p></li>
+<li><p><strong>Richer multi-formation features.</strong> The well's own six surfaces give near-exact TVT locally — but the<br>
+test files lack those columns (§2.2), so this was a train-only artifact; the honest offset-imputed<br>
+version added nothing (the surfaces are one DOF, §2.1). Lesson: <strong>verify a feature exists in the test
+data before trusting a local gain.</strong></p></li>
+<li><p><strong>More training data / more particles / larger seed ensembles.</strong> Each improved local metrics and lost<br>
+on the public test — the classic distribution-shift signature; with a shift, more capacity fits the<br>
+wrong distribution.</p></li>
+<li><p><strong>Re-tuning the tracker's own constants (initial spread, process noise).</strong> Won under distribution-shift<br>
+CV yet lost on the public test: the tracker constants are effectively calibrated to the <em>test</em><br>
+distribution, and re-fitting them on train overfits it.</p></li>
+<li><p><strong>Heel-calibrated bimodal hedge (the community's headline lever).</strong> I heel-calibrated the GR gain/<br>
+offset (legal) and hedged the datum toward the two-minima posterior mean. On my pipeline it <em>hurt</em><br>
+(worse under every split, even restricted to genuinely bimodal wells). The reason is §2.5: the <em>legal</em><br>
+shift-scan is confounded and points at the wrong depth, so moving the prediction toward its minima<br>
+degrades it. The honest reading — which matches the source diagnostic — is that GR alignment's value is<br>
+as an <strong>uncertainty gate, not a TVT predictor</strong>; my PF's particle spread already carries that signal.</p></li>
+<li><p><strong>Better sequential matchers on the PF likelihood.</strong> Chasing the board heads (~5), I tried three<br>
+physically-motivated matcher upgrades inside the PF: a GR-rotation denoise (rolling median) before<br>
+matching, a heel-calibrated gain/offset in the point likelihood, and a windowed <strong>shape-correlation</strong><br>
+likelihood (match the local GR pattern, not the level). On a hard well sample none beat the plain<br>
+level-anchored PF: denoise was mixed (better median, worse tail), heel-calibration hurt (the same<br>
+confound as the hedge), and the shape term either <strong>diverged</strong> (no absolute anchor) or <strong>corrupted</strong><br>
+the good level anchor when multiplied in. This is consistent with the board's own aligner tournaments,<br>
+where only a carefully-bounded windowed matcher earns a ~0.2 ft gated delta; a crude shape likelihood<br>
+does not. The lesson: the level-anchored PF is near its frontier for these ideas, and the heads' edge<br>
+is a genuinely better sequential matcher I did not reproduce.</p></li>
+</ul>
+<p>The recurring meta-lesson: <strong>add physically-motivated, decorrelated components; validate on
+distribution-shift hold-outs; do not re-tune the tracker to the training distribution; and treat GR
+alignment as a confidence signal, not a mover.</strong></p>
+<hr>
+<h3 data-original-level="2">5. Contribution of individual ideas (Criterion 4)</h3>
+<p>Honest public-test progression, one component per step:</p>
+<table>
+<thead>
+<tr>
+<th>Step</th>
+<th>Component added</th>
+<th>Public RMSE</th>
+<th>Δ</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>Particle filter (multi-seed ensemble)</td>
+<td>8.72</td>
+<td>—</td>
+</tr>
+<tr>
+<td>1</td>
+<td>+ confidence-gated structural prior</td>
+<td>8.63</td>
+<td>−0.09</td>
+</tr>
+<tr>
+<td>2</td>
+<td>+ physics post-process (robust projection + damping + smoothing)</td>
+<td>8.06</td>
+<td>−0.57</td>
+</tr>
+<tr>
+<td>3</td>
+<td>+ GBDT meta over tracker features</td>
+<td>7.81</td>
+<td>−0.25</td>
+</tr>
+<tr>
+<td>4</td>
+<td>+ decorrelated beam tracker</td>
+<td><strong>7.72</strong></td>
+<td>−0.09</td>
+</tr>
+</tbody>
+</table>
+<p><img src="./ROGII_ What Did and Did Not Work, Honest _ Kaggle_files/inbox_23131100_5c7cae26ba02a6ae3a4c7fe5f86b319b_contribution_ladder.png" alt="Contribution ladder: 8.72 to 8.63 to 8.06 to 7.81 to 7.72 as each component is added, with the PF seed band marked."></p>
+<p><em>Figure 4 — Each component's contribution on the public LB. The physics post-process (Step 2) is the
+largest honest gain; the meta-layer and second tracker add real, independently-verified signal. The
+shaded band is the PF seed variance (~0.1 ft): the ±0.09 steps live inside it, so I read them as
+directional and seed-checked, not precise. My 7.72 sits inside the public fork cluster.</em></p>
+<p>Two caveats I hold myself to. First, <strong>the ±0.09 steps are near the PF seed band</strong> — re-running the<br>
+same code reseeds the particle filter and moves the public score by a comparable amount (byte-identical<br>
+public notebooks span ~7.17–7.29), so I read those small steps as <em>directional, seed-checked</em> rather<br>
+than precise. Second, my 7.72 sits <strong>inside the public fork cluster</strong>, above the board heads (~5.3):<br>
+the honest gap to the front is better per-well GR matching, which I did not crack.</p>
+<hr>
+<h3 data-original-level="2">6. Uncertainty estimation (Criterion 5)</h3>
+<ul>
+<li><strong>Particle spread</strong> (dispersion of the weighted cloud) is a per-point predictive variance; it widens<br>
+on ambiguous GR and after long unconstrained intervals — exactly where the method is least reliable.<br>
+Consistent with the community finding that GR-alignment spread correlates with error (~+0.2), I use<br>
+it as a <strong>trust gate</strong> (a feature to the meta-layer), not as a predictor.</li>
+<li><strong>Neighbour distance</strong> gates the spatial prior: trusted where offset wells are dense, reverting to the<br>
+pure PF where sparse — an explicit, physical confidence signal.</li>
+<li><strong>Cross-tracker agreement</strong> (spread across PF temperatures, the beam tracker, the spatial prior) lets<br>
+the meta-layer down-weight regions where the trackers disagree.</li>
+<li><strong>Where I am weak, and know it:</strong> the ~10% bimodal wells (irreducible variance <code>p(1−p)d²</code>), and<br>
+spatially sparse regions. I do not claim calibrated intervals; I claim <em>ordered</em> confidence, which<br>
+is what I act on.</li>
+</ul>
+<hr>
+<h3 data-original-level="2">7. Reflection: genuine relationships vs optimizing the metric (Criterion 3)</h3>
+<p>My discipline was simple and, in hindsight, load-bearing: include a component only if it has a physical<br>
+reading <em>and</em> improves a distribution-shift evaluation, and treat any single-well or in-sample "gain" as<br>
+suspect until it clears the seed band and a shift split. That discipline is what let me <em>reject</em> my own<br>
+attractive-but-non-transferring ideas (the fuzzy second PF, the richer formation features, the<br>
+hyper-parameter re-tunes, the bimodal hedge) instead of shipping them. I think the most useful thing I<br>
+can offer the community is not my (average) score but this <strong>map of what generalizes and what does
+not</strong> on this task — and the confirmation, from an independent pipeline, of the recoverable/irreducible<br>
+structure and the single-cue limit.</p>
+<hr>
+<h3 data-original-level="2">8. Conclusion</h3>
+<p>The honest core for this task is a <strong>physically-grounded particle filter on <code>S = TVT + Z</code></strong>, augmented<br>
+by a reliability-gated spatial prior, a physics post-process, a bounded gradient-boosted meta-layer, and<br>
+a decorrelated second tracker (public 7.72). The deeper contribution is methodological: the target<br>
+reduces to offset-plus-piecewise-dip; the six formation columns are one surface; the hard tail is a<br>
+bimodal datum best handled by a posterior mean, not a committed mode; GR matching is confounded with<br>
+absolute depth and must be bounded and used as a confidence signal; and — most practically —<br>
+distribution-shift validation plus a seed-variance check is the only trustworthy way to tell a real gain<br>
+from noise. I report, in equal measure, the components that transferred and the well-motivated ones that<br>
+did not, because on this problem the negative results carry as much information as the positive recipe.</p>
+<p><strong>Acknowledgements.</strong> This note builds on public work by franticXu, Tabish, pilkwang, souldrive,<br>
+Georgy Mamarin, wharekawa, Chris Deotte, and mitchgansemer, and on the host's clarifications about the<br>
+data. Errors are mine.</p></div><div><span class="sc-bCgoVd hLkRPf" style="display: block; margin-bottom: 16px;">Tagged</span><div role="group" aria-label="Tags" class="sc-eqvrjw GBpoa"><a href="https://www.kaggle.com/search?q=english+tag%3A%22english%22" target="_blank" class="sc-fbyhTQ rQAsB" role="link" aria-label="English opens in new window" style="cursor: pointer; margin-right: 0px;"><span class="sc-dILkzW sc-eTEcpQ khMpKs iApPDx">English</span></a><a href="https://www.kaggle.com/search?q=geology+tag%3A%22geology%22" target="_blank" class="sc-fbyhTQ rQAsB" role="link" aria-label="Geology opens in new window" style="cursor: pointer; margin-right: 0px;"><span class="sc-dILkzW sc-eTEcpQ khMpKs iApPDx">Geology</span></a></div></div></div><div class="sc-iCtEez bnFpQo"><div><span class="sc-bCgoVd hLkRPf">Author</span><div class="sc-kbwYUm qxzbp"><a href="https://www.kaggle.com/juliancamilovilla" aria-label="Julian Camilo Villa&#39;s profile" class="sc-iIvZUO ebfLHz"><div data-testid="avatar-image" title="Julian Camilo Villa" class="sc-gsdCXR kQeKXR" style="background-image: url(&quot;https://storage.googleapis.com/kaggle-avatars/thumbnails/default-thumb.png&quot;);"></div><svg width="48" height="48" viewBox="0 0 48 48"><circle r="22.5" cx="24" cy="24" fill="none" stroke-width="3" style="stroke: rgb(95, 99, 104);"></circle><circle r="22.5" cx="24" cy="24" fill="none" stroke-width="3" style="stroke: rgb(32, 190, 255);"></circle></svg></a><div><a class="sc-llQYOh ihIcpK sc-hgXGvb iFLHRK" emphasis="high" href="https://www.kaggle.com/juliancamilovilla" data-discover="true">Julian Camilo Villa</a><p class="sc-fFCZOx iZNPId">juliancamilovilla</p></div></div></div><div role="separator" class="sc-khYboC dTnicw" style="margin: 24px 0px;"></div><div class="sc-hgafYl fJa-dJa"><button class="sc-ikBzZv dtZZSK" tabindex="0" role="button"><span class="sc-dlwHGs cVnQIi">Share</span></button><button aria-label="Writeup actions" aria-haspopup="menu" title="Writeup actions" class="sc-iBjNZB ianyQQ google-symbols notranslate" aria-expanded="false">more_horiz</button><div></div></div></div></div><h2 class="sc-qdQOe inWqJY">Project Links</h2><div class="sc-kazyxw ijdoAW"><div><a tabindex="0" href="https://www.kaggle.com/competitions/rogii-wellbore-geology-prediction/overview" target="_blank" aria-label="undefined opens in new window" class="sc-huPUxU bNflXg" style="pointer-events: auto;"><div class="sc-bYUTKD ehOKfK"><div class="sc-jCzWXF sc-cMBrVc kdSTIE cAkZkc"><div class="sc-bKECUK jrHIFA"><div class="sc-jPvlTi bMrqMF"><div style="overflow: hidden;"><div title="ROGII - Wellbore Geology Prediction | Kaggle" class="sc-hCcPtG sc-kRdyKH gTYZQg drfqDw">ROGII - Wellbore Geology Prediction | Kaggle</div><p class="sc-bjLslk sc-gXWzVC lmozPe jfYkAY">https://www.kaggle.com/competitions/rogii-wellbore-geology-prediction/overview</p></div><div class="sc-eZYlYd klmtVE" style="position: relative;"><img src="./ROGII_ What Did and Did Not Work, Honest _ Kaggle_files/placeholder.svg" alt=""><div class="sc-kijJqc izOvin"><span class="google-symbols notranslate MuiIcon-root MuiIcon-fontSizeMedium sc-bYgEKt kbsNyo notranslate css-1jgtvd5" aria-hidden="true">link</span></div></div></div></div><div class="sc-hqDlzY pXBdn" style="overflow: hidden;"><p font-weight="bold" title="kaggle.com" class="sc-fFCZOx sc-aIbBn cPdHtY hLGiBF">kaggle.com</p></div></div><p class="sc-fFCZOx sc-glwJlt ffIPOn glMBms">Contest related with this Worknote</p></div></a></div></div><div class="sc-hSUtVV hvlhOe"></div></div></div></div><div id="nav-footer" class="sc-jYuITo hZRBvh"></div></div><div aria-live="polite" aria-atomic="true" role="alert" class="sc-kJxzDI CyFoG"></div></div>
+
+
+</body></html>
