@@ -20,7 +20,8 @@
 > decorrelated particle-filter ensemble (7.230 → 7.096) and a more-seeds robustness variant (7.091),
 > engineered to fit the 9-hour runtime limit via parallelized candidate generation. A second, larger gain
 > then came from **stacking a decorrelated neural corrector with a robust physics post-process** on top of
-> that pipeline: real-LB-confirmed **7.080 → 6.836** (−3.4% relative), our new best submission. The same
+> that pipeline, then further refined by transferring a cross-validated hyperparameter back onto the real
+> submission: real-LB-confirmed **7.080 → 6.836 → 6.794** (−4.0% relative), our new best submission. The same
 > real-leaderboard test also produced a controlled negative result of independent interest: a third,
 > individually cross-fit-validated correction (a second particle filter, `pf_z`) **breaks this combination
 > regardless of where it sits in the pipeline** (7.446–7.515), and a simple shrink-toward-last-known-TVT
@@ -42,8 +43,9 @@
   extra seeds consume.
 - **A second, larger real-LB gain from stacking a decorrelated neural corrector with a physics
   post-process**: blending the WARP neural net into the pipeline together with a robust surface
-  post-process pushes the real leaderboard from **7.080 → 6.836** (−3.4% relative), our new best
-  submission — confirmed by direct resubmission, not proxy validation.
+  post-process pushes the real leaderboard from **7.080 → 6.836**, then a cross-validated WARP-weight
+  correction pushes it further to **6.794** (−4.0% relative overall), our new best submission — confirmed
+  by direct resubmission, not proxy validation.
 - **A controlled real-LB negative result on over-stacking corrections.** Adding a third, independently
   cross-fit-validated lever (`pf_z`, a second particle filter) on top of the winning two-stage combination
   *breaks* it — **6.836 → 7.446–7.515**, regardless of where in the pipeline it is inserted. A simple
@@ -82,8 +84,9 @@ the public LB, which for the dominant particle-filter (PF) solution family is do
 **(2) A positive result:** a *decorrelated PF ensemble* improving the public pipeline from 7.230 to
 **7.096**, below the pipeline's own seed-noise floor (7.168) — a real gain, plus a more-seeds variant at
 **7.091**. **(3) A second, larger positive result:** stacking a decorrelated neural corrector (WARP) with a
-robust physics post-process on top of that pipeline, real-LB-confirmed **7.080 → 6.836**, our new best
-submission — paired with a controlled real-LB negative result showing this stack does *not* extend to a
+robust physics post-process on top of that pipeline, real-LB-confirmed **7.080 → 6.836**, then a further
+real gain from transferring a cross-validated hyperparameter back onto the submission, **6.836 → 6.794**
+(our new best) — paired with a controlled real-LB negative result showing this stack does *not* extend to a
 third, individually-validated correction (§7.2). **(4) A rigorous negative-result analysis** — the bulk of
 this note — mapping *why* the residual error is hard: an exact decomposition shows the exploitable error is
 a low-frequency per-well *surface trend*; GR localization error is **broadband and irreducible** due to log
@@ -199,10 +202,10 @@ This oracle argument places the whole competition on one ruler:
 ![Fig. 3 — the ceiling ladder](figures/fig03_oracle_ladder.png)
 
 **Figure 3.** The ceiling ladder. From the top: the trivial baselines (flat 15.9, beam 15.8) and the
-isolated PF / best NN (~11); our submission (7.09); the best-linear-eval-trend oracle (6.6); the competition
-leader (5.26); and the smooth-surface-minus-known-Z oracle (3.9). The narrow green band between 3.9 and 6.6
-is the entire "learnable" headroom — a reminder of how compressed this problem is, and why sub-foot
-improvements are noise.
+isolated PF / best NN (~11); our variance-reduction submission (7.08); our best submission (6.79); the
+best-linear-eval-trend oracle (6.6); the competition leader (5.26); and the smooth-surface-minus-known-Z
+oracle (3.9). The narrow green band between 3.9 and 6.6 is the entire "learnable" headroom — a reminder of
+how compressed this problem is, and why sub-foot improvements are noise.
 
 ## 5. The Wall: the surface trend is not recoverable
 
@@ -380,10 +383,13 @@ physics:
 | 6 | + WARP-blend (decorrelated neural corrector, §9.2) | 6.882 | **−0.198** |
 | 7 | + physics post-process on top of WARP-blend (§7.1a) | 6.881 | −0.001 |
 | 8 | steps 6–7, both moved to run *after* gold-calibration (§7.2) | 6.846 / **6.836** | −0.036 / −0.045 |
+| 9 | + WARP weight raised 0.15→0.30, the value 5-fold CV independently selected in every fold (§7.2) | **6.794** | −0.042 |
 
 Steps 4–5 sit inside our own measured seed-noise floor (±0.07, §3) — we report them as *directional and
-seed-checked* rather than precise. Steps 6–8 are real, resubmitted leaderboard numbers (not proxy), detailed
-in §7.2, and **6.836 is our best submission to date.** Steps we tried and *rejected* after they hurt the real
+seed-checked* rather than precise. Step 9's −0.042 is itself smaller than that same noise floor, so we hold
+it to the same standard: directionally consistent with what the cross-validation predicted, not claimed as
+a precise, certain delta. Steps 6–9 are real, resubmitted leaderboard numbers (not proxy), detailed in
+§7.2, and **6.794 is our best submission to date.** Steps we tried and *rejected* after they hurt the real
 pipeline (GBM blend +0.35 to +0.84, the 4-way decorrelation over-dilution +0.52, twjit/gs partners within
 noise of step 3, and — critically — a third correction stacked on top of step 8 that reverses all of this
 gain, §7.2) are catalogued in full in §7.2, §8.3 and §8.5 — the same "isolated tests mislead" lesson that
@@ -405,7 +411,8 @@ this component — it is the free lunch, and it is exactly what our submissions 
 
 **Figure 8 (real LB scores).** Our full submission ladder. Decorrelation helped (7.230 → 7.096);
 over-dilution (the 4-way ensemble) hurt (7.752); more seeds gave a robust 7.080. Stacking WARP-blend with
-physics post-process then gave our new best, **6.836** (§7.2) — while wall-hedge and the 3-way stack
+physics post-process gave 6.836 (§7.2), and transferring the cross-validated WARP-weight (0.30) back onto
+the real submission pushed it further to our current best, **6.794** — while wall-hedge and the 3-way stack
 (adding `pf_z`) sit above 7.08 in both pipeline placements we tested, confirming they are genuinely harmful
 rather than a placement artifact.
 
@@ -417,8 +424,9 @@ multi-slice-holdout story that led us to over-dilute, and the lesson it taught, 
 
 We independently implemented and honestly cross-fit-validated three further levers on our own proxy and
 data. **Update (§7.2 reports the real-LB outcome):** lever (a), combined with the WARP-blend of §9.2, is
-now our real best submission (6.836); lever (d) is now a confirmed real-LB negative when stacked as a third
-correction on top of (a). Lever (b) remains offline-only — it was not part of the real-LB test in §7.2.
+the basis of our real best submission (6.836, later refined to **6.794**, §7.2); lever (d) is now a
+confirmed real-LB negative when stacked as a third correction on top of (a). Lever (b) remains offline-only
+— it was not part of the real-LB test in §7.2.
 
 **(a) Physics post-process: robust projection + warm-up damping + smoothing.** A Tukey-robust (IRLS,
 4 iterations) degree-4 polynomial fit of the structural surface `U = TVT + Z`, blended back toward the raw
@@ -430,8 +438,8 @@ the smooth fit further into the eval zone), followed by light Savitzky–Golay s
 correction only on high-disagreement wells, to protect any well where the pipeline is already near-exact)
 — gating **strictly hurt** here, monotonically with how much we restricted it (§15's override audit
 explains why: on our proxy we have no such overlap subset to protect, so uniform application is optimal
-for us). **This lever, combined with WARP-blend, is now real-LB confirmed as our best submission (6.836,
-§7.2).**
+for us). **This lever, combined with WARP-blend, is now real-LB confirmed as the basis of our best
+submission (6.836, later refined to 6.794 by transferring a cross-validated hyperparameter, §7.2).**
 
 **(b) L1-objective diversity in the residual corrector.** Training a LightGBM residual corrector on the
 same 16 features with an **L1** (MAE) objective instead of the standard L2, then blending it back in at
@@ -558,6 +566,18 @@ is far larger than the real-LB gain (−3.4%) — consistent with our standing f
 *direction*, not *magnitude* (§13). What the K-fold test targets specifically is the overfitting question,
 and on that question the answer is unambiguous: this is a stable, cross-validated effect, not a fitted
 artifact of one split.
+
+**The cross-validated weight transfers: a further real-LB gain (6.836 → 6.794).** The 5-fold CV above made a
+falsifiable prediction, not just a robustness check: every fold selected WARP-blend weight 0.30, not the
+more conservative 0.15 we had actually shipped (§9.2). If that specific value — not merely its direction —
+transfers to the real hidden test, raising the shipped weight from 0.15 to 0.30 (physics-pp and everything
+else unchanged) should give a further real gain. We built and submitted exactly that change and it scored
+**6.794** — a further **−0.042** move in the predicted direction, our best submission to date (7.080 →
+6.836 → 6.794, **−4.0%** relative overall). We hold this single step to the same honesty standard as steps
+4–5 above: −0.042 is itself smaller than our measured seed-noise floor (±0.07, §3), so we report it as
+*directionally consistent with the cross-validation's prediction*, not as a precise, certain delta on its
+own. Taken together with the 5/5-fold agreement, though, it is a clean instance of a cross-validated
+hyperparameter transferring in more than just sign.
 
 **Why this belongs next to §7.1's stacking positives.** The over-stacking result is the same lesson as the
 GBM-blend cautionary tale (§8.5) and the 4-way ensemble (§8.3), now demonstrated one level higher: not just
@@ -901,7 +921,8 @@ test this directly (§7.2).
 
 **The placement-crossed real-LB test (§7.2) only partly bears this out.** WARP-blend and WARP+physics-pp
 *did* improve slightly under the after-gold placement (6.882→6.846, 6.881→6.836) — consistent with the
-placement mechanism above, and this is where our new best submission (6.836) comes from. But wall-hedge,
+placement mechanism above, and this is where our best submission (later refined to 6.794, §7.2) comes from.
+But wall-hedge,
 tested in both placements, is *not* rescued by the fix — it scores 7.252 before and 7.304 after, i.e. no
 positive effect from reordering, if anything the reverse. **We therefore retract the strong form of the
 claim above** ("this can flip a cross-fit-validated gain into a real regression"): placement is a real,
@@ -925,7 +946,7 @@ buy a better uncertainty signal than the one we already had.
 
 **Figure 9 (real public LB, 4,065 teams).** The full public leaderboard. The flat baseline (15.9) sits near
 the bulk's right shoulder; the median team scores ~9.9; **only 7 teams beat 6.0**, and the best is 5.26. Our
-best submission, 6.836 (§7.2, up from an earlier 7.09), sits at the edge of that top group. The shape of
+best submission, 6.794 (§7.2, up from an earlier 7.09), sits at the edge of that top group. The shape of
 this distribution is itself evidence of the wall: the mass of the field is compressed into a narrow band a
 little better than flat, and the leaders' separation is small in absolute feet — consistent with a task
 whose irreducible floor is only ~1.5 ft below the best public score.
@@ -1066,11 +1087,12 @@ The ROGII task decomposes cleanly: the high-frequency TVT wiggle is free (it equ
 eval time), and the entire difficulty is a smooth per-well surface trend whose slope-changes occur at
 sub-seismic faults that the self-similar GR log cannot localize (broadband-irreducible error). This is why
 the trivial flat baseline is so strong, why a weak-GR/strong-continuity prior wins, and why 60+ experiments
-and 20+ neural architectures — MDN, synthetic pretraining, 2D misfit-SDF, transformers — all cap at the
+and 22 neural architectures — MDN, synthetic pretraining, 2D misfit-SDF, transformers — all cap at the
 isolated-PF level (~11) while the tuned classical pipeline reaches ~7 through its full stack. Our first
 concrete, transferable gain came not from new modeling but from *variance reduction* (a decorrelated PF
 ensemble, 7.230 → 7.091). A second, larger real-LB gain then came from stacking a decorrelated neural
-corrector with a robust physics post-process, **7.080 → 6.836**, our best submission — paired with a
+corrector with a robust physics post-process, **7.080 → 6.836**, further refined to **6.794** — our best
+submission — by transferring a cross-validated hyperparameter back onto the real pipeline, paired with a
 controlled real-LB negative result showing this stack does not extend to a third, individually-validated
 correction (§7.2), and a correction to our own earlier causal claim about *why* the first such attempt
 (wall-hedge) failed. We hope the map of *where the signal is and is not* is useful: on this task, measure
@@ -1102,11 +1124,12 @@ For quick reference, the full list of experiments referenced above, by section:
 - **§7.2 Real-LB stacking/placement confirmation (2):** placement-crossed WARP+physics-pp resubmission ✅
   (new best 6.836); placement-crossed wall-hedge and 3-lever full-stack resubmission ❌ (both harmful
   regardless of placement).
-- **§7.2/§7.3 Overfitting and validation-honesty checks (4):** 5-fold grouped CV of the new best (5/5 folds
-  positive, identical hyperparameters every fold) ✅; hedge-on-bare-base vs hedge-on-tuned-combo cross-fit,
-  confirming the hedge collapses to weight 0 once WARP+physics-pp are applied ✅; LSO spatial K-means-block
-  holdout, confirming the gain is not neighbour leakage ✅; isolation-quartile check, confirming isolated
-  wells benefit *more*, not less, from the new combo ✅.
+- **§7.2/§7.3 Overfitting and validation-honesty checks (5):** 5-fold grouped CV of the new best (5/5 folds
+  positive, identical hyperparameters every fold) ✅; real-LB transfer of the CV-selected WARP-weight
+  (0.15→0.30), a further gain to our current best 6.794 ✅; hedge-on-bare-base vs hedge-on-tuned-combo
+  cross-fit, confirming the hedge collapses to weight 0 once WARP+physics-pp are applied ✅; LSO spatial
+  K-means-block holdout, confirming the gain is not neighbour leakage ✅; isolation-quartile check,
+  confirming isolated wells benefit *more*, not less, from the new combo ✅.
 - **§9 Neural nets (20):** see the architecture table.
 
 **Total: 60+ distinct experiments.**

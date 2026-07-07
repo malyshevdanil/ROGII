@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<!-- saved from url=(0207)https://www.kaggle.com/writeups/kishorevishal/segn-an-autoregressive-cost-map-view-of-tvt?_gl=1*3673el*_ga*MzA0NzU1Njg2LjE3ODEzNTA0Njc.*_ga_T7QHS60L4Q*czE3ODMzNzY0MzckbzUyJGcxJHQxNzgzMzc2NTM4JGoyMCRsMCRoMA.. -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>SEGN: Autoregressive Cost-Map View of TVT | Kaggle</title>
+  
+    <meta name="robots" content="index, follow">
+  <meta name="description" content="Discover what actually works in AI. Join millions of builders, researchers, and labs evaluating agents, models, and frontier technology through crowdsourced benchmarks, competitions, and hackathons.">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, minimum-scale=1.0">
+  <meta name="theme-color" content="#008ABC">
+  <script src="./SEGN_ Autoregressive Cost-Map View of TVT _ Kaggle_files/cb=gapi.loaded_0" nonce="" async=""></script><script nonce="" type="text/javascript">
+    window["pageRequestStartTime"] = 1783376558860;
+    window["pageRequestEndTime"] = 1783376558876;
+    window["initialPageLoadStartTime"] = new Date().getTime();
+  </script>
+  <script nonce="" id="gsi-client" src="./SEGN_ Autoregressive Cost-Map View of TVT _ Kaggle_files/client" async="" defer=""></script>
+  <script nonce="">window.KAGGLE_JUPYTERLAB_PATH = "/static/assets/jupyterlab-v4/jupyterlab-index-5e005a8baf8c543b.html";</script>
+  <link rel="preconnect" href="https://www.google-analytics.com/" crossorigin="anonymous"><link rel="preconnect" href="https://stats.g.doubleclick.net/"><link rel="preconnect" href="https://storage.googleapis.com/"><link rel="preconnect" href="https://apis.google.com/">
+    <link href="https://www.kaggle.com/static/images/favicon.ico" rel="shortcut icon" type="image/x-icon" id="dynamic-favicon">
+  <link rel="manifest" href="https://www.kaggle.com/static/json/manifest.json" crossorigin="use-credentials">
+
+
+  <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
+
+  <link href="./SEGN_ Autoregressive Cost-Map View of TVT _ Kaggle_files/css" rel="preload" as="style">
+  <link href="./SEGN_ Autoregressive Cost-Map View of TVT _ Kaggle_files/css2" rel="preload" as="style">
+  <link href="./SEGN_ Autoregressive Cost-Map View of TVT _ Kaggle_files/css" rel="stylesheet" media="all" id="async-google-font-1">
+  <link href="./SEGN_ Autoregressive Cost-Map View of TVT _ Kaggle_files/css2" rel="stylesheet" media="all" id="async-google-font-2">
+  <script nonce="" type="text/javascript">
+    const styleSheetIds = ["async-google-font-1", "async-google-font-2"];
+    styleSheetIds.forEach(function (id) {
+      document.getElementById(id).addEventListener("load", function() {
+        this.media = "all";
+      });
+    });
+  </script>
+
+
+    <link rel="stylesheet" type="text/css" href="./SEGN_ Autoregressive Cost-Map View of TVT _ Kaggle_files/app.css">
+
+  
+    
+ 
+      <script nonce="">
+        try{(function(a,s,y,n,c,h,i,d,e){d=s.createElement("style");
+        d.appendChild(s.createTextNode(""));s.head.appendChild(d);d=d.sheet;
+        y=y.map(x => d.insertRule(x + "{ opacity: 0 !important }"));
+        h.start=1*new Date;h.end=i=function(){y.forEach(x => x<d.cssRules.length ? d.deleteRule(x) : {})};
+        (a[n]=a[n]||[]).hide=h;setTimeout(function(){i();h.end=null},c);h.timeout=c;
+        })(window,document,['.site-header-react__nav'],'dataLayer',2000,{'GTM-52LNT9S':true});}catch(ex){}
+    </script><style id="googleidentityservice_button_styles" nonce="">.qJTHM{-moz-user-select:none;-webkit-user-select:none;-ms-user-select:none;color:#202124;direction:ltr;-webkit-touch-callout:none;font-family:Roboto-Regular,arial,sans-serif;-webkit-font-smoothing:antialiased;font-weight:400;margin:0;overflow:hidden;-webkit-text-size-adjust:100%}.ynRLnc{left:-9999px;position:absolute;top:-9999px}.L6cTce{display:none}.bltWBb{overflow-wrap:break-word;word-break:break-word}.hSRGPd{color:#1a73e8;cursor:pointer;font-weight:500;text-decoration:none}.Bz112c-W3lGp{height:16px;width:16px}.Bz112c-E3DyYd{height:20px;width:20px}.Bz112c-r9oPif{height:24px;width:24px}.Bz112c-u2z5K{height:36px;width:36px}.Bz112c-uaxL4e{border-radius:10px}.LgbsSe-Bz112c{display:block}.S9gUrf-YoZ4jf{border:none;margin:0;padding:0}.S9gUrf-YoZ4jf *{border:none;margin:0;padding:0}.fFW7wc-ibnC6b>.aZ2wEe>div{border-color:#4285f4}.P1ekSe-ZMv3u{-webkit-transition:height .2s linear;transition:height .2s linear}.P1ekSe-ZMv3u>div:first-child{background-color:#1a73e8!important;-webkit-transition:width .3s linear;transition:width .3s linear}.P1ekSe-ZMv3u>div:nth-child(2){background-image:-webkit-gradient(linear,left top,right top,from(rgba(255,255,255,.7)),to(rgba(255,255,255,.7))),-webkit-gradient(linear,left top,right top,from(#1a73e8),to(#1a73e8))!important;background-image:-webkit-linear-gradient(left,rgba(255,255,255,.7),rgba(255,255,255,.7)),-webkit-linear-gradient(left,#1a73e8,#1a73e8)!important;background-image:linear-gradient(90deg,rgba(255,255,255,.7),rgba(255,255,255,.7)),linear-gradient(90deg,#1a73e8,#1a73e8)!important}.P1ekSe-ZMv3u>div:nth-child(3){background-image:-webkit-gradient(linear,left top,right top,from(rgba(255,255,255,.7)),to(rgba(255,255,255,.7))),-webkit-gradient(linear,left top,right top,from(#1a73e8),to(#1a73e8))!important;background-image:-webkit-linear-gradient(left,rgba(255,255,255,.7),rgba(255,255,255,.7)),-webkit-linear-gradient(left,#1a73e8,#1a73e8)!important;background-image:linear-gradient(90deg,rgba(255,255,255,.7),rgba(255,255,255,.7)),linear-gradient(90deg,#1a73e8,#1a73e8)!important}.haAclf{display:inline-block}.nsm7Bb-HzV7m-LgbsSe{border-radius:4px;box-sizing:border-box;-webkit-transition:background-color .218s,border-color .218s;transition:background-color .218s,border-color .218s;-moz-user-select:none;-webkit-user-select:none;-ms-user-select:none;-webkit-appearance:none;background-color:#fff;background-image:none;border:1px solid #dadce0;color:#3c4043;cursor:pointer;font-family:Google Sans,arial,sans-serif;font-size:.875rem;height:40px;letter-spacing:.25px;outline:none;overflow:hidden;padding:0 12px;position:relative;text-align:center;vertical-align:middle;white-space:nowrap;width:auto}@media screen and (-ms-high-contrast:active){.nsm7Bb-HzV7m-LgbsSe{border:2px solid windowText;color:windowText}}@media screen and (preferes-contrast:more){.nsm7Bb-HzV7m-LgbsSe{color:#000}}.nsm7Bb-HzV7m-LgbsSe.pSzOP-SxQuSe{font-size:.875rem;height:32px;letter-spacing:.25px;padding:0 10px}.nsm7Bb-HzV7m-LgbsSe.purZT-SxQuSe{font-size:.6875rem;height:20px;letter-spacing:.3px;padding:0 8px}.nsm7Bb-HzV7m-LgbsSe.Bz112c-LgbsSe{padding:0;width:40px}.nsm7Bb-HzV7m-LgbsSe.Bz112c-LgbsSe.pSzOP-SxQuSe{width:32px}.nsm7Bb-HzV7m-LgbsSe.Bz112c-LgbsSe.purZT-SxQuSe{width:20px}.nsm7Bb-HzV7m-LgbsSe.JGcpL-RbRzK{border-radius:20px}.nsm7Bb-HzV7m-LgbsSe.JGcpL-RbRzK.pSzOP-SxQuSe{border-radius:16px}.nsm7Bb-HzV7m-LgbsSe.JGcpL-RbRzK.purZT-SxQuSe{border-radius:10px}.nsm7Bb-HzV7m-LgbsSe.i5vt6e-to915-Ia7Qfc{border:1px solid #8e918f;background-color:#131314;color:#e3e3e3}.nsm7Bb-HzV7m-LgbsSe.MFS4be-Ia7Qfc{border:none;color:#fff}.nsm7Bb-HzV7m-LgbsSe.MFS4be-v3pZbf-Ia7Qfc{background-color:#1a73e8}.nsm7Bb-HzV7m-LgbsSe.MFS4be-JaPV2b-Ia7Qfc{background-color:#202124;color:#e8eaed}@media screen and (prefers-contrast:more){.nsm7Bb-HzV7m-LgbsSe.MFS4be-JaPV2b-Ia7Qfc{color:#fff}}.nsm7Bb-HzV7m-LgbsSe .nsm7Bb-HzV7m-LgbsSe-Bz112c{height:18px;margin-right:8px;min-width:18px;width:18px}.nsm7Bb-HzV7m-LgbsSe.pSzOP-SxQuSe .nsm7Bb-HzV7m-LgbsSe-Bz112c{height:14px;min-width:14px;width:14px}.nsm7Bb-HzV7m-LgbsSe.purZT-SxQuSe .nsm7Bb-HzV7m-LgbsSe-Bz112c{height:10px;min-width:10px;width:10px}.nsm7Bb-HzV7m-LgbsSe.jVeSEe .nsm7Bb-HzV7m-LgbsSe-Bz112c{margin-left:8px;margin-right:-4px}.nsm7Bb-HzV7m-LgbsSe.Bz112c-LgbsSe .nsm7Bb-HzV7m-LgbsSe-Bz112c{margin:0;padding:10px}.nsm7Bb-HzV7m-LgbsSe.Bz112c-LgbsSe.pSzOP-SxQuSe .nsm7Bb-HzV7m-LgbsSe-Bz112c{padding:8px}.nsm7Bb-HzV7m-LgbsSe.Bz112c-LgbsSe.purZT-SxQuSe .nsm7Bb-HzV7m-LgbsSe-Bz112c{padding:4px}.nsm7Bb-HzV7m-LgbsSe .nsm7Bb-HzV7m-LgbsSe-Bz112c-haAclf{border-top-left-radius:3px;border-bottom-left-radius:3px;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-pack:center;-webkit-justify-content:center;justify-content:center;-webkit-box-align:center;-webkit-align-items:center;align-items:center;background-color:#fff;height:36px;margin-left:-10px;margin-right:12px;min-width:36px;width:36px}.nsm7Bb-HzV7m-LgbsSe .nsm7Bb-HzV7m-LgbsSe-Bz112c-haAclf .nsm7Bb-HzV7m-LgbsSe-Bz112c,.nsm7Bb-HzV7m-LgbsSe.Bz112c-LgbsSe .nsm7Bb-HzV7m-LgbsSe-Bz112c-haAclf .nsm7Bb-HzV7m-LgbsSe-Bz112c{margin:0;padding:0}.nsm7Bb-HzV7m-LgbsSe.pSzOP-SxQuSe .nsm7Bb-HzV7m-LgbsSe-Bz112c-haAclf{height:28px;margin-left:-8px;margin-right:10px;min-width:28px;width:28px}.nsm7Bb-HzV7m-LgbsSe.purZT-SxQuSe .nsm7Bb-HzV7m-LgbsSe-Bz112c-haAclf{height:16px;margin-left:-6px;margin-right:8px;min-width:16px;width:16px}.nsm7Bb-HzV7m-LgbsSe.Bz112c-LgbsSe .nsm7Bb-HzV7m-LgbsSe-Bz112c-haAclf{border-radius:3px;margin-left:2px;margin-right:0;padding:0}.nsm7Bb-HzV7m-LgbsSe.JGcpL-RbRzK .nsm7Bb-HzV7m-LgbsSe-Bz112c-haAclf{border-radius:18px}.nsm7Bb-HzV7m-LgbsSe.pSzOP-SxQuSe.JGcpL-RbRzK .nsm7Bb-HzV7m-LgbsSe-Bz112c-haAclf{border-radius:14px}.nsm7Bb-HzV7m-LgbsSe.purZT-SxQuSe.JGcpL-RbRzK .nsm7Bb-HzV7m-LgbsSe-Bz112c-haAclf{border-radius:8px}.nsm7Bb-HzV7m-LgbsSe .nsm7Bb-HzV7m-LgbsSe-bN97Pc-sM5MNb{display:-webkit-box;display:-webkit-flex;display:flex;-webkit-align-items:center;-webkit-box-align:center;align-items:center;-webkit-flex-direction:row;-webkit-box-orient:horizontal;-webkit-box-direction:normal;flex-direction:row;-webkit-box-pack:justify;-webkit-justify-content:space-between;justify-content:space-between;-webkit-flex-wrap:nowrap;flex-wrap:nowrap;height:100%;position:relative;width:100%}.nsm7Bb-HzV7m-LgbsSe .oXtfBe-l4eHX{-webkit-box-pack:center;-webkit-justify-content:center;justify-content:center}.nsm7Bb-HzV7m-LgbsSe .nsm7Bb-HzV7m-LgbsSe-BPrWId{-webkit-flex-grow:1;-webkit-box-flex:1;flex-grow:1;font-family:Google Sans,arial,sans-serif;font-weight:500;overflow:hidden;text-overflow:ellipsis;vertical-align:top}.nsm7Bb-HzV7m-LgbsSe.purZT-SxQuSe .nsm7Bb-HzV7m-LgbsSe-BPrWId{font-weight:300}.nsm7Bb-HzV7m-LgbsSe .oXtfBe-l4eHX .nsm7Bb-HzV7m-LgbsSe-BPrWId{-webkit-flex-grow:0;-webkit-box-flex:0;flex-grow:0}.nsm7Bb-HzV7m-LgbsSe .nsm7Bb-HzV7m-LgbsSe-MJoBVe{-webkit-transition:background-color .218s;transition:background-color .218s;bottom:0;left:0;position:absolute;right:0;top:0}.nsm7Bb-HzV7m-LgbsSe:focus,.nsm7Bb-HzV7m-LgbsSe:hover{box-shadow:none;border-color:rgb(210,227,252);outline:none}.nsm7Bb-HzV7m-LgbsSe:focus-within{outline:2px solid #00639b;border-color:transparent}.nsm7Bb-HzV7m-LgbsSe:hover .nsm7Bb-HzV7m-LgbsSe-MJoBVe{background:rgba(66,133,244,.08)}.nsm7Bb-HzV7m-LgbsSe:active .nsm7Bb-HzV7m-LgbsSe-MJoBVe,.nsm7Bb-HzV7m-LgbsSe:focus .nsm7Bb-HzV7m-LgbsSe-MJoBVe{background:rgba(66,133,244,.1)}.nsm7Bb-HzV7m-LgbsSe.i5vt6e-to915-Ia7Qfc:hover .nsm7Bb-HzV7m-LgbsSe-MJoBVe{background:rgba(255,255,255,.08)}.nsm7Bb-HzV7m-LgbsSe.i5vt6e-to915-Ia7Qfc:active .nsm7Bb-HzV7m-LgbsSe-MJoBVe,.nsm7Bb-HzV7m-LgbsSe.i5vt6e-to915-Ia7Qfc:focus .nsm7Bb-HzV7m-LgbsSe-MJoBVe{background:rgba(255,255,255,.12)}.nsm7Bb-HzV7m-LgbsSe.MFS4be-Ia7Qfc:hover .nsm7Bb-HzV7m-LgbsSe-MJoBVe{background:rgba(255,255,255,.24)}.nsm7Bb-HzV7m-LgbsSe.MFS4be-Ia7Qfc:active .nsm7Bb-HzV7m-LgbsSe-MJoBVe,.nsm7Bb-HzV7m-LgbsSe.MFS4be-Ia7Qfc:focus .nsm7Bb-HzV7m-LgbsSe-MJoBVe{background:rgba(255,255,255,.32)}.nsm7Bb-HzV7m-LgbsSe .n1UuX-DkfjY{border-radius:50%;display:-webkit-box;display:-webkit-flex;display:flex;height:20px;margin-left:-4px;margin-right:8px;min-width:20px;width:20px}.nsm7Bb-HzV7m-LgbsSe.jVeSEe .nsm7Bb-HzV7m-LgbsSe-BPrWId{font-family:Roboto;font-size:12px;text-align:left}.nsm7Bb-HzV7m-LgbsSe.jVeSEe .nsm7Bb-HzV7m-LgbsSe-BPrWId .K4efff .fmcmS,.nsm7Bb-HzV7m-LgbsSe.jVeSEe .nsm7Bb-HzV7m-LgbsSe-BPrWId .ssJRIf{overflow:hidden;text-overflow:ellipsis}.nsm7Bb-HzV7m-LgbsSe.jVeSEe .nsm7Bb-HzV7m-LgbsSe-BPrWId .K4efff{display:-webkit-box;display:-webkit-flex;display:flex;-webkit-align-items:center;-webkit-box-align:center;align-items:center;color:#5f6368;fill:#5f6368;font-size:11px;font-weight:400}.nsm7Bb-HzV7m-LgbsSe.jVeSEe.i5vt6e-to915-Ia7Qfc .nsm7Bb-HzV7m-LgbsSe-BPrWId .K4efff{color:#c4c7c5;fill:#c4c7c5}.nsm7Bb-HzV7m-LgbsSe.jVeSEe.MFS4be-Ia7Qfc .nsm7Bb-HzV7m-LgbsSe-BPrWId .K4efff{color:#e8eaed;fill:#e8eaed}@media screen and (prefers-contrast:more){.nsm7Bb-HzV7m-LgbsSe.jVeSEe .nsm7Bb-HzV7m-LgbsSe-BPrWId .K4efff,.nsm7Bb-HzV7m-LgbsSe.jVeSEe.MFS4be-Ia7Qfc .nsm7Bb-HzV7m-LgbsSe-BPrWId .K4efff{color:#000;fill:#000}}.nsm7Bb-HzV7m-LgbsSe.jVeSEe .nsm7Bb-HzV7m-LgbsSe-BPrWId .K4efff .Bz112c{height:18px;margin:-3px -3px -3px 2px;min-width:18px;width:18px}.nsm7Bb-HzV7m-LgbsSe.jVeSEe .nsm7Bb-HzV7m-LgbsSe-Bz112c-haAclf{border-top-left-radius:0;border-bottom-left-radius:0;border-top-right-radius:3px;border-bottom-right-radius:3px;margin-left:12px;margin-right:-10px}.nsm7Bb-HzV7m-LgbsSe.jVeSEe.JGcpL-RbRzK .nsm7Bb-HzV7m-LgbsSe-Bz112c-haAclf{border-radius:18px}.L5Fo6c-sM5MNb{border:0;display:block;left:0;position:relative;top:0}.L5Fo6c-bF1uUb{border-radius:4px;bottom:0;cursor:pointer;left:0;position:absolute;right:0;top:0}.L5Fo6c-bF1uUb:focus{border:none;outline:none}sentinel{}</style><style></style>
+    <script nonce="">
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'G-T7QHS60L4Q', {
+            'optimize_id': 'GTM-52LNT9S',
+            'displayFeaturesTask': null,
+            'send_page_view': false,
+            'content_group1': 'WriteUps',
+            'user_properties': {
+                'logged_in': true,
+            }
+        });
+    </script>
+    <script nonce="" async="" src="./SEGN_ Autoregressive Cost-Map View of TVT _ Kaggle_files/js"></script>
+
+
+  
+    
+    <meta name="description" content="">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://www.kaggle.com//writeups/kishorevishal/segn-an-autoregressive-cost-map-view-of-tvt">
+    <meta property="og:title" content="SEGN: Autoregressive Cost-Map View of TVT | Kaggle">
+    <meta property="og:description" content="">
+
+    <meta name="twitter:card" content="summary">
+    <meta property="twitter:domain" content="kaggle.com">
+    <meta property="twitter:url" content="https://www.kaggle.com//writeups/kishorevishal/segn-an-autoregressive-cost-map-view-of-tvt">
+    <meta name="twitter:title" content="SEGN: Autoregressive Cost-Map View of TVT | Kaggle">
+    <meta name="twitter:description" content="">
+
+
+
+    <meta property="og:image" content="https://www.kaggle.com/static/images/logos/kaggle-logo-opengraph.png">
+    <meta property="twitter:image" content="https://www.kaggle.com/static/images/logos/kaggle-logo-opengraph-square.png">
+
+  <meta name="twitter:site" content="@Kaggle"> 
+  
+    
+
+  
+    
+
+  
+    
+
+
+
+    <script nonce="">window['useKaggleAnalytics'] = true;</script>
+
+  <script id="gapi-target" nonce="" src="./SEGN_ Autoregressive Cost-Map View of TVT _ Kaggle_files/api.js.Без названия" defer="" async="" gapi_processed="true"></script>
+  <script nonce="" src="./SEGN_ Autoregressive Cost-Map View of TVT _ Kaggle_files/runtime.js.Без названия"></script>
+  <script nonce="" src="./SEGN_ Autoregressive Cost-Map View of TVT _ Kaggle_files/vendor.js.Без названия"></script>
+  <script nonce="" src="./SEGN_ Autoregressive Cost-Map View of TVT _ Kaggle_files/app.js.Без названия"></script><style id="_goober"> .go1475592160{height:0;}.go1671063245{height:auto;}.go1888806478{display:flex;flex-wrap:wrap;flex-grow:1;}@media (min-width:600px){.go1888806478{flex-grow:initial;min-width:288px;}}.go167266335{background-color:#313131;font-size:0.875rem;line-height:1.43;letter-spacing:0.01071em;color:#fff;align-items:center;padding:6px 16px;border-radius:4px;box-shadow:0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12);}.go3162094071{padding-left:20px;}.go3844575157{background-color:#313131;}.go1725278324{background-color:#43a047;}.go3651055292{background-color:#d32f2f;}.go4215275574{background-color:#ff9800;}.go1930647212{background-color:#2196f3;}.go946087465{display:flex;align-items:center;padding:8px 0;}.go703367398{display:flex;align-items:center;margin-left:auto;padding-left:16px;margin-right:-8px;}.go3963613292{width:100%;position:relative;transform:translateX(0);top:0;right:0;bottom:0;left:0;min-width:288px;}.go1141946668{box-sizing:border-box;display:flex;max-height:100%;position:fixed;z-index:1400;height:auto;width:auto;transition:top 300ms ease 0ms,right 300ms ease 0ms,bottom 300ms ease 0ms,left 300ms ease 0ms,max-width 300ms ease 0ms;pointer-events:none;max-width:calc(100% - 40px);}.go1141946668 .notistack-CollapseWrapper{padding:6px 0px;transition:padding 300ms ease 0ms;}@media (max-width:599.95px){.go1141946668{width:100%;max-width:calc(100% - 32px);}}.go3868796639 .notistack-CollapseWrapper{padding:2px 0px;}.go3118922589{top:14px;flex-direction:column;}.go1453831412{bottom:14px;flex-direction:column-reverse;}.go4027089540{left:20px;}@media (min-width:600px){.go4027089540{align-items:flex-start;}}@media (max-width:599.95px){.go4027089540{left:16px;}}.go2989568495{right:20px;}@media (min-width:600px){.go2989568495{align-items:flex-end;}}@media (max-width:599.95px){.go2989568495{right:16px;}}.go4034260886{left:50%;transform:translateX(-50%);}@media (min-width:600px){.go4034260886{align-items:center;}}</style>
+    <script nonce="" type="text/javascript">
+      window.kaggleStackdriverConfig = {
+        key: 'AIzaSyA4eNqUdRRskJsCZWVz-qL655Xa5JEMreE',
+        projectId: 'kaggle-161607',
+        service: 'web-fe',
+        version: 'ci',
+        userId: '34630893'
+      }
+    </script>
+<style data-styled="active" data-styled-version="6.4.2"></style><link rel="stylesheet" type="text/css" href="./SEGN_ Autoregressive Cost-Map View of TVT _ Kaggle_files/4912.70c86abc3e838bdc.css"><style data-emotion="css-global" data-s=""></style><style data-emotion="css" data-s=""></style></head>
+<body style="background-color: rgb(28, 29, 32);">
+  <div id="root"><nav aria-label="Main Kaggle page navigation" inert="" class="sc-biWTsH sc-clqQRB fRWvqG dleQVr"><div class="sc-hglrMW cKDOTY"><div class="sc-hZhKrD jzEBVF"><div class="sc-cHazmW hwbXxe"><button aria-label="Navigation menu" title="Navigation menu" class="sc-iBjNZB bGduwL google-symbols notranslate">menu</button></div><a href="https://www.kaggle.com/writeups/kishorevishal/segn-an-autoregressive-cost-map-view-of-tvt?_gl=1*3673el*_ga*MzA0NzU1Njg2LjE3ODEzNTA0Njc.*_ga_T7QHS60L4Q*czE3ODMzNzY0MzckbzUyJGcxJHQxNzgzMzc2NTM4JGoyMCRsMCRoMA..#site-content" class="sc-dSDPUr ixAKjE">Skip to<br>content</a><div data-testid="kaggle-logo-wrapper" class="sc-Jclpx kOOdLY"><a href="https://www.kaggle.com/" aria-label="Return to Kaggle home page"><img src="./SEGN_ Autoregressive Cost-Map View of TVT _ Kaggle_files/site-logo.svg" alt="Kaggle" class="sc-tIyEa jALJjq"></a></div></div></div><div class="sc-findPx hSJydp"><button class="sc-Jwmfr jsHtZW"><svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink: 0;"><path fill-rule="evenodd" clip-rule="evenodd" d="M20 30L20 16L16 20L16 30L20 30Z" fill="#20BEFF"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M20 20L30 20L30 16L20 16L20 20Z" fill="#20BEFF"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M16 20L20 16L15.937 16L6 16L6 20L16 20Z" fill="#20BEFF"></path><rect x="20" y="16" width="4" height="10" transform="rotate(-180 20 16)" fill="#20BEFF"></rect></svg><span class="sc-dILkzW sc-gGKKzG iNaPtF hmZcDd">Create</span></button></div><div class="sc-lfBCjM dySFdx"><div class="sc-hCXID fIuUmI"><div class="sc-DSdOV bWAwBN"><div class="sc-dwNPMq eELAeC"><div class="sc-hjYznJ hSlpsI"><div class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root sc-dkIoQT dLCgVn css-feqhe6"><div class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedStart css-ipre3h"><span class="google-symbols notranslate MuiIcon-root MuiIcon-fontSizeMedium sc-bYgEKt bpVxIz notranslate css-1jgtvd5" aria-hidden="true" style="margin-right: 8px;">search</span><input aria-invalid="false" autocomplete="off" id=":r2:" placeholder="Search" type="text" class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedStart css-iyhe1a" value=""><fieldset aria-hidden="true" class="MuiOutlinedInput-notchedOutline css-nqlg3w"><legend class="css-ihdtdm"><span class="notranslate">​</span></legend></fieldset></div></div></div></div><ul class="MuiList-root km-list css-1uzmcsd" role="list"><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="Home List Item"><div class="sc-euUkyj cXgshv sc-hGLXNb bCUebD km-listitem--small"><a aria-label="Home" tabindex="0" href="https://www.kaggle.com/" data-click-log-id="home" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-dtvRhV llRLRt" style="min-width: 24px;"><div class="sc-dlgOLa iymbBI"><span class="google-symbols notranslate MuiIcon-root MuiIcon-fontSizeMedium sc-bYgEKt dVcKNL notranslate sc-iusvXA gtIPch css-1jgtvd5" aria-hidden="true" title="Home" aria-label="Home">explore</span></div></div><div class="sc-hCcPtG sc-bitxrY gTYZQg iQsabx"><p class="sc-fFCZOx iZNPId" style="padding-left: 4px;">Home</p></div></div></a></div></li><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="Competitions List Item"><div class="sc-euUkyj cXgshv sc-hGLXNb bCUebD km-listitem--small"><a aria-label="Competitions" tabindex="0" href="https://www.kaggle.com/competitions" data-click-log-id="competitions" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-dtvRhV llRLRt" style="min-width: 24px;"><div class="sc-dlgOLa iymbBI"><span class="google-symbols notranslate MuiIcon-root MuiIcon-fontSizeMedium sc-bYgEKt dVcKNL notranslate sc-iusvXA gtIPch css-1jgtvd5" aria-hidden="true" title="Competitions" aria-label="Competitions">emoji_events</span></div></div><div class="sc-hCcPtG sc-bitxrY gTYZQg iQsabx"><p class="sc-fFCZOx iZNPId" style="padding-left: 4px;">Competitions</p></div></div></a></div></li><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="Benchmarks List Item"><div class="sc-euUkyj cXgshv sc-hGLXNb bCUebD km-listitem--small"><a aria-label="Benchmarks" tabindex="0" href="https://www.kaggle.com/benchmarks" data-click-log-id="benchmarks" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-dtvRhV llRLRt" style="min-width: 24px;"><div class="sc-dlgOLa iymbBI"><span class="google-symbols notranslate MuiIcon-root MuiIcon-fontSizeMedium sc-bYgEKt dVcKNL notranslate sc-iusvXA gtIPch css-1jgtvd5" aria-hidden="true" title="Benchmarks" aria-label="Benchmarks">leaderboard</span></div></div><div class="sc-hCcPtG sc-bitxrY gTYZQg iQsabx"><p class="sc-fFCZOx iZNPId" style="padding-left: 4px;">Benchmarks</p></div></div></a></div></li><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="Game Arena List Item"><div class="sc-euUkyj cXgshv sc-hGLXNb bCUebD km-listitem--small"><a aria-label="Game Arena" tabindex="0" href="https://www.kaggle.com/game-arena" data-click-log-id="game-arena" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-dtvRhV llRLRt" style="min-width: 24px;"><div class="sc-dlgOLa iymbBI"><span class="google-symbols notranslate MuiIcon-root MuiIcon-fontSizeMedium sc-bYgEKt dVcKNL notranslate sc-iusvXA gtIPch css-1jgtvd5" aria-hidden="true" title="Game Arena" aria-label="Game Arena">smart_toy</span></div></div><div class="sc-hCcPtG sc-bitxrY gTYZQg iQsabx"><p class="sc-fFCZOx iZNPId" style="padding-left: 4px;">Game Arena</p></div></div></a></div></li></ul><ul class="MuiList-root km-list css-1uzmcsd" role="list"><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="Data Hub List Item"><div class="sc-euUkyj cXgshv sc-hGLXNb bCUebD km-listitem--small"><a aria-current="false" aria-expanded="false" aria-label="Data Hub" tabindex="0" href="https://www.kaggle.com/writeups/kishorevishal/segn-an-autoregressive-cost-map-view-of-tvt?_gl=1*3673el*_ga*MzA0NzU1Njg2LjE3ODEzNTA0Njc.*_ga_T7QHS60L4Q*czE3ODMzNzY0MzckbzUyJGcxJHQxNzgzMzc2NTM4JGoyMCRsMCRoMA..#" data-click-log-id="data-hub" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-dtvRhV llRLRt" style="min-width: 24px;"><div class="sc-dlgOLa iymbBI"><span class="google-symbols notranslate MuiIcon-root MuiIcon-fontSizeMedium sc-bYgEKt dVcKNL notranslate sc-iusvXA gtIPch css-1jgtvd5" aria-hidden="true" title="Data Hub" aria-label="Data Hub">code</span></div></div><div class="sc-hCcPtG sc-bitxrY gTYZQg iQsabx"><p class="sc-fFCZOx iZNPId" style="padding-left: 4px;">Data Hub</p></div></div></a><div class="sc-ilnrqe fdhDmN" style="padding-right: 12px;"><button aria-label="Expand" title="Expand" class="sc-iBjNZB ianyQQ google-symbols notranslate">expand_more</button></div></div></li></ul><ul class="MuiList-root km-list css-1uzmcsd" role="list"><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="More on Kaggle List Item"><div class="sc-euUkyj cXgshv sc-hGLXNb bCUebD km-listitem--small"><a aria-current="false" aria-expanded="true" aria-label="More on Kaggle" tabindex="0" href="https://www.kaggle.com/writeups/kishorevishal/segn-an-autoregressive-cost-map-view-of-tvt?_gl=1*3673el*_ga*MzA0NzU1Njg2LjE3ODEzNTA0Njc.*_ga_T7QHS60L4Q*czE3ODMzNzY0MzckbzUyJGcxJHQxNzgzMzc2NTM4JGoyMCRsMCRoMA..#" data-click-log-id="more" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-dtvRhV llRLRt" style="min-width: 24px;"><div class="sc-dlgOLa iymbBI"><span class="google-symbols notranslate MuiIcon-root MuiIcon-fontSizeMedium sc-bYgEKt dVcKNL notranslate sc-iusvXA gtIPch css-1jgtvd5" aria-hidden="true" title="More" aria-label="More">format_list_bulleted</span></div></div><div class="sc-hCcPtG sc-bitxrY gTYZQg iQsabx"><p class="sc-fFCZOx iZNPId" style="padding-left: 4px;">More</p></div></div></a><div class="sc-ilnrqe fdhDmN" style="padding-right: 12px;"><button aria-label="Collapse" title="Collapse" class="sc-iBjNZB ianyQQ google-symbols notranslate">expand_less</button></div></div></li><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="Discussions List Item"><div class="sc-euUkyj cXgshv sc-hGLXNb bCUebD km-listitem--small"><a aria-label="Discussions" tabindex="0" href="https://www.kaggle.com/discussions" data-click-log-id="discussions" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-dtvRhV llRLRt" style="min-width: 24px;"><div class="sc-dlgOLa iymbBI"><span class="google-symbols notranslate MuiIcon-root MuiIcon-fontSizeMedium sc-bYgEKt dVcKNL notranslate sc-iusvXA gtIPch css-1jgtvd5" aria-hidden="true" title="Discussions" aria-label="Discussions">comment</span></div></div><div class="sc-hCcPtG sc-bitxrY gTYZQg iQsabx"><p class="sc-fFCZOx iZNPId" style="padding-left: 4px;">Discussions</p></div></div></a></div></li><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="Kaggle Learn List Item"><div class="sc-euUkyj cXgshv sc-hGLXNb bCUebD km-listitem--small"><a aria-label="Kaggle Learn" tabindex="0" href="https://www.kaggle.com/learn" data-click-log-id="learn" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-dtvRhV llRLRt" style="min-width: 24px;"><div class="sc-dlgOLa iymbBI"><span class="google-symbols notranslate MuiIcon-root MuiIcon-fontSizeMedium sc-bYgEKt dVcKNL notranslate sc-iusvXA gtIPch css-1jgtvd5" aria-hidden="true" title="Learn" aria-label="Learn">school</span></div></div><div class="sc-hCcPtG sc-bitxrY gTYZQg iQsabx"><p class="sc-fFCZOx iZNPId" style="padding-left: 4px;">Learn</p></div></div></a></div></li><div class="sc-gVJhcH gymogj"><div class="sc-hJpFng cRusut"></div></div><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="Kaggle Rankings List Item"><div class="sc-euUkyj cXgshv sc-likWDx hIoMMp km-listitem--dense"><a aria-label="Kaggle Rankings" tabindex="0" href="https://www.kaggle.com/rankings" data-click-log-id="kaggle-rankings" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-hCcPtG sc-bitxrY gTYZQg iQsabx"><p class="sc-fFCZOx iZNPId">Kaggle Rankings</p></div></div></a></div></li><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="Progression List Item"><div class="sc-euUkyj cXgshv sc-likWDx hIoMMp km-listitem--dense"><a aria-label="Progression" tabindex="0" href="https://www.kaggle.com/progression" data-click-log-id="progression" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-hCcPtG sc-bitxrY gTYZQg iQsabx"><p class="sc-fFCZOx iZNPId">Progression</p></div></div></a></div></li><div class="sc-gVJhcH gymogj"><div class="sc-hJpFng cRusut"></div></div><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="Documentation List Item"><div class="sc-euUkyj cXgshv sc-likWDx hIoMMp km-listitem--dense"><a aria-label="Documentation" tabindex="0" href="https://www.kaggle.com/docs" data-click-log-id="documentation" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-hCcPtG sc-bitxrY gTYZQg iQsabx"><p class="sc-fFCZOx iZNPId">Documentation</p></div></div></a></div></li><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="Blog List Item"><div class="sc-euUkyj cXgshv sc-likWDx hIoMMp km-listitem--dense"><a aria-label="Blog" tabindex="0" href="https://www.kaggle.com/blog" data-click-log-id="blog" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-hCcPtG sc-bitxrY gTYZQg iQsabx"><p class="sc-fFCZOx iZNPId">Blog</p></div></div></a></div></li><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="Host a Competition List Item"><div class="sc-euUkyj cXgshv sc-likWDx hIoMMp km-listitem--dense"><a aria-label="Host a Competition" tabindex="0" href="https://www.kaggle.com/c/about/host" data-click-log-id="host-a-competition" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-hCcPtG sc-bitxrY gTYZQg iQsabx"><p class="sc-fFCZOx iZNPId">Host a Competition</p></div></div></a></div></li><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="Research Grants List Item"><div class="sc-euUkyj cXgshv sc-likWDx hIoMMp km-listitem--dense"><a aria-label="Research Grants" tabindex="0" href="https://www.kaggle.com/research-grants" data-click-log-id="research-grants" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-hCcPtG sc-bitxrY gTYZQg iQsabx"><p class="sc-fFCZOx iZNPId">Research Grants</p></div></div></a></div></li><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="Educator Resources List Item"><div class="sc-euUkyj cXgshv sc-likWDx hIoMMp km-listitem--dense"><a aria-label="Educator Resources" tabindex="0" href="https://www.kaggle.com/edu" data-click-log-id="educator-resources" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-hCcPtG sc-bitxrY gTYZQg iQsabx"><p class="sc-fFCZOx iZNPId">Educator Resources</p></div></div></a></div></li><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="Support/Contact List Item"><div class="sc-euUkyj cXgshv sc-likWDx hIoMMp km-listitem--dense"><a aria-label="Support/Contact" tabindex="0" href="https://www.kaggle.com/contact" data-click-log-id="supportcontact" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-hCcPtG sc-bitxrY gTYZQg iQsabx"><p class="sc-fFCZOx iZNPId">Support/Contact</p></div></div></a></div></li><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="Community Guidelines List Item"><div class="sc-euUkyj cXgshv sc-likWDx hIoMMp km-listitem--dense"><a aria-label="Community Guidelines" tabindex="0" href="https://www.kaggle.com/community-guidelines" data-click-log-id="community-guidelines" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-hCcPtG sc-bitxrY gTYZQg iQsabx"><p class="sc-fFCZOx iZNPId">Community Guidelines</p></div></div></a></div></li><div class="sc-gVJhcH gymogj"><div class="sc-hJpFng cRusut"></div></div><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="Team List Item"><div class="sc-euUkyj cXgshv sc-likWDx hIoMMp km-listitem--dense"><a aria-label="Team" tabindex="0" href="https://www.kaggle.com/about/team" data-click-log-id="team" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-hCcPtG sc-bitxrY gTYZQg iQsabx"><p class="sc-fFCZOx iZNPId">Team</p></div></div></a></div></li><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="Terms List Item"><div class="sc-euUkyj cXgshv sc-likWDx hIoMMp km-listitem--dense"><a aria-label="Terms" tabindex="0" href="https://www.kaggle.com/terms" data-click-log-id="terms" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-hCcPtG sc-bitxrY gTYZQg iQsabx"><p class="sc-fFCZOx iZNPId">Terms</p></div></div></a></div></li><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="Privacy List Item"><div class="sc-euUkyj cXgshv sc-likWDx hIoMMp km-listitem--dense"><a aria-label="Privacy" tabindex="0" href="https://www.kaggle.com/privacy" data-click-log-id="privacy" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-hCcPtG sc-bitxrY gTYZQg iQsabx"><p class="sc-fFCZOx iZNPId">Privacy</p></div></div></a></div></li></ul></div><div><div role="separator" class="sc-khYboC eRaHXH sc-BiJvk kwmcLw"></div><ul><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="Your Work List Item"><div class="sc-euUkyj cXgshv sc-hGLXNb bCUebD km-listitem--small"><a aria-label="Your Work" tabindex="0" href="https://www.kaggle.com/work" data-click-log-id="your-work" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-dtvRhV llRLRt" style="min-width: 24px;"><div class="sc-dlgOLa iymbBI"><span class="google-symbols notranslate MuiIcon-root MuiIcon-fontSizeMedium sc-bYgEKt dVcKNL notranslate sc-iusvXA gtIPch css-1jgtvd5" aria-hidden="true" title="Your Work" aria-label="Your Work">note_alt</span></div></div><div class="sc-hCcPtG sc-bitxrY gTYZQg iQsabx"><p class="sc-fFCZOx iZNPId" style="padding-left: 4px;">Your Work</p></div></div></a><div class="sc-ilnrqe fdhDmN" style="padding-right: 12px;"><button aria-label="Collapse Your Work" title="Collapse" class="sc-iBjNZB ianyQQ google-symbols notranslate" aria-expanded="true">expand_less</button></div></div></li><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="Collapse Viewed List Item"><div class="sc-euUkyj cXgshv sc-hGLXNb bCUebD km-listitem--small"><a aria-expanded="true" aria-label="Collapse Viewed" tabindex="0" href="https://www.kaggle.com/writeups/kishorevishal/segn-an-autoregressive-cost-map-view-of-tvt?_gl=1*3673el*_ga*MzA0NzU1Njg2LjE3ODEzNTA0Njc.*_ga_T7QHS60L4Q*czE3ODMzNzY0MzckbzUyJGcxJHQxNzgzMzc2NTM4JGoyMCRsMCRoMA..#" data-click-log-id="viewed" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-dtvRhV llRLRt" style="min-width: 24px;"><div class="sc-dlgOLa iymbBI"><span class="google-symbols notranslate MuiIcon-root MuiIcon-fontSizeMedium sc-bYgEKt dVcKNL notranslate sc-iusvXA gtIPch css-1jgtvd5" aria-hidden="true" style="visibility: hidden;">code</span></div></div><div class="sc-hCcPtG sc-bitxrY gTYZQg iQsabx"><p class="sc-fFCZOx iZNPId" style="padding-left: 4px;">Viewed</p></div></div></a><div class="sc-ilnrqe fdhDmN" style="padding-right: 12px;"><button aria-label="Collapse Viewed" title="Collapse Viewed" class="sc-iBjNZB ianyQQ google-symbols notranslate">expand_less</button></div></div></li><li class="sc-fUplsD lgRrvV"><ul class="MuiList-root km-list sc-cvtUcm jHIajL css-1uzmcsd" role="list"><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="SEGN: Autoregressive Cost-Map View of TVT List Item"><div class="sc-euUkyj cXgshv sc-bTZKdb gpsALw km-listitem--dense"><a aria-label="SEGN: Autoregressive Cost-Map View of TVT" tabindex="0" href="https://www.kaggle.com/writeups/kishorevishal/segn-an-autoregressive-cost-map-view-of-tvt" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-dtvRhV llRLRt"><div class="sc-dlgOLa iymbBI"><img src="./SEGN_ Autoregressive Cost-Map View of TVT _ Kaggle_files/17487459-kg.png" alt="" width="20" height="20" class="sc-fTpUzR eXJWwY"></div></div><div class="sc-hCcPtG sc-bitxrY iAzhEW iQsabx"><p class="sc-fFCZOx sc-hRoixq iZNPId ulIIt">SEGN: Autoregressive Cost-Map View of TVT</p></div></div></a></div></li><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="Law as Architecture List Item"><div class="sc-euUkyj cXgshv sc-bTZKdb gpsALw km-listitem--dense"><a aria-label="Law as Architecture" tabindex="0" href="https://www.kaggle.com/writeups/rohanvinaik/law-as-architecture" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-dtvRhV llRLRt"><div class="sc-dlgOLa iymbBI"><img src="./SEGN_ Autoregressive Cost-Map View of TVT _ Kaggle_files/18041611-kg.jpg" alt="" width="20" height="20" class="sc-fTpUzR eXJWwY"></div></div><div class="sc-hCcPtG sc-bitxrY iAzhEW iQsabx"><p class="sc-fFCZOx sc-hRoixq iZNPId ulIIt">Law as Architecture</p></div></div></a></div></li><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="Measuring What Is Learnable: A Validation-First ROGII Campaign List Item"><div class="sc-euUkyj cXgshv sc-bTZKdb gpsALw km-listitem--dense"><a aria-label="Measuring What Is Learnable: A Validation-First ROGII Campaign" tabindex="0" href="https://www.kaggle.com/writeups/ssubbotin/measuring-what-is-learnable-a-validation-first-ro" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-dtvRhV llRLRt"><div class="sc-dlgOLa iymbBI"><img src="./SEGN_ Autoregressive Cost-Map View of TVT _ Kaggle_files/2182897-kg.jpg" alt="" width="20" height="20" class="sc-fTpUzR eXJWwY"></div></div><div class="sc-hCcPtG sc-bitxrY iAzhEW iQsabx"><p class="sc-fFCZOx sc-hRoixq iZNPId ulIIt">Measuring What Is Learnable: A Validation-First ROGII Campaign</p></div></div></a></div></li><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="Autoregressive GRU with Typewell Correlation Features and Rollout List Item"><div class="sc-euUkyj cXgshv sc-bTZKdb gpsALw km-listitem--dense"><a aria-label="Autoregressive GRU with Typewell Correlation Features and Rollout" tabindex="0" href="https://www.kaggle.com/writeups/crabxmz/autoregressive-gru-with-typewell-correlation-featu" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-dtvRhV llRLRt"><div class="sc-dlgOLa iymbBI"><img src="./SEGN_ Autoregressive Cost-Map View of TVT _ Kaggle_files/default-thumb.png" alt="" width="20" height="20" class="sc-fTpUzR eXJWwY"></div></div><div class="sc-hCcPtG sc-bitxrY iAzhEW iQsabx"><p class="sc-fFCZOx sc-hRoixq iZNPId ulIIt">Autoregressive GRU with Typewell Correlation Features and Rollout</p></div></div></a></div></li><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="Pricing the Missing Sign: Forty Audits on the ROGII Tail List Item"><div class="sc-euUkyj cXgshv sc-bTZKdb gpsALw km-listitem--dense"><a aria-label="Pricing the Missing Sign: Forty Audits on the ROGII Tail" tabindex="0" href="https://www.kaggle.com/writeups/zeoyoungy/pricing-the-missing-sign-forty-audits-on-the-rogi" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-dtvRhV llRLRt"><div class="sc-dlgOLa iymbBI"><img src="./SEGN_ Autoregressive Cost-Map View of TVT _ Kaggle_files/17422964-kg.png" alt="" width="20" height="20" class="sc-fTpUzR eXJWwY"></div></div><div class="sc-hCcPtG sc-bitxrY iAzhEW iQsabx"><p class="sc-fFCZOx sc-hRoixq iZNPId ulIIt">Pricing the Missing Sign: Forty Audits on the ROGII Tail</p></div></div></a></div></li></ul></li><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="Collapse Edited List Item"><div class="sc-euUkyj cXgshv sc-hGLXNb bCUebD km-listitem--small"><a aria-expanded="true" aria-label="Collapse Edited" tabindex="0" href="https://www.kaggle.com/writeups/kishorevishal/segn-an-autoregressive-cost-map-view-of-tvt?_gl=1*3673el*_ga*MzA0NzU1Njg2LjE3ODEzNTA0Njc.*_ga_T7QHS60L4Q*czE3ODMzNzY0MzckbzUyJGcxJHQxNzgzMzc2NTM4JGoyMCRsMCRoMA..#" data-click-log-id="edited" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-dtvRhV llRLRt" style="min-width: 24px;"><div class="sc-dlgOLa iymbBI"><span class="google-symbols notranslate MuiIcon-root MuiIcon-fontSizeMedium sc-bYgEKt dVcKNL notranslate sc-iusvXA gtIPch css-1jgtvd5" aria-hidden="true" style="visibility: hidden;">code</span></div></div><div class="sc-hCcPtG sc-bitxrY gTYZQg iQsabx"><p class="sc-fFCZOx iZNPId" style="padding-left: 4px;">Edited</p></div></div></a><div class="sc-ilnrqe fdhDmN" style="padding-right: 12px;"><button aria-label="Collapse Edited" title="Collapse Edited" class="sc-iBjNZB ianyQQ google-symbols notranslate">expand_less</button></div></div></li><li class="sc-fUplsD lgRrvV"><ul class="MuiList-root km-list sc-cvtUcm jHIajL css-1uzmcsd" role="list"><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="physic 30 List Item"><div class="sc-euUkyj cXgshv sc-bTZKdb gpsALw km-listitem--dense"><a aria-label="physic 30" tabindex="0" href="https://www.kaggle.com/code/malyshevdanil/physic-30" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-dtvRhV llRLRt"><div class="sc-dlgOLa iymbBI"><img src="./SEGN_ Autoregressive Cost-Map View of TVT _ Kaggle_files/default-thumb.png" alt="" width="20" height="20" class="sc-fTpUzR eXJWwY"></div></div><div class="sc-hCcPtG sc-bitxrY iAzhEW iQsabx"><p class="sc-fFCZOx sc-hRoixq iZNPId ulIIt">physic 30</p></div></div></a></div></li><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="NeuroGolf 7238.61 v130 Fusion Public List Item"><div class="sc-euUkyj cXgshv sc-bTZKdb gpsALw km-listitem--dense"><a aria-label="NeuroGolf 7238.61 v130 Fusion Public" tabindex="0" href="https://www.kaggle.com/code/malyshevdanil/neurogolf-7238-61-v130-fusion-public" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-dtvRhV llRLRt"><div class="sc-dlgOLa iymbBI"><img src="./SEGN_ Autoregressive Cost-Map View of TVT _ Kaggle_files/default-thumb.png" alt="" width="20" height="20" class="sc-fTpUzR eXJWwY"></div></div><div class="sc-hCcPtG sc-bitxrY iAzhEW iQsabx"><p class="sc-fFCZOx sc-hRoixq iZNPId ulIIt">NeuroGolf 7238.61 v130 Fusion Public</p></div></div></a></div></li><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="notebookfdc9043238 List Item"><div class="sc-euUkyj cXgshv sc-bTZKdb gpsALw km-listitem--dense"><a aria-label="notebookfdc9043238" tabindex="0" href="https://www.kaggle.com/code/malyshevdanil/notebookfdc9043238" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-dtvRhV llRLRt"><div class="sc-dlgOLa iymbBI"><img src="./SEGN_ Autoregressive Cost-Map View of TVT _ Kaggle_files/default-thumb.png" alt="" width="20" height="20" class="sc-fTpUzR eXJWwY"></div></div><div class="sc-hCcPtG sc-bitxrY iAzhEW iQsabx"><p class="sc-fFCZOx sc-hRoixq iZNPId ulIIt">notebookfdc9043238</p></div></div></a></div></li><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="physic 2 List Item"><div class="sc-euUkyj cXgshv sc-bTZKdb gpsALw km-listitem--dense"><a aria-label="physic 2" tabindex="0" href="https://www.kaggle.com/code/malyshevdanil/physic-2" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-dtvRhV llRLRt"><div class="sc-dlgOLa iymbBI"><img src="./SEGN_ Autoregressive Cost-Map View of TVT _ Kaggle_files/default-thumb.png" alt="" width="20" height="20" class="sc-fTpUzR eXJWwY"></div></div><div class="sc-hCcPtG sc-bitxrY iAzhEW iQsabx"><p class="sc-fFCZOx sc-hRoixq iZNPId ulIIt">physic 2</p></div></div></a></div></li><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="warpblend List Item"><div class="sc-euUkyj cXgshv sc-bTZKdb gpsALw km-listitem--dense"><a aria-label="warpblend" tabindex="0" href="https://www.kaggle.com/code/malyshevdanil/warpblend" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-dtvRhV llRLRt"><div class="sc-dlgOLa iymbBI"><img src="./SEGN_ Autoregressive Cost-Map View of TVT _ Kaggle_files/default-thumb.png" alt="" width="20" height="20" class="sc-fTpUzR eXJWwY"></div></div><div class="sc-hCcPtG sc-bitxrY iAzhEW iQsabx"><p class="sc-fFCZOx sc-hRoixq iZNPId ulIIt">warpblend</p></div></div></a></div></li></ul></li></ul></div></div><div class="sc-geRwcS elybkM"><button class="sc-locMLe bJqkju"><div class="sc-unmwu fvUTrm"><span class="google-symbols notranslate MuiIcon-root MuiIcon-fontSizeMedium sc-bYgEKt caGTwn notranslate sc-iPjDwf kOVcyX css-1jgtvd5" aria-hidden="true" aria-label="Open Active Events dialog">auto_awesome_motion</span></div><p class="sc-folSZX sc-kVYSvN gZGcaN gJuThF">View Active Events</p></button></div></div></nav><nav aria-label="Main menu, search and your account" class="sc-hYYjdK hatzUt"><div class="sc-hKyxtL izPPzR"><div class="sc-hZhKrD jzEBVF"><div class="sc-cHazmW hwbXxe"><button aria-label="Navigation menu" title="Navigation menu" class="sc-iBjNZB bGduwL google-symbols notranslate">menu</button></div><a href="https://www.kaggle.com/writeups/kishorevishal/segn-an-autoregressive-cost-map-view-of-tvt?_gl=1*3673el*_ga*MzA0NzU1Njg2LjE3ODEzNTA0Njc.*_ga_T7QHS60L4Q*czE3ODMzNzY0MzckbzUyJGcxJHQxNzgzMzc2NTM4JGoyMCRsMCRoMA..#site-content" class="sc-dSDPUr ixAKjE">Skip to<br>content</a><div data-testid="kaggle-logo-wrapper" class="sc-Jclpx kOOdLY"><a href="https://www.kaggle.com/" aria-label="Return to Kaggle home page"><img src="./SEGN_ Autoregressive Cost-Map View of TVT _ Kaggle_files/site-logo.svg" alt="Kaggle" class="sc-tIyEa jALJjq"></a></div></div></div><div class="sc-edgaEG jDoSdO"><div class="sc-jlAnuY dZmtsV"></div><div class="sc-iXaBKZ bLlZsj"><div class="sc-fyzlkC gAkhdh"><div class="sc-iXuCAT OVKCZ"><div class="sc-kmYGLm hooIHD"><div class="sc-iIvZUO ebfLHz sc-gJaedx gwRoqn" aria-label="Malyshev Danil" role="button" tabindex="0"><div data-testid="avatar-image" title="Malyshev Danil" class="sc-gsdCXR hgbFAN" style="background-image: url(&quot;https://storage.googleapis.com/kaggle-avatars/thumbnails/default-thumb.png&quot;);"></div><svg width="32" height="32" viewBox="0 0 32 32"><circle r="15" cx="16" cy="16" fill="none" stroke-width="2" style="stroke: rgb(95, 99, 104);"></circle><circle r="15" cx="16" cy="16" fill="none" stroke-width="2" style="stroke: rgb(32, 190, 255);"></circle></svg></div></div></div></div></div></div></nav><div id="site-content" class="sc-cjeGuL iXkhOO legacy-less-dark-theme" role="main"><div class="sc-bAoahh ldSmbP"></div><div><div height="1px" class="sc-BlSCl cpQduB"></div><div class="sc-jXCnqn Vhmbp"><div inert="" class="sc-iMRniJ bGKIue"><div class="sc-donJkS kvBIET"><span class="sc-bqqMSY sc-glFXrH icDQHb jiHGZU">SEGN: Autoregressive Cost-Map View of TVT</span></div></div></div><div role="separator" class="sc-khYboC dTnicw sc-bpCmCc eXPMwz"></div><div class="sc-kNYukV bPXZrh" style="padding-top: 0px;"><div class="sc-hWJtyg dQZslb"><div class="sc-fMvFCd gLPPZv" style="margin-top: 40px;"><h1 class="sc-jrIDTr sc-cPdrvo fGpszN hPXRPW">SEGN: Autoregressive Cost-Map View of TVT</h1><div class="sc-dAueUm jEQvZb"><p class="sc-bjLslk sc-cDkSAy kXtakj glfdPN">Project Writeup · Jul 7, 2026</p></div></div><div style="margin: 40px 0px;"><div role="separator" class="sc-khYboC dTnicw"></div></div><div class="sc-bMalKH kyDdyO"><div class="sc-jLZMNx jXFCPI"><div class="sc-dFBygw jHODdG"><h2 data-original-level="1">SEGN: Autoregressive Cost-Map View of TVT</h2>
+<h3 data-original-level="3">Working Note -</h3>
+<p><strong>Public LB:</strong> <code>6.1RSME</code><br>
+<strong>Team:</strong> <code>Vishal Kishore</code></p>
+<h2 data-original-level="2">1. Problem Setup</h2>
+<ul>
+<li><p>The task is to predict <strong>TVT / stratigraphic depth</strong> for a horizontal well after the <strong>Prediction Start</strong>.</p></li>
+<li><p>Inputs available:</p>
+<ul>
+<li>Well path</li>
+<li>Gamma-ray log</li>
+<li>Vertical typewell</li></ul></li>
+<li><p>Our system is called <strong>SEGN - Structured Energy Geosteering Network</strong>.</p></li>
+<li><p>SEGN does <strong>not</strong> directly regress TVT as a single number.</p></li>
+<li><p>Instead, at every measured depth, it builds a <strong>cost map</strong>:</p>
+<ul>
+<li>Candidate TVT values are scored.</li>
+<li>Lower cost means the candidate is more likely.</li>
+<li>The model then decodes a trajectory through the low-cost region.</li></ul></li>
+</ul>
+<h3 data-original-level="3">Main idea</h3>
+<ul>
+<li>SEGN treats TVT prediction as a <strong>matching problem</strong>, not just a regression problem.</li>
+</ul>
+<h2 data-original-level="2">Mathematical View of SEGN</h2>
+<table>
+<thead>
+<tr>
+<th>Concept</th>
+<th>Formula / Quantity</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Candidate TVT grid</td>
+<td><code>z ∈ Z</code></td>
+<td>At every measured depth, SEGN considers many possible TVT candidates instead of predicting one value directly.</td>
+</tr>
+<tr>
+<td>Cost map</td>
+<td><code>C_t(z)</code></td>
+<td>Cost assigned to candidate TVT <code>z</code> at depth step <code>t</code>. Lower cost means higher confidence.</td>
+</tr>
+<tr>
+<td>Posterior over candidates</td>
+<td><code>p_t(z) = exp(-C_t(z)) / Σ_z' exp(-C_t(z'))</code></td>
+<td>Converts the cost map into a probability-like distribution over TVT candidates.</td>
+</tr>
+<tr>
+<td>Mean decode</td>
+<td><code>z_hat_t = Σ_z p_t(z) * z</code></td>
+<td>Final prediction is the posterior mean. This reduced amplitude shrinkage compared to mode/soft decode.</td>
+</tr>
+<tr>
+<td>Mode decode</td>
+<td><code>z_hat_t = argmin_z C_t(z)</code></td>
+<td>Picks the single cheapest candidate. This was brittle in self-similar GR sections.</td>
+</tr>
+<tr>
+<td>RMSE</td>
+<td><code>RMSE = sqrt((1/N) * Σ_i (z_hat_i - z_i)^2)</code></td>
+<td>Main error metric used to compare approaches.</td>
+</tr>
+<tr>
+<td>Anchor-relative offset</td>
+<td><code>Δ_t = z_t - z_anchor</code></td>
+<td>TVT is predicted relative to the last trusted anchor. Wrong anchors cause recursive drift.</td>
+</tr>
+<tr>
+<td>Predicted offset</td>
+<td><code>Δ_hat_t = z_hat_t - z_anchor</code></td>
+<td>The model predicts movement away from the anchor rather than absolute TVT alone.</td>
+</tr>
+<tr>
+<td>Gain correction</td>
+<td><code>z_corr_t = z_anchor + g * Δ_hat_t + b</code></td>
+<td>Captures the multiplicative under-scaling problem. Bias alone was not enough.</td>
+</tr>
+<tr>
+<td>Bias-only correction</td>
+<td><code>z_corr_t = z_hat_t + b</code></td>
+<td>Tests whether the error is only an additive shift. This failed because the error was mostly gain/level related.</td>
+</tr>
+<tr>
+<td>Affine diagnostic</td>
+<td><code>z_corr_t = α + β * z_hat_t + γ * h_t</code></td>
+<td>Used to test whether remaining error was mostly level, gain, or horizon drift.</td>
+</tr>
+<tr>
+<td>Entropy</td>
+<td><code>H_t = -Σ_z p_t(z) * log(p_t(z))</code></td>
+<td>Measures uncertainty of the cost-map distribution.</td>
+</tr>
+<tr>
+<td>Valley sharpness</td>
+<td><code>sharpness_t ≈ 1 / H_t</code></td>
+<td>Sharp valley means confident evidence; diffuse valley means uncertainty.</td>
+</tr>
+<tr>
+<td>Decode disagreement</td>
+<td><code>d_t = abs(z_hat_mean_t - z_hat_mode_t)</code></td>
+<td>Large disagreement flags ambiguous or self-similar sections.</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+  <p>Mathematically, SEGN can be viewed as learning a cost function (C_t(z)) over candidate TVT values rather than directly regressing TVT. The final prediction is decoded from the induced distribution (p_t(z)). This framing made it possible to separate three failure modes: bad evidence, bad decode, and anchor/gain drift.</p>
+</blockquote>
+<ul>
+<li>The key diagnostic question throughout the campaign was:</li>
+</ul>
+<blockquote>
+  <p>Is the error coming from the evidence, or from how we read out the evidence?</p>
+</blockquote>
+<hr>
+<h2 data-original-level="2">2. How We Evaluated</h2>
+<ul>
+<li><p>Numbers are mostly <strong>leave-well-out CV RMSE</strong> of dTVT in feet.</p></li>
+<li><p>Single-well results are treated as diagnostics, not final proof.</p></li>
+<li><p>We tracked two validation signals:</p>
+<ul>
+<li>Local CV</li>
+<li>Public leaderboard slice, around <strong>24% of test data</strong></li></ul></li>
+<li><p>If a change helped CV but hurt the public slice, we treated it as likely overfitting our validation.</p></li>
+</ul>
+<hr>
+<h2 data-original-level="2">3. Main Approaches Tried</h2>
+<h3 data-original-level="3">3.1 Summary Table</h3>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Approach</th>
+<th>Status</th>
+<th>Key Result</th>
+<th>Main Lesson</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>Autoregressive framing instead of global sequence alignment</td>
+<td>Adopted</td>
+<td>Chunked trunk <strong>5.8</strong> vs full-sequence warp <strong>8.0</strong> RMSE</td>
+<td>Full alignment suffers from unknown well-level scale</td>
+</tr>
+<tr>
+<td>1</td>
+<td>Cost-map evidence-fusion trunk</td>
+<td>Kept as core</td>
+<td>Shape tracked, but level off by <strong>−27 to −35 ft</strong> in deep sections</td>
+<td>Backbone was right, level calibration was wrong</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Per-channel evidence audit</td>
+<td>Kept and pruned</td>
+<td>2 of 5 slots actually localised well</td>
+<td>Some channels sharpen, others only add coverage</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Soft / mode / mean / DP decode</td>
+<td>Mean kept</td>
+<td><strong>15.17 → 11.36</strong> RMSE on same trunk</td>
+<td>Mean decode recovered amplitude better</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Anchor re-basing + <code>previous_delta</code> fix</td>
+<td>Shipped</td>
+<td>Oracle anchor <strong>2.67–4.70</strong> vs deployed <strong>7.01–13.57</strong></td>
+<td>Anchor drift caused major recursive error</td>
+</tr>
+<tr>
+<td>5</td>
+<td>K-hypothesis anchor selection</td>
+<td>Built, not shipped</td>
+<td>Oracle <strong>3.84</strong>, true-anchor <strong>4.13</strong>, baseline <strong>8.43</strong></td>
+<td>Mechanism works, but selector training noise mismatch hurt deployment</td>
+</tr>
+<tr>
+<td>6</td>
+<td>CRPS distributional loss</td>
+<td>Rejected</td>
+<td>Deployed score <strong>6.7 → 7.1</strong></td>
+<td>It collapsed fusion onto one channel</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Formation-surface + XGBoost</td>
+<td>Rejected</td>
+<td>Around <strong>12 RMSE</strong> vs SEGN around <strong>6.7</strong></td>
+<td>Surface regression discards useful log-matching evidence</td>
+</tr>
+<tr>
+<td>8</td>
+<td>External ensemble blend</td>
+<td>Kept near floor</td>
+<td><strong>6.965 → 6.516</strong> as SEGN weight increased</td>
+<td>SEGN was the decorrelated member</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 data-original-level="2">4. Why We Used an Autoregressive Framing</h2>
+<ul>
+<li><p>Many public-style approaches use:</p>
+<ul>
+<li>Full-sequence DP / Viterbi</li>
+<li>Beam search</li>
+<li>Optimal transport-style alignment</li>
+<li>Global warping of the log</li></ul></li>
+<li><p>These methods require knowing the right <strong>scale</strong> of the warp.</p></li>
+<li><p>In this problem, that scale is not identifiable per well.</p></li>
+</ul>
+<h3 data-original-level="3">Key finding</h3>
+<ul>
+<li><p>Direction correlation between predicted and true movement was strong:</p>
+<ul>
+<li>Around <strong>0.93–0.97</strong></li></ul></li>
+<li><p>But the required magnitude multiplier varied heavily:</p>
+<ul>
+<li>From <strong>1.05× to 6.55×</strong></li></ul></li>
+<li><p>Local evidence could not reliably choose that multiplier.</p></li>
+</ul>
+<h3 data-original-level="3">Result</h3>
+<ul>
+<li>Full-sequence DP / Viterbi decode scored around <strong>8.0 RMSE</strong>.</li>
+<li>Chunked autoregressive trunk scored around <strong>5.8 RMSE</strong>.</li>
+<li>So we kept the autoregressive setup.</li>
+</ul>
+<p><img src="./SEGN_ Autoregressive Cost-Map View of TVT _ Kaggle_files/inbox_17487459_d5c4c7fe1ff9ea04522549dae5ed9ddc_spatial_base_epoch065_costmap_components_55efee7f.png" alt=""></p>
+<p><img src="./SEGN_ Autoregressive Cost-Map View of TVT _ Kaggle_files/inbox_17487459_9fee78abb3f9186c704b44723639a8f7_crps_epoch064_mode_vs_mean_T050_hidden.png" alt=""></p>
+<h3 data-original-level="3">Tradeoff</h3>
+<ul>
+<li><p>Autoregression matches the real deployment protocol:</p>
+<ul>
+<li>Only the prefix is known.</li>
+<li>Future TVT must be predicted recursively.</li></ul></li>
+<li><p>But it introduces anchor drift:</p>
+<ul>
+<li>A wrong anchor affects the next features.</li>
+<li>This creates compounding error.</li></ul></li>
+</ul>
+<hr>
+<h2 data-original-level="2">5. Cost-Map Evidence Fusion</h2>
+<ul>
+<li>SEGN builds a cost map over candidate TVT values.</li>
+<li>The model does not guess TVT directly.</li>
+<li>It searches for a low-cost valley that represents the likely stratigraphic path.</li>
+</ul>
+<p><img src="./SEGN_ Autoregressive Cost-Map View of TVT _ Kaggle_files/inbox_17487459_9a9a2b9297b424146ec5fcd462204c32_cost_component_scale.png" alt=""></p>
+<h3 data-original-level="3">What worked</h3>
+<ul>
+<li><p>On well-supported sections:</p>
+<ul>
+<li>The cost-map valley aligned with the true curve.</li>
+<li>Decode was almost free.</li></ul></li>
+<li><p>On harder sections:</p>
+<ul>
+<li>The model tracked the shape correctly.</li>
+<li>But the whole valley was shifted by around <strong>27–35 ft</strong>.</li></ul></li>
+</ul>
+<h3 data-original-level="3">Main conclusion</h3>
+<ul>
+<li>The trunk had learned useful shape evidence.</li>
+<li>The dominant failure was a <strong>level / calibration problem</strong>, not a shape problem.</li>
+</ul>
+<hr>
+<h2 data-original-level="2">6. Evidence Channel Audit</h2>
+<ul>
+<li><p>We audited the five fusion channels separately.</p></li>
+<li><p>Two channels were clearly useful:</p>
+<ul>
+<li>Bilinear channel: TCN × typewell interaction</li>
+<li>Multi-head cosine matching channel</li></ul></li>
+<li><p>These produced sharper, better-localised valleys.</p></li>
+</ul>
+<h3 data-original-level="3">Weaker channels</h3>
+<ul>
+<li><p>Some auxiliary channels were:</p>
+<ul>
+<li>Diffuse</li>
+<li>Striped</li>
+<li>Less localised</li></ul></li>
+<li><p>They still helped with coverage, but not with sharp localisation.</p></li>
+</ul>
+<h3 data-original-level="3">Lesson</h3>
+<ul>
+<li>Not every channel should be trusted equally.</li>
+<li>Fusion should learn continuous trust instead of using hard rules.</li>
+</ul>
+<hr>
+<h2 data-original-level="2">7. Decode Experiments</h2>
+<h3 data-original-level="3">Soft / mode decode</h3>
+<ul>
+<li>Soft or modal decode compressed the movement.</li>
+<li>It undershot real peaks.</li>
+<li>Diagnostic RMSE was <strong>15.17</strong>.</li>
+</ul>
+<h3 data-original-level="3">Mean decode</h3>
+<ul>
+<li><p>Switching only the read-out to posterior mean improved the same trunk:</p>
+<ul>
+<li><strong>15.17 → 11.36 RMSE</strong></li></ul></li>
+<li><p>This was a large gain without changing the evidence.</p></li>
+</ul>
+<h3 data-original-level="3">DP decode</h3>
+<ul>
+<li><p>DP decode was rejected.</p></li>
+<li><p>Problems:</p>
+<ul>
+<li>Produced staircase-like trajectories.</li>
+<li>Hard-committed to self-similar wrong evidence.</li>
+<li>Scored around <strong>6 ft worse than a flat anchor</strong> in a true-cutoff diagnostic.</li></ul></li>
+</ul>
+<h3 data-original-level="3">Final choice</h3>
+<ul>
+<li>Mean decode was kept.</li>
+<li>DP decode was banned, even if it sometimes looked locally attractive.</li>
+</ul>
+<hr>
+<h2 data-original-level="2">8. Anchor Drift and Fixes</h2>
+<h3 data-original-level="3">Problem</h3>
+<ul>
+<li><p>Anchor-relative offset coordinates caused long-interval droop.</p></li>
+<li><p>A <code>previous_delta</code> train/eval skew made recursive features inconsistent:</p>
+<ul>
+<li>Training saw one kind of feature.</li>
+<li>Inference produced another kind of feature.</li></ul></li>
+<li><p>Together, they created a feedback loop:</p>
+<ul>
+<li>Wrong anchor</li>
+<li>Wrong features</li>
+<li>Worse next prediction</li>
+<li>More drift</li></ul></li>
+</ul>
+<h3 data-original-level="3">Diagnostic result</h3>
+<ul>
+<li>Same architecture, different anchor quality:</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Start Condition</th>
+<th>RMSE</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Oracle anchor at 0.90 cutoff</td>
+<td><strong>2.67–4.70</strong></td>
+</tr>
+<tr>
+<td>Real deployed 0.60 cutoff</td>
+<td><strong>7.01–13.57</strong></td>
+</tr>
+</tbody>
+</table>
+<h3 data-original-level="3">Lesson</h3>
+<ul>
+<li>A lot of error was not because the evidence trunk was useless.</li>
+<li>It came from recursive anchor drift.</li>
+</ul>
+<hr>
+<h2 data-original-level="2">9. K-Hypothesis Anchor Selection</h2>
+<h3 data-original-level="3">Idea</h3>
+<ul>
+<li>Instead of carrying one anchor, carry <strong>K possible anchors</strong>.</li>
+<li>Then train a selector to choose among them.</li>
+</ul>
+<h3 data-original-level="3">Why it was promising</h3>
+<ul>
+<li>Oracle selection among candidates scored <strong>3.84 RMSE</strong>.</li>
+<li>True single-anchor version scored <strong>4.13 RMSE</strong>.</li>
+<li>Baseline was <strong>8.43 RMSE</strong>.</li>
+</ul>
+<h3 data-original-level="3">Interpretation</h3>
+<ul>
+<li>Multiple candidate anchors can hedge locally.</li>
+<li>Surprisingly, oracle K-selection even beat the true single anchor.</li>
+</ul>
+<h3 data-original-level="3">Why it was not shipped</h3>
+<ul>
+<li><p>The real selector was better than chance.</p></li>
+<li><p>But it hurt the actual submission.</p></li>
+<li><p>Reason:</p>
+<ul>
+<li>Training-time noise did not match real inference-time anchor errors.</li></ul></li>
+</ul>
+<h3 data-original-level="3">Status</h3>
+<ul>
+<li>Mechanism is valid.</li>
+<li>Not abandoned.</li>
+<li>Parked until negative sampling / noise modelling is improved.</li>
+</ul>
+<hr>
+<h2 data-original-level="2">10. CRPS Loss Experiment</h2>
+<h3 data-original-level="3">Goal</h3>
+<ul>
+<li>We tried CRPS to make the cost map more distributionally calibrated.</li>
+</ul>
+<h3 data-original-level="3">Result</h3>
+<ul>
+<li><p>It helped one local diagnostic.</p></li>
+<li><p>But deployed score became worse:</p>
+<ul>
+<li><strong>6.7 → 7.1</strong></li></ul></li>
+</ul>
+<h3 data-original-level="3">Why it failed</h3>
+<ul>
+<li><p>Fusion weights collapsed onto one channel.</p></li>
+<li><p>Costmix channel weight increased:</p>
+<ul>
+<li><strong>37% → 71%</strong></li></ul></li>
+<li><p>Extra MLP channel decreased:</p>
+<ul>
+<li><strong>21.4% → 5.2%</strong></li></ul></li>
+</ul>
+<h3 data-original-level="3">Lesson</h3>
+<ul>
+<li>CRPS rewarded apparent sharpness.</li>
+<li>It reduced evidence diversity.</li>
+<li>We rejected it.</li>
+</ul>
+<hr>
+<h2 data-original-level="2">11. Formation-Surface + XGBoost</h2>
+<h3 data-original-level="3">Idea</h3>
+<ul>
+<li>Use geological tops and geometry directly.</li>
+<li>Train a surface-style XGBoost model.</li>
+</ul>
+<h3 data-original-level="3">Result</h3>
+<ul>
+<li>Around <strong>12 RMSE</strong></li>
+<li>SEGN was around <strong>6.7 RMSE</strong></li>
+</ul>
+<h3 data-original-level="3">Lesson</h3>
+<ul>
+<li>Surface regression alone was not enough.</li>
+<li>It discarded the gamma-ray matching evidence.</li>
+<li>Clean rejection.</li>
+</ul>
+<hr>
+<h2 data-original-level="2">12. External Ensemble Blend</h2>
+<h3 data-original-level="3">Setup</h3>
+<ul>
+<li><p>Final blend used:</p>
+<ul>
+<li>SEGN</li>
+<li><code>sp45</code></li>
+<li><code>fleongg</code></li></ul></li>
+</ul>
+<h3 data-original-level="3">Result</h3>
+<table>
+<thead>
+<tr>
+<th>SEGN Weight</th>
+<th>Public Score</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0.1</td>
+<td><strong>6.965</strong></td>
+</tr>
+<tr>
+<td>0.2</td>
+<td><strong>6.694</strong></td>
+</tr>
+<tr>
+<td>0.3</td>
+<td><strong>6.570</strong></td>
+</tr>
+<tr>
+<td>0.4</td>
+<td><strong>6.516</strong></td>
+</tr>
+</tbody>
+</table>
+<h3 data-original-level="3">Interpretation</h3>
+<ul>
+<li><p>Fitted optimum was around <strong>0.38–0.40</strong> SEGN weight.</p></li>
+<li><p>Expected floor was around <strong>6.51</strong>.</p></li>
+<li><p><code>sp45</code> and <code>fleongg</code> were close to each other:</p>
+<ul>
+<li>Around <strong>3.2 ft</strong> apart</li></ul></li>
+<li><p>SEGN was more different:</p>
+<ul>
+<li>Around <strong>3.9–4.3 ft</strong> from both</li></ul></li>
+</ul>
+<h3 data-original-level="3">Lesson</h3>
+<ul>
+<li>SEGN was the only genuinely decorrelated member.</li>
+<li>Blend helped final score.</li>
+<li>But it was mostly metric optimisation, not geological insight.</li>
+</ul>
+<hr>
+<h2 data-original-level="2">13. Main Data Insights</h2>
+<h3 data-original-level="3">13.1 The biggest error is level / gain, not shape</h3>
+<ul>
+<li><p>Oracle affine correction on hard-well tail:</p>
+<ul>
+<li><strong>6.24 → 2.44 RMSE</strong></li></ul></li>
+<li><p>Bias-only correction:</p>
+<ul>
+<li><strong>6.24 → 8.31 RMSE</strong></li></ul></li>
+<li><p>So the error is not a simple additive bias.</p></li>
+<li><p>It is mostly a multiplicative gain / level problem.</p></li>
+</ul>
+<h3 data-original-level="3">Important limitation</h3>
+<ul>
+<li><p>The required gain was not visible from test-time features.</p></li>
+<li><p>Best available test-time feature correlation with required gain:</p>
+<ul>
+<li><strong>r = −0.107</strong></li></ul></li>
+<li><p>This suggests a hard information limit, not just a missing model trick.</p></li>
+</ul>
+<hr>
+<h3 data-original-level="3">13.2 Prefix-fit regression showed systematic under-scaling</h3>
+<ul>
+<li><p>Predicted vs true offset:</p>
+<ul>
+<li>Slope: <strong>0.735</strong></li>
+<li>Bias: <strong>−0.34 ft</strong></li>
+<li>RMSE: <strong>4.92</strong></li>
+<li>Correlation: <strong>0.889</strong></li></ul></li>
+</ul>
+<h3 data-original-level="3">Interpretation</h3>
+<ul>
+<li><p>The model got direction mostly right.</p></li>
+<li><p>But it systematically under-scaled movement.</p></li>
+<li><p>Approximate correction implied:</p>
+<ul>
+<li>Around <strong>1.36×</strong> scaling needed.</li></ul></li>
+</ul>
+<hr>
+<h3 data-original-level="3">13.3 Error is concentrated in hard sections</h3>
+<ul>
+<li><p>Easy sections near the anchor are close to solved.</p></li>
+<li><p>Most remaining error occurs in:</p>
+<ul>
+<li>Far sections</li>
+<li>Diverging sections</li>
+<li>Deep sections</li>
+<li>Self-similar gamma-ray intervals</li></ul></li>
+<li><p>A single global correction does not solve this because the required correction is per-well.</p></li>
+</ul>
+<hr>
+<h3 data-original-level="3">13.4 Gamma-ray matching is weaker than it first appears</h3>
+<table>
+<thead>
+<tr>
+<th>Diagnostic</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GR–typewell NCC top-1</td>
+<td><strong>12.4%</strong>, about 15× random</td>
+</tr>
+<tr>
+<td>GR–typewell NCC top-5</td>
+<td>Falls to chance</td>
+</tr>
+<tr>
+<td>GR–typewell W1 top-1</td>
+<td><strong>3.3%</strong>, about 4× random</td>
+</tr>
+<tr>
+<td>Directional sign agreement</td>
+<td><strong>54.6%</strong> vs 50% chance</td>
+</tr>
+</tbody>
+</table>
+<h3 data-original-level="3">Lesson</h3>
+<ul>
+<li>Gamma-ray does contain signal.</li>
+<li>But it is highly self-similar.</li>
+<li>It can easily produce false matches.</li>
+<li>This explains why hard DP-style commitment fails.</li>
+</ul>
+<hr>
+<h3 data-original-level="3">13.5 Public slice often disagreed with local CV</h3>
+<ul>
+<li><p>Some ideas improved local CV but hurt the board.</p></li>
+<li><p>Examples:</p>
+<ul>
+<li>CRPS</li>
+<li>Some neighbour-leaning ideas</li></ul></li>
+<li><p>When CV and public slice disagreed, we trusted the public slice more.</p></li>
+</ul>
+<h3 data-original-level="3">Lesson</h3>
+<ul>
+<li>Local validation could be gamed.</li>
+<li>A change had to survive both validation axes before being trusted.</li>
+</ul>
+<hr>
+<h3 data-original-level="3">13.6 Per-well routing should be learned, not hand-written</h3>
+<ul>
+<li><p>We did not use hand-written well buckets.</p></li>
+<li><p>SEGN’s fusion gate learned continuous trust based on:</p>
+<ul>
+<li>Valley sharpness</li>
+<li>Matcher confidence</li>
+<li>Distance past anchor</li>
+<li>Local evidence quality</li></ul></li>
+</ul>
+<h3 data-original-level="3">Lesson</h3>
+<ul>
+<li>Clean-log wells naturally leaned on matching channels.</li>
+<li>Noisy wells leaned more on spatial / base priors.</li>
+<li>Hard if/else routing made results worse.</li>
+</ul>
+<hr>
+<h2 data-original-level="2">14. Physical Interpretation</h2>
+<ul>
+<li><p>The cost map is physically meaningful:</p>
+<ul>
+<li>It represents a distribution over stratigraphic position.</li>
+<li>The decoded path should follow a coherent geological surface.</li></ul></li>
+<li><p>This is why DP decode was rejected:</p>
+<ul>
+<li>It created staircase-like paths.</li>
+<li>Those paths are not geologically plausible.</li></ul></li>
+</ul>
+<h3 data-original-level="3">What was physically meaningful</h3>
+<ul>
+<li>Cost-map evidence fusion</li>
+<li>Channel-level matching</li>
+<li>Mean posterior decode</li>
+<li>Anchor drift diagnostics</li>
+</ul>
+<h3 data-original-level="3">What was mostly metric optimisation</h3>
+<ul>
+<li>External blend with public artifacts</li>
+<li>Some decode tweaks</li>
+</ul>
+<h3 data-original-level="3">Rule followed</h3>
+<ul>
+<li><p>Ship a change only if:</p>
+<ul>
+<li>Physics suggested it, or</li>
+<li>Both CV and public slice supported it</li></ul></li>
+<li><p>Avoid shipping changes based on one isolated local win.</p></li>
+</ul>
+<hr>
+<h2 data-original-level="2">15. What Moved the Needle</h2>
+<table>
+<thead>
+<tr>
+<th>Change</th>
+<th>Before</th>
+<th>After</th>
+<th>Comment</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Chunked trunk vs full-sequence warp</td>
+<td>8.0</td>
+<td>5.8</td>
+<td>Autoregressive framing helped</td>
+</tr>
+<tr>
+<td>mode decode → mean decode</td>
+<td>15.17</td>
+<td>11.36</td>
+<td>Read-out only changed</td>
+</tr>
+<tr>
+<td>Deployed 0.60 cutoff → oracle 0.90 cutoff</td>
+<td>7.01–13.57</td>
+<td>2.67–4.70</td>
+<td>Anchor drift was major</td>
+</tr>
+<tr>
+<td>Baseline → oracle K-candidate selector</td>
+<td>8.43</td>
+<td>3.84</td>
+<td>Selector ceiling was strong</td>
+</tr>
+<tr>
+<td>Anchor-shift head</td>
+<td>9.35</td>
+<td>8.87</td>
+<td>Shipped, but ceiling was 3.78</td>
+</tr>
+<tr>
+<td>Oracle hard source selection → learned soft weighting</td>
+<td>5.71</td>
+<td>5.13</td>
+<td>Learned trust beat hard selection</td>
+</tr>
+<tr>
+<td>External blend, SEGN weight 0.1 → 0.4</td>
+<td>6.965</td>
+<td>6.516</td>
+<td>Blend floor near 6.51</td>
+</tr>
+</tbody>
+</table>
+<h3 data-original-level="3">Main conclusion</h3>
+<ul>
+<li><p>No single component carried the result.</p></li>
+<li><p>Contributions came from:</p>
+<ul>
+<li>Trunk localisation</li>
+<li>Mean decode</li>
+<li>Anchor drift fixes</li>
+<li>Fusion calibration</li>
+<li>External decorrelated blending</li></ul></li>
+</ul>
+<hr>
+<h2 data-original-level="2">16. Model Uncertainty</h2>
+<p>SEGN has two native confidence signals.</p>
+<h3 data-original-level="3">16.1 Valley sharpness</h3>
+<ul>
+<li><p>Sharp valley:</p>
+<ul>
+<li>Model is more confident.</li>
+<li>Evidence is well-localised.</li></ul></li>
+<li><p>Diffuse valley:</p>
+<ul>
+<li>Model is less confident.</li>
+<li>Multiple TVT candidates look plausible.</li></ul></li>
+</ul>
+<h3 data-original-level="3">16.2 Decode disagreement</h3>
+<ul>
+<li><p>We compare:</p>
+<ul>
+<li>Posterior mean decode</li>
+<li>Soft / mode decode</li></ul></li>
+<li><p>Large <code>|mean − soft|</code> indicates harder intervals.</p></li>
+<li><p>This usually appears in:</p>
+<ul>
+<li>Deep sections</li>
+<li>Diverging sections</li>
+<li>Self-similar-log regions</li></ul></li>
+</ul>
+<h3 data-original-level="3">Important limitation</h3>
+<ul>
+<li>These signals show where the model is likely less accurate.</li>
+<li>They do not reliably show where the model is systematically wrong.</li>
+<li>The main remaining error, level / gain drift, is mostly invisible to these uncertainty signals.</li>
+</ul>
+<h3 data-original-level="3">CRPS note</h3>
+<ul>
+<li>CRPS was our attempt at true distributional calibration.</li>
+<li>It failed because it collapsed channel diversity.</li>
+<li>Therefore, we did not present calibrated intervals we could not defend.</li>
+</ul>
+<hr>
+<h2 data-original-level="2">17. Final Takeaways</h2>
+<ul>
+<li><p>The main progress came from diagnosing the failure mode precisely.</p></li>
+<li><p>The key distinction was:</p>
+<ul>
+<li>Evidence problem</li>
+<li>Decode problem</li>
+<li>Anchor drift problem</li>
+<li>Level / gain calibration problem</li></ul></li>
+<li><p>Rejected ideas were still useful because they closed directions cleanly:</p>
+<ul>
+<li>Global alignment</li>
+<li>DP decode</li>
+<li>CRPS</li>
+<li>Surface XGBoost</li></ul></li>
+<li><p>The remaining open problem is gain / level calibration.</p></li>
+<li><p>This problem now appears well-characterised rather than vague.</p></li>
+</ul>
+<hr>
+<h2 data-original-level="2">18. Credit to Public Work</h2>
+<ul>
+<li><p>Final blend uses two public artifacts:</p>
+<ul>
+<li><code>sp45</code></li>
+<li><code>fleongg</code></li></ul></li>
+<li><p>They were used unmodified at the output level.</p></li>
+<li><p>We make no claim about their internals.</p></li>
+<li><p>Our contribution is:</p>
+<ul>
+<li>Validation protocol</li>
+<li>Evidence-fusion design</li>
+<li>Cost-map diagnostics</li>
+<li>Anchor-drift analysis</li>
+<li>SEGN-specific modelling and interpretation</li></ul></li>
+</ul></div></div><div class="sc-iCtEez bnFpQo"><div><span class="sc-bCgoVd hLkRPf">Author</span><div class="sc-kbwYUm qxzbp"><a href="https://www.kaggle.com/kishorevishal" aria-label="Vishal Kishore&#39;s profile" class="sc-iIvZUO ebfLHz"><div data-testid="avatar-image" title="Vishal Kishore" class="sc-gsdCXR kQeKXR" style="background-image: url(&quot;https://storage.googleapis.com/kaggle-avatars/thumbnails/17487459-kg.png?t=2024-01-27-06-56-39&quot;);"></div><svg width="48" height="48" viewBox="0 0 48 48"><circle r="22.5" cx="24" cy="24" fill="none" stroke-width="3" style="stroke: rgb(95, 99, 104);"></circle><circle r="22.5" cx="24" cy="24" fill="none" stroke-width="3" style="stroke: rgb(129, 72, 253);"></circle></svg></a><div><a class="sc-llQYOh ihIcpK sc-hgXGvb iFLHRK" emphasis="high" href="https://www.kaggle.com/kishorevishal" data-discover="true">Vishal Kishore</a><p class="sc-fFCZOx iZNPId">kishorevishal</p></div></div></div><div role="separator" class="sc-khYboC dTnicw" style="margin: 24px 0px;"></div><div class="sc-hgafYl fJa-dJa"><button class="sc-ikBzZv dtZZSK" tabindex="0" role="button"><span class="sc-dlwHGs cVnQIi">Share</span></button><button aria-label="Writeup actions" aria-haspopup="menu" title="Writeup actions" class="sc-iBjNZB ianyQQ google-symbols notranslate" aria-expanded="false">more_horiz</button><div></div></div></div></div><div class="sc-hSUtVV hvlhOe"></div></div></div></div><div id="nav-footer" class="sc-jYuITo hZRBvh"></div></div><div aria-live="polite" aria-atomic="true" role="alert" class="sc-kJxzDI CyFoG"></div></div>
+
+
+</body></html>
