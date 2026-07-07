@@ -60,6 +60,13 @@
   cross-fit test explains *why* the hedge/pf_z stacking failures above happen: hedge-style corrections are
   base-dependent, and their cross-fit-optimal weight collapses to exactly zero once WARP+physics-pp have
   already spent that variance-reduction budget (§7.2).
+- **A real-LB-measured audit of an inherited train/test answer-substitution mechanism.** We traced an
+  inherited postprocessor to the mechanism level (it reads the train copy's true TVT for any hidden well
+  whose ID happens to also appear in `train/`, §15), then measured its actual contribution on the real
+  hidden test by resubmitting our best pipeline with it disabled: **7.155 honest vs. 6.794 with it active**
+  — a real, quantified **0.361 ft** (≈9.8% of pooled squared error), directly refuting the inherited code's
+  own assumption that the entire public test set carries this overlap. Most of our gain over flat is
+  genuine; a real, now-measured minority is not.
 - **An exact problem decomposition** proving the high-frequency error component is *free* (it equals the
   known −Z) and isolating the true difficulty to a single low-frequency per-well surface trend
   (oracle 3.9 ft).
@@ -1061,12 +1068,25 @@ What this does *not* change: because the override's behavior has been identical 
 every submission we have made, it cannot explain the *relative* differences between our own variants
 (denoise, the decorrelated ensemble, more seeds, wall-hedge, WARP-blend, physics-pp) — those deltas are
 still honest, since the override runs constantly across all of them. What it *does* mean: our absolute LB
-numbers are not purely attributable to the components we deliberately engineered, we do not know what
-fraction of the real hidden test set (public or private) carries this ID overlap, and — unlike our first,
+numbers are not purely attributable to the components we deliberately engineered, and — unlike our first,
 narrower framing — this is not merely "a mechanism of unclear magnitude," it is a train/test answer
-substitution whose effect we have now quantified directly. We flag this as prominently as we know how,
-rather than quietly softening the earlier text, because catching our own overclaim with real evidence —
-twice now — is exactly the standard we are holding the rest of this note to.
+substitution whose effect we have now quantified directly.
+
+**We went further and measured its real contribution on the actual hidden test, not just our local stub.**
+We resubmitted our best pipeline (WARP-blend + physics-pp + the cross-validated weight, §7.2) with all three
+override layers disabled: it scored **7.155**, against **6.794** with the override active — a real, measured
+contribution of **0.361 ft**. Converting to squared-error terms (the metric the competition actually pools),
+this is **≈9.8% of pooled squared error** on the graded rows, under the simplifying assumption that
+override-affected rows carry roughly the pipeline's typical honest error before correction. This is a
+small but real minority of our overall gain (flat baseline 15.9 → honest 7.155 → 6.794 with the override):
+most of what separates us from flat is genuine engineering, but a real, now-quantified fraction is not. It
+also **directly contradicts** the inherited pipeline's own diagnostic comment, which asserts "current public
+test = train-contact wells only; override determines them" — if the *entire* public test set carried this
+ID overlap, disabling the override would collapse performance back toward the isolated-pipeline level
+(8–10+ ft), not move it by 0.36 ft. The real fraction of the hidden test set with this overlap is evidently
+modest, not total, contrary to what the inherited code itself assumed. We flag all of this as prominently as
+we know how, rather than quietly softening the earlier text, because catching our own overclaim with real
+evidence — three times now — is exactly the standard we are holding the rest of this note to.
 
 **Future work (the path to the leaders' 5.2–5.4).** Synthetic pretraining remains the most likely route, but
 §9.1 sharpens the target: a better *noise* model (e.g. a 1D diffusion / neural-SDE fit to the residual) is
@@ -1130,6 +1150,9 @@ For quick reference, the full list of experiments referenced above, by section:
   cross-fit, confirming the hedge collapses to weight 0 once WARP+physics-pp are applied ✅; LSO spatial
   K-means-block holdout, confirming the gain is not neighbour leakage ✅; isolation-quartile check,
   confirming isolated wells benefit *more*, not less, from the new combo ✅.
+- **§15 Real-LB audit of the inherited override (1):** resubmission with all 3 override layers disabled,
+  measuring its real contribution directly on the hidden test (7.155 honest vs. 6.794 with it active,
+  ≈9.8% of pooled squared error) ✅.
 - **§9 Neural nets (20):** see the architecture table.
 
 **Total: 60+ distinct experiments.**
