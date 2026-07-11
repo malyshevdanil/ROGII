@@ -1101,6 +1101,23 @@ backbone once realistic priors are in place. Our analysis suggests these are nec
 signal is broadband-unreliable — the gains must come from a better *prior*, learned from a genuine synthetic
 *geology*, rather than from the observation likelihood or the noise distribution.
 
+**A new architecture line, and a near-miss worth documenting.** We built a duration-aware beam-search
+decoder (a Hidden-Semi-Markov model over piecewise-linear segments, with a mixture-hazard segment-length
+prior and AR(1) dip-persistence, both fit from our own known-zone data) as a genuinely different motion
+model from the PF's continuous AR(1) diffusion — inspired by the *category* of the joint (segment-length,
+Δposition) decoding idea, not any competitor's numbers. After fixing two real bugs (fitting priors on the
+wrong tracked quantity, and a catastrophic-divergence failure mode on structurally "wiggly" wells, cured by
+a two-component hazard plus diversity-preserving beam pruning), it reaches rough parity with our isolated
+`pf_ancc` but shows **no** cross-fit-validated blend gain against the full production combo — confirmed
+cleanly on a proper held-out well set, not just a small sample. Separately, while widening the WARP-blend
+weight search past its previous grid edge (0.30), we found what looked like a dramatic further win (pooled
+RMSE 8.58 → 7.06 at weight 0.85) — and then caught it: the WARP net was trained on 613 of the 773 wells in
+that evaluation pool, so pushing weight toward pure WARP was leaning on memorized, not generalized,
+predictions. Restricting the same test to WARP's true 160-well seed-42 holdout reversed the conclusion
+entirely — 0.30 is the genuine optimum, exactly as shipped. We record this as a standing methodology rule:
+any local evaluation touching a learned component must be restricted to that component's own true holdout,
+never a pool it was partly trained on.
+
 ## 16. Conclusion
 
 The ROGII task decomposes cleanly: the high-frequency TVT wiggle is free (it equals −Z, which is known at
