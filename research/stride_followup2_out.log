@@ -1,0 +1,17 @@
+=== extended Cauchy scale sweep (checking for turnaround) ===
+cauchy_scale=  3.0  mean=13.3355  std=0.3320
+cauchy_scale=  5.0  mean=15.9642  std=0.2526
+cauchy_scale=  8.0  mean=22.3890  std=0.3893
+cauchy_scale= 15.0  mean=33.4826  std=0.6439
+cauchy_scale= 30.0  mean=52.7543  std=0.3407
+
+=== sanity check: does simply WIDENING the Gaussian noise scale (gs_mult) show the same monotonic improvement? ===
+gs_mult=  1.0  mean=14.4944  std=0.3052
+gs_mult=  1.5  mean=13.0265  std=0.7084
+gs_mult=  2.0  mean=13.1035  std=0.6642
+gs_mult=  3.0  mean=13.9128  std=0.5096
+gs_mult=  5.0  mean=19.8381  std=0.7320
+gs_mult= 10.0  mean=31.9679  std=0.5725
+
+=== (B) fixed: GR recalibration WITH gs recomputed on the calibrated residual ===
+recalibrated (gs fixed)  mean=16.5509  std=0.8761  (baseline mean was 14.9467)

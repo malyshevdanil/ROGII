@@ -1,0 +1,10 @@
+=== seed-averaged sweep (4 seeds x 120 wells), ir_anchor=0 is the production baseline ===
+ir_anchor=0.00  per-seed=[15.058, 15.324, 15.771, 14.994]  mean=15.2866  std=0.3055
+ir_anchor=0.25  per-seed=[13.769, 13.673, 14.47, 15.958]  mean=14.4674  std=0.9138
+ir_anchor=0.50  per-seed=[14.285, 14.117, 14.522, 14.496]  mean=14.3551  std=0.1653
+ir_anchor=0.75  per-seed=[14.862, 14.425, 14.492, 13.504]  mean=14.3207  std=0.5001
+ir_anchor=1.00  per-seed=[12.982, 14.709, 13.625, 13.657]  mean=13.7432  std=0.6192
+
+=== cross-fit: fit best anchor on H1 (2 seeds), test on H2 (2 seeds), and vice versa ===
+fit on H1: best anchor=0.25 (train=13.6938) -> H2 test=14.5802 vs H2 baseline(anchor=0)=15.1486
+fit on H2: best anchor=0.75 (train=13.4024) -> H1 test=14.3570 vs H1 baseline(anchor=0)=14.7168

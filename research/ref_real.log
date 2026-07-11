@@ -1,0 +1,25 @@
+building real wells...
+built 773 (613/160) 12s | NOISE=boot EPOCHS=60
+flat=14.707
+real eval dTVT std=0.3493 (synthetic paths matched to this)
+MODE=real (reference, real-only, the ~11.3 anchor)
+  [real] ep 3 loss4.789 | REAL holdout 13.060 (best 13.060@real-ep3) 79s
+  [real] ep 6 loss4.034 | REAL holdout 14.999 (best 13.060@real-ep3) 160s
+  [real] ep 9 loss3.304 | REAL holdout 13.453 (best 13.060@real-ep3) 240s
+  [real] ep12 loss2.717 | REAL holdout 12.890 (best 12.890@real-ep12) 321s
+  [real] ep15 loss2.642 | REAL holdout 12.190 (best 12.190@real-ep15) 401s
+  [real] ep18 loss1.674 | REAL holdout 11.981 (best 11.981@real-ep18) 482s
+  [real] ep21 loss1.336 | REAL holdout 11.550 (best 11.550@real-ep21) 562s
+  [real] ep24 loss1.402 | REAL holdout 11.527 (best 11.527@real-ep24) 643s
+  [real] ep27 loss1.093 | REAL holdout 11.080 (best 11.080@real-ep27) 723s
+  [real] ep30 loss0.843 | REAL holdout 11.030 (best 11.030@real-ep30) 804s
+  [real] ep33 loss0.700 | REAL holdout 11.227 (best 11.030@real-ep30) 885s
+  [real] ep36 loss0.632 | REAL holdout 11.343 (best 11.030@real-ep30) 965s
+  [real] ep39 loss0.522 | REAL holdout 11.318 (best 11.030@real-ep30) 1046s
+  [real] ep42 loss0.435 | REAL holdout 11.066 (best 11.030@real-ep30) 1127s
+  [real] ep45 loss0.372 | REAL holdout 11.083 (best 11.030@real-ep30) 1207s
+  [real] ep48 loss0.327 | REAL holdout 11.157 (best 11.030@real-ep30) 1288s
+  [real] ep51 loss0.282 | REAL holdout 11.143 (best 11.030@real-ep30) 1369s
+  [real] ep54 loss0.277 | REAL holdout 11.135 (best 11.030@real-ep30) 1449s
+  [real] ep55 loss0.288 | REAL holdout 11.134 (best 11.030@real-ep30) 1476s
+DONE MODE=real NOISE=boot best REAL holdout 11.030 @real-ep30  (GATE: ft_boot < real-only ~11.3 = idea2 recipe helps)

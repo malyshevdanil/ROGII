@@ -1,0 +1,14 @@
+=== reproducibility check: same seed twice ===
+run1: 17.757886704760107 run2: 17.757886704760107 identical: True
+
+=== fine anchor sweep, 6 seeds x 150 wells (now truly reproducible) ===
+ir_anchor=0.00  mean=15.3447  std=0.9258
+ir_anchor=0.30  mean=14.1620  std=0.5446
+ir_anchor=0.50  mean=14.2638  std=0.2977
+ir_anchor=0.65  mean=13.8537  std=0.3132
+ir_anchor=0.80  mean=13.4061  std=0.5911
+ir_anchor=0.90  mean=13.3641  std=0.6255
+ir_anchor=1.00  mean=13.6163  std=0.1459
+ir_anchor=1.10  mean=13.6623  std=0.4212
+ir_anchor=1.20  mean=13.3418  std=0.4909
+ir_anchor=1.40  mean=14.0957  std=0.6067

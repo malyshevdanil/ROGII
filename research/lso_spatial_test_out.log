@@ -1,0 +1,23 @@
+building well features (all train wells)...
+usable wells: 773
+running WARP inference on all wells...
+common with proxy (sp45/true available): 773
+
+=== LSO: 6 spatial K-means blocks (whole geographic regions held out) ===
+hyperparameters FROZEN at the value the earlier random 5-fold CV converged to everywhere: (0.3, 0.75, 500, 51)
+block 0: n=112  baseline=10.6350  combo=8.0608  gain=+2.5742
+block 1: n= 86  baseline=8.4705  combo=7.4710  gain=+0.9995
+block 2: n=214  baseline=11.0751  combo=8.5664  gain=+2.5087
+block 3: n= 69  baseline=14.3298  combo=10.8262  gain=+3.5036
+block 4: n=148  baseline=12.6289  combo=10.3696  gain=+2.2593
+block 5: n=144  baseline=7.9226  combo=6.3034  gain=+1.6191
+
+LSO mean baseline: 10.8437  mean combo: 8.5996  mean gain: +2.2441  positive in 6/6 blocks
+
+(for comparison) random grouped 5-fold, same frozen hyperparams: mean baseline=10.6779  mean combo=8.4428  mean gain=+2.2350
+
+=== isolation check: nearest-neighbour distance vs baseline error and vs combo gain ===
+dense wells (bottom quartile NN-dist): n=194  mean baseline RMSE=6.615  mean gain=+1.259
+isolated wells (top quartile NN-dist): n=194  mean baseline RMSE=9.805  mean gain=+2.144
+corr(nn_dist, per-well baseline RMSE) = 0.106
+corr(nn_dist, per-well combo gain)    = 0.097

@@ -1,0 +1,20 @@
+building...
+built 773 (613/160) 15s
+flat=14.707 (WARP anchor ~11.0)
+training pure-classification net | params=1143k
+  ep 3 loss4.705 | argmax 57.656 top3exp 57.657 (best 57.656@3-argmax) 11s
+  ep 6 loss4.102 | argmax 43.089 top3exp 42.455 (best 42.455@6-top3) 22s
+  ep 9 loss3.875 | argmax 38.120 top3exp 37.282 (best 37.282@9-top3) 34s
+  ep12 loss3.771 | argmax 40.835 top3exp 38.082 (best 37.282@9-top3) 45s
+  ep15 loss3.631 | argmax 36.102 top3exp 36.467 (best 36.102@15-argmax) 56s
+  ep18 loss3.579 | argmax 34.961 top3exp 33.857 (best 33.857@18-top3) 67s
+  ep21 loss3.491 | argmax 34.818 top3exp 33.866 (best 33.857@18-top3) 78s
+  ep24 loss3.362 | argmax 32.541 top3exp 31.453 (best 31.453@24-top3) 90s
+  ep27 loss3.324 | argmax 33.030 top3exp 31.963 (best 31.453@24-top3) 101s
+  ep30 loss3.193 | argmax 32.624 top3exp 31.573 (best 31.453@24-top3) 112s
+  ep33 loss3.104 | argmax 32.143 top3exp 30.867 (best 30.867@33-top3) 123s
+  ep36 loss3.024 | argmax 29.925 top3exp 28.872 (best 28.872@36-top3) 134s
+  ep39 loss2.977 | argmax 30.148 top3exp 28.784 (best 28.784@39-top3) 145s
+  ep42 loss2.927 | argmax 30.004 top3exp 28.703 (best 28.703@42-top3) 156s
+  ep45 loss2.917 | argmax 29.819 top3exp 28.606 (best 28.606@45-top3) 167s
+DONE pure-classification best 28.606 @ep45[top3] (flat~15, WARP-continuity~11.0, target: beat 11)

@@ -1,0 +1,6 @@
+=== seed-averaged sweep (4 seeds x 120 wells) ===
+strength=0.00  per-seed=[15.094, 14.597, 14.497, 14.208]  mean=14.5991  std=0.3196
+strength=0.05  per-seed=[14.126, 15.591, 14.277, 14.707]  mean=14.6752  std=0.5703
+strength=0.10  per-seed=[14.656, 15.65, 14.814, 16.024]  mean=15.2864  std=0.5693
+strength=0.15  per-seed=[15.533, 15.315, 15.682, 14.149]  mean=15.1698  std=0.6036
+strength=0.20  per-seed=[16.377, 16.816, 15.787, 16.347]  mean=16.3316  std=0.3650

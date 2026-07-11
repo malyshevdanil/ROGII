@@ -1,0 +1,34 @@
+computing pf_z (seed-avg=8) on 300 wells...
+   25 / 300 82s
+   50 / 300 162s
+   75 / 300 253s
+   100 / 300 338s
+   125 / 300 424s
+   150 / 300 527s
+   175 / 300 631s
+   200 / 300 727s
+   225 / 300 806s
+   250 / 300 904s
+   275 / 300 996s
+   300 / 300 1068s
+
+usable wells: 300
+
+baseline sp45 (a=0):  H1=11.5893 H2=9.6046 ALL=10.6602
+fit on H1: best a=0.15 train=11.3706 -> H2=9.4383 (H2 baseline 9.6046)
+fit on H2: best a=0.10 train=9.4306 -> H1=11.3923 (H1 baseline 11.5893)
+
+full sweep (ALL wells):
+  a=0.00  pooled=10.6602
+  a=0.05  pooled=10.5394
+  a=0.10  pooled=10.4741
+  a=0.15  pooled=10.4656
+  a=0.20  pooled=10.5138
+  a=0.25  pooled=10.6180
+  a=0.30  pooled=10.7766
+  a=0.35  pooled=10.9872
+  a=0.40  pooled=11.2469
+  a=0.45  pooled=11.5524
+  a=0.50  pooled=11.9002
+  a=0.55  pooled=12.2867
+  a=0.60  pooled=12.7083

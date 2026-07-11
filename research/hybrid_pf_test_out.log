@@ -1,0 +1,12 @@
+=== full-sweep on all 200 wells (1 seed) ===
+  strength=0.0  pooled=14.9739
+  strength=0.1  pooled=14.6988
+  strength=0.2  pooled=15.0496
+  strength=0.3  pooled=15.0664
+  strength=0.5  pooled=15.8363
+  strength=0.7  pooled=15.9641
+  strength=1.0  pooled=16.8839
+
+=== cross-fit: fit best strength on H1, test on H2, and vice versa ===
+fit on H1: best strength=0.0 (train=14.3930) -> H2 test=14.9938 vs H2 baseline(strength=0)=16.4211
+fit on H2: best strength=0.2 (train=14.1157) -> H1 test=13.8960 vs H1 baseline(strength=0)=15.7781

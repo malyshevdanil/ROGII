@@ -1,0 +1,30 @@
+building real wells...
+built 773 (613/160) 15s | NOISE=gauss EPOCHS=60
+flat=14.707
+real eval dTVT std=0.3493 (synthetic paths matched to this)
+MODE=ft: pretrain gauss 25ep -> finetune real 45ep
+  [pre-gauss] ep 3 loss69.024 | REAL holdout 20.813 (best 20.813@pre-gauss-ep3) 87s
+  [pre-gauss] ep 6 loss56.255 | REAL holdout 34.315 (best 20.813@pre-gauss-ep3) 170s
+  [pre-gauss] ep 9 loss49.199 | REAL holdout 28.136 (best 20.813@pre-gauss-ep3) 259s
+  [pre-gauss] ep12 loss45.204 | REAL holdout 20.126 (best 20.126@pre-gauss-ep12) 375s
+  [pre-gauss] ep15 loss41.513 | REAL holdout 22.040 (best 20.126@pre-gauss-ep12) 496s
+  [pre-gauss] ep18 loss40.895 | REAL holdout 16.593 (best 16.593@pre-gauss-ep18) 616s
+  [pre-gauss] ep21 loss37.012 | REAL holdout 16.506 (best 16.506@pre-gauss-ep21) 744s
+  [pre-gauss] ep24 loss35.000 | REAL holdout 17.417 (best 16.506@pre-gauss-ep21) 866s
+  [pre-gauss] ep25 loss34.633 | REAL holdout 17.481 (best 16.506@pre-gauss-ep21) 910s
+  [ft] ep 3 loss6.898 | REAL holdout 15.273 (best 15.273@ft-ep3) 90s
+  [ft] ep 6 loss5.632 | REAL holdout 14.521 (best 14.521@ft-ep6) 175s
+  [ft] ep 9 loss3.825 | REAL holdout 13.456 (best 13.456@ft-ep9) 260s
+  [ft] ep12 loss2.512 | REAL holdout 13.039 (best 13.039@ft-ep12) 341s
+  [ft] ep15 loss1.767 | REAL holdout 12.779 (best 12.779@ft-ep15) 434s
+  [ft] ep18 loss1.368 | REAL holdout 12.063 (best 12.063@ft-ep18) 513s
+  [ft] ep21 loss1.173 | REAL holdout 11.925 (best 11.925@ft-ep21) 599s
+  [ft] ep24 loss1.049 | REAL holdout 12.062 (best 11.925@ft-ep21) 682s
+  [ft] ep27 loss0.928 | REAL holdout 12.003 (best 11.925@ft-ep21) 763s
+  [ft] ep30 loss0.779 | REAL holdout 12.079 (best 11.925@ft-ep21) 844s
+  [ft] ep33 loss0.695 | REAL holdout 11.841 (best 11.841@ft-ep33) 925s
+  [ft] ep36 loss0.616 | REAL holdout 11.706 (best 11.706@ft-ep36) 1006s
+  [ft] ep39 loss0.587 | REAL holdout 11.723 (best 11.706@ft-ep36) 1087s
+  [ft] ep42 loss0.536 | REAL holdout 11.638 (best 11.638@ft-ep42) 1168s
+  [ft] ep45 loss0.533 | REAL holdout 11.664 (best 11.638@ft-ep42) 1249s
+DONE MODE=ft NOISE=gauss best REAL holdout 11.638 @ft-ep42  (GATE: ft_boot < real-only ~11.3 = idea2 recipe helps)

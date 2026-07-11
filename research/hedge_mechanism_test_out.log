@@ -1,0 +1,23 @@
+building well features (all train wells)...
+running WARP inference...
+usable wells: 773
+
+=== Does wall-hedge help bare sp45? (cross-fit, 5-fold) ===
+fold 0: baseline=10.6968  hedge(alpha=0.10)=10.5195  gain=+0.1773
+fold 1: baseline=13.8711  hedge(alpha=0.10)=13.8081  gain=+0.0629
+fold 2: baseline=9.2424  hedge(alpha=0.15)=9.3005  gain=-0.0581
+fold 3: baseline=9.4142  hedge(alpha=0.10)=9.2699  gain=+0.1442
+fold 4: baseline=10.1649  hedge(alpha=0.10)=9.9811  gain=+0.1839
+mean gain (hedge on bare sp45): 0.10205516815185547
+
+=== Does wall-hedge help on TOP of the already-tuned WARP+physics-pp combo? (cross-fit, 5-fold) ===
+fold 0: combo baseline=8.2251  combo+hedge(alpha=0.00)=8.2251  gain=+0.0000
+fold 1: combo baseline=11.2705  combo+hedge(alpha=0.00)=11.2705  gain=+0.0000
+fold 2: combo baseline=7.1813  combo+hedge(alpha=0.00)=7.1813  gain=+0.0000
+fold 3: combo baseline=7.3626  combo+hedge(alpha=0.00)=7.3626  gain=+0.0000
+fold 4: combo baseline=8.1747  combo+hedge(alpha=0.00)=8.1747  gain=+0.0000
+mean gain (hedge on top of WARP+pp combo): 0.0
+
+=== summary ===
+hedge on bare sp45:        mean gain +0.1021, positive in 4/5 folds
+hedge on WARP+pp combo:    mean gain +0.0000, positive in 0/5 folds

@@ -1,0 +1,22 @@
+warming up numba jit...
+   20 / 160 16s
+   40 / 160 32s
+   60 / 160 48s
+   80 / 160 63s
+   100 / 160 77s
+   120 / 160 92s
+   140 / 160 107s
+   160 / 160 121s
+
+wells used: 160
+pooled RMSE pf_ancc (single seed): 13.492013656982191
+pooled RMSE pf_z    (single seed): 14.734161492233927
+pooled RMSE mean(ancc,z): 12.106354482694307
+error correlation(pf_ancc, pf_z): 0.4702753469280681
+
+blend sweep (1-a)*pf_ancc + a*pf_z, single seed each:
+  a=0.1: pooled= 12.901942777993444
+  a=0.2: pooled= 12.454955408173554
+  a=0.3: pooled= 12.166831668068609
+  a=0.4: pooled= 12.04897353740948
+  a=0.5: pooled= 12.106354761769616

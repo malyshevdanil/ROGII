@@ -1,0 +1,12 @@
+   20 / 120 167s
+   40 / 120 331s
+   60 / 120 507s
+   80 / 120 675s
+   100 / 120 841s
+   120 / 120 1021s
+
+wells used: 120
+pooled RMSE base : 10.270141481207856
+pooled RMSE pf_z : 39.61331222548836
+pooled RMSE mean(base,z): 21.23535984273007
+error correlation(base, pf_z): 0.14364962210128981

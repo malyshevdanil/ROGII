@@ -1,0 +1,20 @@
+building well features (all train wells)...
+running WARP inference...
+usable wells: 773
+
+=== WARP-weight sweep, physics-pp FROZEN at (0.75, 500, 51) -- the exact submitted params ===
+baseline (sp45 only, no warp, no pp): 10.825628280639648
+  a=0.00  pooled=10.5217
+  a=0.05  pooled=10.1666
+  a=0.10  pooled=9.8227
+  a=0.15  pooled=9.4912  <-- submitted (real LB 6.836)
+  a=0.20  pooled=9.1732
+  a=0.25  pooled=8.8703
+  a=0.30  pooled=8.5845  <-- CV/LSO-selected optimum
+  a=0.35  pooled=8.3174
+  a=0.40  pooled=8.0699
+  a=0.50  pooled=7.6433
+
+=== honest cross-fit: a=0.15 (submitted) vs a=0.30 (CV-selected), both OUT-OF-FOLD ===
+a=0.15: per-fold [9.239, 12.392, 7.958, 8.167, 8.944]  mean=9.3401
+a=0.30: per-fold [8.225, 11.27, 7.181, 7.363, 8.175]  mean=8.4428

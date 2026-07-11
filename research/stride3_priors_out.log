@@ -1,0 +1,20 @@
+wells processed: 200 / 200
+total segments: 3305
+
+--- segment length distribution (ft) ---
+median: 72.0 mean: 100.31043872919818 std: 98.65759717089811
+log-normal fit: mu=4.303 sigma=0.744 (implies median=73.9 ft)
+  p10: 27.4 ft
+  p25: 46.0 ft
+  p50: 72.0 ft
+  p75: 110.0 ft
+  p90: 208.0 ft
+
+--- dip rate distribution (ft/ft) ---
+median: 0.5904848484848503 mean: 0.5656485174578012 std: 0.4122080316572613
+
+--- persistence: dip[i] ~ rho * dip[i-1] + noise ---
+n pairs: 3105 rho (no intercept): 0.9041551515271751 resid std: 0.17264794495164454
+correlation(dip[i-1], dip[i]): 0.9065706724982501
+
+saved priors to stride3_priors.pkl

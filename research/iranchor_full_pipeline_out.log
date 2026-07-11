@@ -1,0 +1,29 @@
+computing seed-averaged ir-anchored PF track for all wells (this is the expensive step)...
+wells: 773
+  100/773  49s
+  200/773  95s
+  300/773  142s
+  400/773  190s
+  500/773  236s
+  600/773  283s
+  700/773  330s
+done computing ir-anchored tracks: 773 363s total
+
+=== full-set sweep: best-combo (WARP+physics-pp) + ir-anchor blend ===
+baseline (best combo, no ir-anchor): 8.584454673384627
+  ir_weight=0.00  pooled=8.5845
+  ir_weight=0.05  pooled=8.5910
+  ir_weight=0.10  pooled=8.6276
+  ir_weight=0.15  pooled=8.6940
+  ir_weight=0.20  pooled=8.7895
+  ir_weight=0.30  pooled=9.0638
+  ir_weight=0.40  pooled=9.4406
+  ir_weight=0.50  pooled=9.9084
+
+=== 5-fold cross-fit ===
+fold 0: baseline=8.2251  ir_weight=0.00  with_ir=8.2251  gain=+0.0000
+fold 1: baseline=11.2705  ir_weight=0.00  with_ir=11.2705  gain=+0.0000
+fold 2: baseline=7.1813  ir_weight=0.00  with_ir=7.1813  gain=+0.0000
+fold 3: baseline=7.3626  ir_weight=0.00  with_ir=7.3626  gain=+0.0000
+fold 4: baseline=8.1747  ir_weight=0.00  with_ir=8.1747  gain=+0.0000
+mean gain: 0.0 positive in 0 /5 folds

@@ -1,0 +1,26 @@
+building real wells...
+built 773 (613/160) 12s | NOISE=boot EPOCHS=60
+flat=14.707
+real eval dTVT std=0.3493 (synthetic paths matched to this)
+training WARP on boot synthetic | transfer to REAL holdout
+  ep 3 loss73.628 | REAL holdout 47.267 (best 47.267@3) 60s
+  ep 6 loss61.653 | REAL holdout 18.621 (best 18.621@6) 119s
+  ep 9 loss55.866 | REAL holdout 16.711 (best 16.711@9) 179s
+  ep12 loss53.958 | REAL holdout 29.286 (best 16.711@9) 238s
+  ep15 loss50.881 | REAL holdout 17.814 (best 16.711@9) 298s
+  ep18 loss48.221 | REAL holdout 18.559 (best 16.711@9) 357s
+  ep21 loss46.932 | REAL holdout 20.870 (best 16.711@9) 417s
+  ep24 loss45.832 | REAL holdout 17.787 (best 16.711@9) 476s
+  ep27 loss44.131 | REAL holdout 18.209 (best 16.711@9) 535s
+  ep30 loss42.818 | REAL holdout 17.991 (best 16.711@9) 602s
+  ep33 loss40.966 | REAL holdout 19.000 (best 16.711@9) 663s
+  ep36 loss39.708 | REAL holdout 29.622 (best 16.711@9) 723s
+  ep39 loss39.064 | REAL holdout 22.018 (best 16.711@9) 783s
+  ep42 loss37.995 | REAL holdout 18.599 (best 16.711@9) 843s
+  ep45 loss36.934 | REAL holdout 17.090 (best 16.711@9) 904s
+  ep48 loss36.073 | REAL holdout 21.708 (best 16.711@9) 964s
+  ep51 loss34.355 | REAL holdout 20.217 (best 16.711@9) 1024s
+  ep54 loss33.745 | REAL holdout 16.689 (best 16.689@54) 1091s
+  ep57 loss33.478 | REAL holdout 16.796 (best 16.689@54) 1158s
+  ep60 loss33.667 | REAL holdout 17.095 (best 16.689@54) 1225s
+DONE NOISE=boot best REAL holdout 16.689 (flat~15, WARP-on-real~11.3; GATE: boot<gauss & boot->~11-13 = idea2 viable)

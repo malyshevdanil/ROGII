@@ -1,0 +1,18 @@
+
+=== window MD length 200 ft (span = TRUE oracle-informed span, same for all 3 conditions) ===
+    n_wells used=146, skipped (near-zero true span here)=4
+  naive   : n=146  median_err= 135.44 ft  mean_err= 193.41 ft  within_2ft=  9.6%  within_5ft= 13.0%
+  legal   : n=146  median_err= 166.28 ft  mean_err= 207.76 ft  within_2ft=  9.6%  within_5ft= 12.3%
+  oracle  : n=146  median_err= 236.81 ft  mean_err= 236.97 ft  within_2ft=  6.8%  within_5ft=  6.8%
+
+=== window MD length 400 ft (span = TRUE oracle-informed span, same for all 3 conditions) ===
+    n_wells used=150, skipped (near-zero true span here)=0
+  naive   : n=150  median_err= 115.59 ft  mean_err= 182.20 ft  within_2ft=  6.7%  within_5ft= 10.7%
+  legal   : n=150  median_err= 171.17 ft  mean_err= 203.74 ft  within_2ft=  6.7%  within_5ft= 10.7%
+  oracle  : n=150  median_err= 287.61 ft  mean_err= 255.92 ft  within_2ft=  5.3%  within_5ft= 10.0%
+
+=== window MD length 800 ft (span = TRUE oracle-informed span, same for all 3 conditions) ===
+    n_wells used=150, skipped (near-zero true span here)=0
+  naive   : n=150  median_err= 225.15 ft  mean_err= 208.17 ft  within_2ft=  5.3%  within_5ft=  8.7%
+  legal   : n=150  median_err= 283.69 ft  mean_err= 243.68 ft  within_2ft=  4.0%  within_5ft=  5.3%
+  oracle  : n=150  median_err= 299.72 ft  mean_err= 288.70 ft  within_2ft=  5.3%  within_5ft=  7.3%

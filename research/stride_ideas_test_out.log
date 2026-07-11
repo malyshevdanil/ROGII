@@ -1,0 +1,17 @@
+=== baseline (Gaussian, no recalibration) ===
+  per-seed=[15.361, 14.811, 15.583, 14.033]  mean=14.9467  std=0.5978
+
+=== (A) Cauchy likelihood, sweep scale ===
+  cauchy_scale=0.50  per-seed=[18.789, 18.061, 16.53, 17.7]  mean=17.7703  std=0.8163
+  cauchy_scale=0.75  per-seed=[15.864, 16.718, 16.509, 17.278]  mean=16.5923  std=0.5057
+  cauchy_scale=1.00  per-seed=[14.917, 15.934, 16.289, 16.664]  mean=15.9510  std=0.6506
+  cauchy_scale=1.50  per-seed=[13.977, 14.446, 14.772, 14.076]  mean=14.3180  std=0.3152
+  cauchy_scale=2.00  per-seed=[13.816, 13.171, 14.791, 13.71]  mean=13.8719  std=0.5842
+  cauchy_scale=3.00  per-seed=[11.779, 13.121, 12.212, 13.669]  mean=12.6953  std=0.7420
+
+=== (B) GR/typewell affine recalibration (Gaussian likelihood, gs kept) ===
+  recalibrated  per-seed=[16.249, 15.553, 15.925, 15.818]  mean=15.8863  std=0.2492
+
+=== cross-fit: best cauchy_scale fit on H1 (seeds 1,2), tested on H2 (seeds 3,4), and vice versa ===
+fit on H1: best scale=3.0 (train=13.3013) -> H2 test=12.5353 vs H2 Gaussian baseline=14.5825
+fit on H2: best scale=3.0 (train=12.5146) -> H1 test=14.2641 vs H1 Gaussian baseline=15.3198

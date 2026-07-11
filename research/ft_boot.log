@@ -1,0 +1,30 @@
+building real wells...
+built 773 (613/160) 12s | NOISE=boot EPOCHS=60
+flat=14.707
+real eval dTVT std=0.3493 (synthetic paths matched to this)
+MODE=ft: pretrain boot 25ep -> finetune real 45ep
+  [pre-boot] ep 3 loss71.512 | REAL holdout 20.138 (best 20.138@pre-boot-ep3) 86s
+  [pre-boot] ep 6 loss61.184 | REAL holdout 24.902 (best 20.138@pre-boot-ep3) 174s
+  [pre-boot] ep 9 loss53.555 | REAL holdout 16.721 (best 16.721@pre-boot-ep9) 262s
+  [pre-boot] ep12 loss51.179 | REAL holdout 20.306 (best 16.721@pre-boot-ep9) 350s
+  [pre-boot] ep15 loss46.567 | REAL holdout 20.993 (best 16.721@pre-boot-ep9) 438s
+  [pre-boot] ep18 loss42.039 | REAL holdout 17.439 (best 16.721@pre-boot-ep9) 526s
+  [pre-boot] ep21 loss40.740 | REAL holdout 19.941 (best 16.721@pre-boot-ep9) 614s
+  [pre-boot] ep24 loss39.123 | REAL holdout 20.240 (best 16.721@pre-boot-ep9) 702s
+  [pre-boot] ep25 loss38.820 | REAL holdout 20.557 (best 16.721@pre-boot-ep9) 732s
+  [ft] ep 3 loss6.586 | REAL holdout 14.144 (best 14.144@ft-ep3) 81s
+  [ft] ep 6 loss4.170 | REAL holdout 12.291 (best 12.291@ft-ep6) 161s
+  [ft] ep 9 loss3.027 | REAL holdout 12.537 (best 12.291@ft-ep6) 242s
+  [ft] ep12 loss2.439 | REAL holdout 12.332 (best 12.291@ft-ep6) 322s
+  [ft] ep15 loss1.752 | REAL holdout 12.700 (best 12.291@ft-ep6) 403s
+  [ft] ep18 loss1.447 | REAL holdout 11.870 (best 11.870@ft-ep18) 483s
+  [ft] ep21 loss1.189 | REAL holdout 12.320 (best 11.870@ft-ep18) 564s
+  [ft] ep24 loss1.058 | REAL holdout 12.209 (best 11.870@ft-ep18) 645s
+  [ft] ep27 loss0.937 | REAL holdout 11.611 (best 11.611@ft-ep27) 725s
+  [ft] ep30 loss0.786 | REAL holdout 11.465 (best 11.465@ft-ep30) 787s
+  [ft] ep33 loss0.680 | REAL holdout 11.672 (best 11.465@ft-ep30) 840s
+  [ft] ep36 loss0.654 | REAL holdout 11.639 (best 11.465@ft-ep30) 895s
+  [ft] ep39 loss0.574 | REAL holdout 11.753 (best 11.465@ft-ep30) 948s
+  [ft] ep42 loss0.539 | REAL holdout 11.659 (best 11.465@ft-ep30) 1002s
+  [ft] ep45 loss0.557 | REAL holdout 11.677 (best 11.465@ft-ep30) 1057s
+DONE MODE=ft NOISE=boot best REAL holdout 11.465 @ft-ep30  (GATE: ft_boot < real-only ~11.3 = idea2 recipe helps)

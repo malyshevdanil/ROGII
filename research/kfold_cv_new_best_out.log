@@ -1,0 +1,21 @@
+building well features (all train wells)...
+usable wells: 773
+running WARP inference on all wells...
+common with proxy (sp45/true available): 773
+
+=== 5-fold grouped CV: baseline (sp45) vs best WARP+physics-pp combo ===
+(773 wells total, hyperparams selected on the OTHER 4 folds only, never on the test fold)
+
+fold 0: n=155  baseline=10.6968  combo(a=0.30,beta=0.75,warm=500,sm=51)=8.2251  gain=+2.4717  (selected on train: 8.6724)
+fold 1: n=155  baseline=13.8711  combo(a=0.30,beta=0.75,warm=500,sm=51)=11.2705  gain=+2.6006  (selected on train: 7.7493)
+fold 2: n=155  baseline=9.2424  combo(a=0.30,beta=0.75,warm=500,sm=51)=7.1813  gain=+2.0611  (selected on train: 8.8971)
+fold 3: n=154  baseline=9.4142  combo(a=0.30,beta=0.75,warm=500,sm=51)=7.3626  gain=+2.0515  (selected on train: 8.8657)
+fold 4: n=154  baseline=10.1649  combo(a=0.30,beta=0.75,warm=500,sm=51)=8.1747  gain=+1.9903  (selected on train: 8.6816)
+
+mean baseline: 10.6779  mean combo: 8.4428  mean gain: +2.2350
+gain positive in 5/5 folds
+chosen (a, beta, warm, sm) per fold: [(0.3, 0.75, 500, 51), (0.3, 0.75, 500, 51), (0.3, 0.75, 500, 51), (0.3, 0.75, 500, 51), (0.3, 0.75, 500, 51)]
+
+=== full-set number for reference (all wells, no held-out split) ===
+best on full set: (8.584454673384627, (0.3, 0.75, 500, 51))
+baseline on full set: 10.825628280639648

@@ -1,0 +1,15 @@
+
+=== window length 100 ft, n_wells=150 ===
+  naive   : n=150  median_err= 322.35 ft  mean_err= 307.33 ft  within_2ft=  0.7%  within_5ft=  3.3%
+  legal   : n=150  median_err= 327.28 ft  mean_err= 314.66 ft  within_2ft=  0.7%  within_5ft=  3.3%
+  oracle  : n=150  median_err= 306.36 ft  mean_err= 284.99 ft  within_2ft=  0.7%  within_5ft=  4.7%
+
+=== window length 300 ft, n_wells=150 ===
+  naive   : n=150  median_err= 320.76 ft  mean_err= 306.96 ft  within_2ft=  0.0%  within_5ft=  0.7%
+  legal   : n=150  median_err= 330.81 ft  mean_err= 326.13 ft  within_2ft=  0.0%  within_5ft=  0.7%
+  oracle  : n=150  median_err= 333.45 ft  mean_err= 335.38 ft  within_2ft=  0.0%  within_5ft=  0.7%
+
+=== window length 600 ft, n_wells=138 ===
+  naive   : n=138  median_err= 238.63 ft  mean_err= 259.71 ft  within_2ft=  0.0%  within_5ft=  0.0%
+  legal   : n=138  median_err= 244.33 ft  mean_err= 275.84 ft  within_2ft=  0.0%  within_5ft=  0.0%
+  oracle  : n=138  median_err= 246.59 ft  mean_err= 281.23 ft  within_2ft=  0.0%  within_5ft=  0.0%
