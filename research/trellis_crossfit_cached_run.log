@@ -1,0 +1,47 @@
+sample size: 60
+  10/60  39s
+  20/60  67s
+  30/60  91s
+  40/60  119s
+  50/60  154s
+  60/60  199s
+
+n wells ok: 60/60  total time: 199s
+
+trellis solo: 39.17475960662056
+sp45 solo: 12.448418617248535
+full_combo solo: 11.23965900556039
+corr(full_combo_err, trellis_err): 0.07650357995867887
+corr(sp45_err, trellis_err): 0.09048803737781251
+
+=== blend full_combo + trellis: full-sample sweep ===
+  w=0.00  pooled=11.2397
+  w=0.02  pooled=11.1133
+  w=0.05  pooled=11.0290
+  w=0.08  pooled=11.0734
+  w=0.10  pooled=11.1738
+  w=0.15  pooled=11.6609
+  w=0.20  pooled=12.4500
+  w=0.30  pooled=14.7233
+--- 4-fold cross-fit (full_combo) ---
+fold 0: n=15  baseline=12.9468  w=0.05  test=12.6599  gain=+0.2868
+fold 1: n=15  baseline=11.9536  w=0.0  test=11.9536  gain=+0.0000
+fold 2: n=15  baseline=9.6343  w=0.05  test=9.4269  gain=+0.2074
+fold 3: n=15  baseline=10.0251  w=0.1  test=12.1338  gain=-2.1086
+mean gain: -0.40359296803622247 positive in 2 /4 folds
+
+=== blend sp45 + trellis: full-sample sweep ===
+  w=0.00  pooled=12.4484
+  w=0.02  pooled=12.3059
+  w=0.05  pooled=12.1871
+  w=0.08  pooled=12.1849
+  w=0.10  pooled=12.2485
+  w=0.15  pooled=12.6279
+  w=0.20  pooled=13.2983
+  w=0.30  pooled=15.3435
+--- 4-fold cross-fit (sp45) ---
+fold 0: n=15  baseline=14.9971  w=0.05  test=14.6746  gain=+0.3225
+fold 1: n=15  baseline=11.5831  w=0.02  test=11.0675  gain=+0.5156
+fold 2: n=15  baseline=10.1146  w=0.05  test=9.7587  gain=+0.3560
+fold 3: n=15  baseline=12.7884  w=0.1  test=14.4196  gain=-1.6312
+mean gain: -0.10928548395866722 positive in 3 /4 folds
