@@ -1,0 +1,68 @@
+usable wells: 773
+dataset ready 2s  train=613 val=160
+sp45 baseline on VA: 10.6199
+  seed0 ep  1 loss113.3106 | holdout 10.6181 (best 10.6181@1) 2s
+  seed0 ep  5 loss67.2004 | holdout 10.1670 (best 10.0171@4) 6s
+  seed0 ep 10 loss27.9654 | holdout 11.3165 (best 10.0171@4) 12s
+  seed0 ep 15 loss24.0653 | holdout 11.8363 (best 10.0171@4) 18s
+  seed0 ep 20 loss20.8381 | holdout 11.1696 (best 10.0171@4) 24s
+  seed0 ep 25 loss17.3114 | holdout 11.5446 (best 10.0171@4) 30s
+  seed0 ep 30 loss14.1077 | holdout 11.4750 (best 10.0171@4) 36s
+  seed0 ep 35 loss12.1187 | holdout 11.6732 (best 10.0171@4) 42s
+  seed0 ep 40 loss11.5996 | holdout 11.6314 (best 10.0171@4) 48s
+seed0 DONE best=10.0171@ep4
+  seed1 ep  1 loss113.5069 | holdout 10.6182 (best 10.6182@1) 1s
+  seed1 ep  5 loss69.7736 | holdout 10.0975 (best 10.0402@4) 6s
+  seed1 ep 10 loss28.4217 | holdout 10.5670 (best 10.0402@4) 12s
+  seed1 ep 15 loss23.4064 | holdout 11.1965 (best 10.0402@4) 18s
+  seed1 ep 20 loss20.3970 | holdout 11.3964 (best 10.0402@4) 24s
+  seed1 ep 25 loss17.2741 | holdout 11.9365 (best 10.0402@4) 29s
+  seed1 ep 30 loss14.0486 | holdout 11.8445 (best 10.0402@4) 35s
+  seed1 ep 35 loss12.2136 | holdout 11.6862 (best 10.0402@4) 41s
+  seed1 ep 40 loss11.8728 | holdout 11.6744 (best 10.0402@4) 47s
+seed1 DONE best=10.0402@ep4
+  seed2 ep  1 loss114.2383 | holdout 10.6181 (best 10.6181@1) 1s
+  seed2 ep  5 loss66.6963 | holdout 10.0609 (best 9.9610@4) 6s
+  seed2 ep 10 loss29.7842 | holdout 10.5283 (best 9.9610@4) 12s
+  seed2 ep 15 loss23.5607 | holdout 11.0714 (best 9.9610@4) 18s
+  seed2 ep 20 loss19.9977 | holdout 11.9854 (best 9.9610@4) 24s
+  seed2 ep 25 loss16.4766 | holdout 11.4760 (best 9.9610@4) 30s
+  seed2 ep 30 loss13.2857 | holdout 11.7467 (best 9.9610@4) 36s
+  seed2 ep 35 loss11.4172 | holdout 11.8106 (best 9.9610@4) 43s
+  seed2 ep 40 loss11.0496 | holdout 11.6489 (best 9.9610@4) 50s
+seed2 DONE best=9.9610@ep4
+  seed3 ep  1 loss115.3817 | holdout 10.6182 (best 10.6182@1) 1s
+  seed3 ep  5 loss66.8043 | holdout 10.3190 (best 10.0093@4) 7s
+  seed3 ep 10 loss30.2676 | holdout 11.1329 (best 10.0093@4) 13s
+  seed3 ep 15 loss23.6047 | holdout 12.5667 (best 10.0093@4) 20s
+  seed3 ep 20 loss19.7105 | holdout 11.0634 (best 10.0093@4) 27s
+  seed3 ep 25 loss17.1623 | holdout 12.1740 (best 10.0093@4) 34s
+  seed3 ep 30 loss13.3207 | holdout 11.4865 (best 10.0093@4) 41s
+  seed3 ep 35 loss11.5901 | holdout 11.5534 (best 10.0093@4) 48s
+  seed3 ep 40 loss11.0358 | holdout 11.5945 (best 10.0093@4) 55s
+seed3 DONE best=10.0093@ep4
+  seed4 ep  1 loss114.6582 | holdout 10.6180 (best 10.6180@1) 1s
+  seed4 ep  5 loss64.9539 | holdout 9.9795 (best 9.9497@4) 7s
+  seed4 ep 10 loss29.8837 | holdout 11.0779 (best 9.9497@4) 14s
+  seed4 ep 15 loss23.5806 | holdout 11.5785 (best 9.9497@4) 22s
+  seed4 ep 20 loss20.2618 | holdout 11.5234 (best 9.9497@4) 29s
+  seed4 ep 25 loss16.7896 | holdout 11.7287 (best 9.9497@4) 36s
+  seed4 ep 30 loss13.6422 | holdout 11.6141 (best 9.9497@4) 43s
+  seed4 ep 35 loss11.8477 | holdout 11.6047 (best 9.9497@4) 51s
+  seed4 ep 40 loss11.0923 | holdout 11.5708 (best 9.9497@4) 58s
+seed4 DONE best=9.9497@ep4
+  seed5 ep  1 loss115.3079 | holdout 10.6185 (best 10.6185@1) 2s
+  seed5 ep  5 loss68.1111 | holdout 10.0400 (best 10.0400@5) 8s
+  seed5 ep 10 loss31.5646 | holdout 11.8606 (best 10.0400@5) 15s
+  seed5 ep 15 loss23.8983 | holdout 11.5203 (best 10.0400@5) 22s
+  seed5 ep 20 loss20.7680 | holdout 11.5453 (best 10.0400@5) 29s
+  seed5 ep 25 loss16.8572 | holdout 11.4637 (best 10.0400@5) 36s
+  seed5 ep 30 loss14.0133 | holdout 12.0077 (best 10.0400@5) 43s
+  seed5 ep 35 loss11.7858 | holdout 11.9933 (best 10.0400@5) 50s
+  seed5 ep 40 loss11.2736 | holdout 11.9353 (best 10.0400@5) 57s
+seed5 DONE best=10.0400@ep5
+
+per-seed best: [(10.017078632355636, 4), (10.04015464692817, 4), (9.961003990752893, 4), (10.009303398714469, 4), (9.949725687229844, 4), (10.040002789588625, 5)]
+
+ENSEMBLE (6 seeds) holdout RMSE: 9.8475  vs sp45=10.6199  vs best-single=9.9497
+saved ensemble predictions
