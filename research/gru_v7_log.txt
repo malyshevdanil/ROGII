@@ -1,0 +1,49 @@
+dataset ready 32s  total_examples=2319 (orig wells=773)
+    seed0 ep  1 | holdout 9.4955 (best 9.4955@1) 3s
+    seed0 ep 10 | holdout 9.0313 (best 9.0313@10) 33s
+    seed0 ep 20 | holdout 9.6035 (best 8.9934@12) 65s
+    seed0 ep 30 | holdout 9.5694 (best 8.9934@12) 98s
+    seed1 ep  1 | holdout 9.4928 (best 9.4928@1) 3s
+    seed1 ep 10 | holdout 9.2141 (best 9.0722@9) 33s
+    seed1 ep 20 | holdout 9.5090 (best 8.9594@13) 65s
+    seed1 ep 30 | holdout 9.8252 (best 8.9594@13) 98s
+fold 0: n=155 sp45_base=9.5028 per-seed best=[8.993, 8.959] ensemble=8.8428  264s
+    seed100 ep  1 | holdout 11.7104 (best 11.7104@1) 3s
+    seed100 ep 10 | holdout 11.3015 (best 11.2074@7) 33s
+    seed100 ep 20 | holdout 11.2409 (best 11.0712@19) 65s
+    seed100 ep 30 | holdout 11.0983 (best 10.8144@21) 98s
+    seed101 ep  1 | holdout 11.7095 (best 11.7095@1) 3s
+    seed101 ep 10 | holdout 11.1550 (best 11.1550@10) 33s
+    seed101 ep 20 | holdout 11.0413 (best 10.7870@17) 65s
+    seed101 ep 30 | holdout 11.3036 (best 10.7870@17) 98s
+fold 1: n=155 sp45_base=11.7207 per-seed best=[10.814, 10.787] ensemble=10.5894  493s
+    seed200 ep  1 | holdout 9.5487 (best 9.5487@1) 3s
+    seed200 ep 10 | holdout 9.3774 (best 9.2341@7) 33s
+    seed200 ep 20 | holdout 10.0153 (best 9.1108@11) 65s
+    seed200 ep 30 | holdout 10.2025 (best 9.1108@11) 98s
+    seed201 ep  1 | holdout 9.5461 (best 9.5461@1) 3s
+    seed201 ep 10 | holdout 9.3105 (best 9.2165@9) 33s
+    seed201 ep 20 | holdout 9.8856 (best 9.2061@12) 65s
+    seed201 ep 30 | holdout 9.8858 (best 9.2061@12) 98s
+fold 2: n=155 sp45_base=9.5581 per-seed best=[9.111, 9.206] ensemble=9.0678  723s
+    seed300 ep  1 | holdout 11.3998 (best 11.3998@1) 3s
+    seed300 ep 10 | holdout 11.1760 (best 10.7510@9) 33s
+    seed300 ep 20 | holdout 10.9899 (best 10.6158@11) 81s
+    seed300 ep 30 | holdout 11.0545 (best 10.6158@11) 133s
+    seed301 ep  1 | holdout 11.4004 (best 11.4004@1) 5s
+    seed301 ep 10 | holdout 10.9340 (best 10.9340@10) 52s
+    seed301 ep 20 | holdout 11.0646 (best 10.7579@12) 103s
+    seed301 ep 30 | holdout 11.2818 (best 10.7579@12) 154s
+fold 3: n=154 sp45_base=11.4060 per-seed best=[10.616, 10.758] ensemble=10.5562  1062s
+    seed400 ep  1 | holdout 11.7238 (best 11.7238@1) 5s
+    seed400 ep 10 | holdout 11.2751 (best 11.2555@9) 50s
+    seed400 ep 20 | holdout 11.4020 (best 11.1791@12) 101s
+    seed400 ep 30 | holdout 11.3025 (best 11.1267@24) 152s
+    seed401 ep  1 | holdout 11.7283 (best 11.7283@1) 5s
+    seed401 ep 10 | holdout 11.2824 (best 11.2824@10) 51s
+    seed401 ep 20 | holdout 11.0717 (best 10.8192@15) 102s
+    seed401 ep 30 | holdout 11.0115 (best 10.8192@15) 153s
+fold 4: n=154 sp45_base=11.7377 per-seed best=[11.127, 10.819] ensemble=10.7291  1419s
+
+OVERALL (honest OOF, orig wells only): gru_v7=9.9850  sp45=10.8256
+saved gru_v7_kfold_oof_preds.pkl
