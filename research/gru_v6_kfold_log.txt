@@ -1,0 +1,9 @@
+dataset ready 1s  n_wells=773
+fold 0: n=155 sp45_base=10.5922 per-seed best=[10.207, 10.23, 10.164] ensemble=10.1331  65s
+fold 1: n=155 sp45_base=11.0218 per-seed best=[10.518, 10.473, 10.527] ensemble=10.4193  130s
+fold 2: n=155 sp45_base=9.2942 per-seed best=[9.066, 9.055, 9.047] ensemble=9.0148  194s
+fold 3: n=154 sp45_base=11.8618 per-seed best=[11.071, 11.053, 11.075] ensemble=10.9443  256s
+fold 4: n=154 sp45_base=11.1748 per-seed best=[10.571, 10.487, 10.524] ensemble=10.4459  318s
+
+OVERALL (all 773 wells, honest OOF): gru=10.2143  sp45=10.8256
+saved gru_v4_kfold_oof_preds.pkl
