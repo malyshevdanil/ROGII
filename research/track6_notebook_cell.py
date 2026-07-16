@@ -1,24 +1,27 @@
-"""Submission cell for the track6 project: an independent PF (pf_ancc, own momentum-free state -- NOT
-derived from sp45) + multi-scale NCC correlation-search features (decoupled from sp45 -- pf_ancc used
-only as a loose search center) -> GBM predicting a RESIDUAL from pf_ancc (absolute-position framing
-severely overfit; residual framing + heavy regularization fixed it). Paired bootstrap on the true
-160-well holdout: corr(track6_err, v7blend_err)=0.635 (architecturally more independent than the first,
-failed sp45-residual attempt at 0.83-0.88), blend gain at w=0.10 = +0.118ft (95%CI touches zero slightly,
-94.7% positive), tail-risk checked clean (max single-well worsening +1.77ft, no catastrophic blowups).
-Runtime is negligible (~9s total for pf_ancc+corr-search on the real 3-well/14151-row test set).
+"""Submission cell for the track6 project (v3: + pf_z second backbone): an independent PF (pf_ancc, own
+momentum-free state -- NOT derived from sp45) + multi-scale NCC correlation-search features (decoupled
+from sp45) + spatial nearest-neighbor formation-plane features (reusing the base pipeline's own `_FI`
+FormationPlaneKNN) + pf_z (a SECOND independent PF with a different motion model -- Z-velocity-coupled
+instead of pure momentum; corr(pf_z_err, pf_ancc_err) on the true holdout is only 0.49, a genuinely
+different failure mode from the same underlying GR data) -> GBM predicting a RESIDUAL from pf_ancc.
+Paired bootstrap on the true 160-well holdout (v3, with pf_z added): blend gain at w=0.10 = +0.157ft,
+95%CI=[+0.036,+0.285] -- clearly excludes zero (99.5% positive), the strongest validation this project
+has had, tail-risk clean (max single-well worsening +1.41ft, better than v2's +1.82ft). Runtime
+negligible (~11s total for pf_ancc+pf_z+corr-search on the real 3-well/14151-row test set).
 Inserted AFTER the GRU-refiner blend cell so it blends against the full current-best track.
 """
 
-CELL_TRACK6_BLEND = '''# --- TRACK6 BLEND (independent PF + multi-scale correlation-search features -> GBM residual) ------
-# Second independent estimator in the spirit of the STRIDE writeup's "track6/track8": a genuinely
-# separate PF (pf_ancc, own state/motion model, NOT derived from sp45) plus NCC correlation-search
-# features computed in a window around pf_ancc's own estimate (used only as a loose search center, not
-# a value being corrected). A GBM predicts the RESIDUAL from pf_ancc (absolute-position framing
-# overfit badly: train/val RMSE gap 11.9 vs 25.8 -- residual + heavy regularization fixed it). Paired
-# bootstrap on the true 160-well holdout: corr(track6_err, current_best_err)=0.635 (well below the
-# first failed sp45-residual attempt's 0.83-0.88), blend gain at w=0.10 real but modest (+0.118ft,
-# 94.7% positive), tail-risk clean (max single-well worsening +1.77ft). Attach the
-# 'rogii-track6-gbm' Kaggle Dataset (5 fold LightGBM boosters + track6_gbm_meta.pkl).
+CELL_TRACK6_BLEND = '''# --- TRACK6 BLEND (independent PF x2 + multi-scale correlation-search + spatial NN features -> GBM) -
+# Second independent estimator in the spirit of the STRIDE writeup's "track6/track8": pf_ancc (own
+# state/motion model, NOT derived from sp45) + pf_z (a SECOND independent PF, Z-velocity-coupled motion
+# model -- corr(pf_z_err, pf_ancc_err)=0.49 on the true holdout, a genuinely different failure mode) +
+# NCC correlation-search features computed around pf_ancc's own estimate + spatial nearest-neighbor
+# formation-plane features (reuses the base pipeline's own `_FI` FormationPlaneKNN global). A GBM
+# predicts the RESIDUAL from pf_ancc (absolute-position framing overfit badly: train/val RMSE gap
+# 11.9 vs 25.8 -- residual + heavy regularization fixed it). Paired bootstrap on the true 160-well
+# holdout: blend gain at w=0.10 = +0.157ft, 95%CI=[+0.036,+0.285] -- clearly excludes zero (99.5%
+# positive), tail-risk clean (max single-well worsening +1.41ft). Attach the 'rogii-track6-gbm' Kaggle
+# Dataset (5 fold LightGBM boosters + track6v3_gbm_meta.pkl, v3 checkpoints).
 _T6_BLEND_W = float(os.environ.get("ROGII_TRACK6_BLEND", "0.10"))
 if _T6_BLEND_W > 0:
     try:
@@ -86,6 +89,77 @@ if _T6_BLEND_W > 0:
                 pts[i] = tv; pm = md_v[i]
             return pts
 
+        _T6_PFZ_N = 600
+        _T6_PFZ_MOM, _T6_PFZ_VN, _T6_PFZ_PN = 0.993, 0.005, 0.01
+        _T6_PFZ_GR_WIN, _T6_PFZ_GR_WT, _T6_PFZ_RESAMP = 5, 0.3, 0.5
+        _T6_PFZ_ROUGH_P, _T6_PFZ_ROUGH_V = 0.2, 0.003
+
+        @_t6njit(cache=True)
+        def _t6_pf_z(md_v, z_v, gr_v, gr_sm_v, gg_p, gg_s, vmin, step, gs, ip, iv, beta, icpt, zsig, N,
+                     MOM, VN, PN, GR_WT, RP, RV, RESAMP):
+            pos = _t6np.empty(N); vel = _t6np.empty(N); w = _t6np.ones(N) / N
+            for j in range(N):
+                pos[j] = ip + 0.5 * _t6np.random.randn(); vel[j] = iv + 0.02 * _t6np.random.randn()
+            pts = _t6np.empty(len(md_v)); pm = md_v[0] - 1.; pz = z_v[0] - 1.
+            for i in range(len(md_v)):
+                dm = md_v[i] - pm; dm = max(dm, 1.); dzd = (z_v[i] - pz) / dm; ve = beta * dzd + icpt
+                for j in range(N):
+                    vel[j] = MOM * vel[j] + VN * _t6np.random.randn(); pos[j] += vel[j] * dm + PN * _t6np.random.randn()
+                    pos[j] = max(pos[j], vmin - 50.); pos[j] = min(pos[j], vmin + len(gg_p) * step + 50.)
+                if not _t6np.isnan(gr_v[i]):
+                    ws = 0.
+                    for j in range(N):
+                        ep = _t6_interp1(gg_p, pos[j], vmin, step); dp = (gr_v[i] - ep) / gs
+                        lp = max(_t6np.exp(-0.5 * dp * dp) if dp * dp < 600. else 0., 1e-300)
+                        if not _t6np.isnan(gr_sm_v[i]):
+                            es = _t6_interp1(gg_s, pos[j], vmin, step); ds = (gr_sm_v[i] - es) / (gs * 1.5)
+                            lsm = max(_t6np.exp(-0.5 * ds * ds) if ds * ds < 600. else 0., 1e-300); lk = (1. - GR_WT) * lp + GR_WT * lsm
+                        else: lk = lp
+                        lk = max(lk, 1e-300); w[j] *= lk; ws += w[j]
+                    if ws > 0.:
+                        for j in range(N): w[j] /= ws
+                    else:
+                        for j in range(N): w[j] = 1. / N
+                ws2 = 0.
+                for j in range(N):
+                    dv = (vel[j] - ve) / max(zsig * 2., 0.005); lz = max(_t6np.exp(-0.5 * dv * dv) if dv * dv < 600. else 0., 1e-300)
+                    w[j] *= lz; ws2 += w[j]
+                if ws2 > 0.:
+                    for j in range(N): w[j] /= ws2
+                else:
+                    for j in range(N): w[j] = 1. / N
+                ne = 0.
+                for j in range(N): ne += w[j] * w[j]
+                if 1. / ne < RESAMP * N:
+                    pos, vel = _t6_resamp(pos, vel, w, N, RP, RV)
+                    for j in range(N): w[j] = 1. / N
+                wm = 0.
+                for j in range(N): wm += w[j] * pos[j]
+                pts[i] = wm; pm = md_v[i]; pz = z_v[i]
+            return pts
+
+        def _t6_run_pf_z(hw, tw_tvt, tw_gr, N=_T6_PFZ_N):
+            gs = _t6_gr_sig(hw, tw_tvt, tw_gr)
+            tw_s = _t6pd.Series(tw_gr).rolling(_T6_PFZ_GR_WIN, center=True, min_periods=1).mean().values.astype(_t6np.float32)
+            kna = hw[hw.TVT_input.notna()]; ev = hw[hw.TVT_input.isna()]
+            if len(ev) == 0: return _t6np.array([])
+            dz_k = _t6np.diff(kna.Z.values); dvt = _t6np.diff(kna.TVT_input.values); dmd_k = _t6np.diff(kna.MD.values); m2 = dmd_k > 0
+            if m2.sum() >= 10:
+                vz = dz_k[m2] / dmd_k[m2]; vt = dvt[m2] / dmd_k[m2]; A = _t6np.column_stack([vz, _t6np.ones_like(vz)])
+                c, _, _, _ = _t6np.linalg.lstsq(A, vt, rcond=None)
+                beta, icpt, zsig = float(c[0]), float(c[1]), max(float(_t6np.std(vt - (c[0] * vz + c[1]))), 0.001)
+            else:
+                beta, icpt, zsig = -1., 0., 0.1
+            t2 = kna.tail(20); dvt2 = _t6np.diff(t2.TVT_input.values); dmd2 = _t6np.diff(t2.MD.values); m3 = dmd2 > 0
+            iv = float(_t6np.median(dvt2[m3] / dmd2[m3])) if m3.sum() >= 3 else 0.
+            gg, gmin, gst = _t6_grid(tw_tvt, tw_gr); gs2, _, _ = _t6_grid(tw_tvt, tw_s)
+            gr_sm = hw.GR.rolling(_T6_PFZ_GR_WIN, center=True, min_periods=1).mean()
+            pts = _t6_pf_z(ev.MD.values.astype(_t6np.float64), ev.Z.values.astype(_t6np.float64), ev.GR.values.astype(_t6np.float64),
+                            gr_sm.loc[ev.index].values.astype(_t6np.float64), gg, gs2, gmin, gst, gs,
+                            float(kna.TVT_input.iloc[-1]), iv, beta, icpt, zsig, N,
+                            _T6_PFZ_MOM, _T6_PFZ_VN, _T6_PFZ_PN, _T6_PFZ_GR_WT, _T6_PFZ_ROUGH_P, _T6_PFZ_ROUGH_V, _T6_PFZ_RESAMP)
+            return pts.astype(_t6np.float32)
+
         def _t6_grid(tw_tvt, tw_gr, step=0.2):
             tmin = float(tw_tvt.min()); tmax = float(tw_tvt.max())
             tvt_g = _t6np.arange(tmin, tmax + step, step)
@@ -130,10 +204,16 @@ if _T6_BLEND_W > 0:
             runner_up = tmp.max() if len(tmp) > 5 else peak
             return float(offsets[best_i]), float(peak), float(peak - runner_up)
 
+        _T6_FORMATIONS = ["ANCC", "ASTNU", "ASTNL", "EGFDU", "EGFDL", "BUDA"]
         _T6_FEATCOLS = ["md_since", "gr", "gr_grad", "gr_rstd", "z", "dzdmd", "cal_gr", "pf_ancc_tvt", "sin_azi", "cos_azi"]
         for _ws in _T6_WIN_SIZES: _T6_FEATCOLS += ["off%d" % _ws, "peak%d" % _ws, "sharp%d" % _ws]
+        _T6_FEATCOLS += ["tvtF_%s" % _fn for _fn in _T6_FORMATIONS] + ["knn_d", "pf_z_tvt", "pfz_ancc_disagree"]
 
-        def _t6_build_well(hw, tw_tvt, tw_gr, pf_tvt):
+        def _t6_seg_b(ktvt, kz, form_col):
+            bv = ktvt + kz - form_col
+            return float(_t6np.median(bv)) if len(bv) else 0.0
+
+        def _t6_build_well(hw, tw_tvt, tw_gr, pf_tvt, pfz_tvt):
             km = hw["TVT_input"].notna()
             last = hw[km].iloc[-1]; last_MD = float(last["MD"]); last_Z = float(last["Z"])
             gr = _t6_interp_nan(hw["GR"].values.astype(float))
@@ -159,6 +239,24 @@ if _T6_BLEND_W > 0:
                     gwin = cal_ev[lo:hi]
                     off, peak, sharp = _t6_match_profile(gwin, tw_gr, tw_tvt, pf_tvt[j], _T6_SEARCH_HALF, _T6_SEARCH_STEP)
                     off_by_ws[ws][si] = off; peak_by_ws[ws][si] = peak; sharp_by_ws[ws][si] = sharp
+
+            # spatial NN formation-plane features -- reuse the base pipeline's own `_FI` (FormationPlaneKNN
+            # fit on all 773 train wells); test wells are never in that fit set, so no self-exclusion needed.
+            if "_FI" in globals() and _FI is not None and getattr(_FI, "tree", None) is not None \
+                    and all(_fc in hw.columns for _fc in _T6_FORMATIONS) and "X" in hw.columns:
+                xy_kn = hw.loc[km, ["X", "Y"]].to_numpy(_t6np.float64)
+                xy_ev = hw.loc[~km, ["X", "Y"]].to_numpy(_t6np.float64)
+                form_kn, _ = _FI.impute(xy_kn, self_wid=None)
+                form_ev, knn_d = _FI.impute(xy_ev, self_wid=None)
+                kz_ = hw.loc[km, "Z"].to_numpy(_t6np.float32); z_ev_ = hw.loc[~km, "Z"].to_numpy(_t6np.float32)
+                tvtF = {}
+                for _fi2, _fn in enumerate(_T6_FORMATIONS):
+                    _bo = _t6_seg_b(ktvt.astype(_t6np.float32), kz_, form_kn[:, _fi2])
+                    tvtF["tvtF_%s" % _fn] = (-z_ev_ + form_ev[:, _fi2] + _bo).astype(_t6np.float32)
+            else:
+                tvtF = {"tvtF_%s" % _fn: _t6np.zeros(n_ev, _t6np.float32) for _fn in _T6_FORMATIONS}
+                knn_d = _t6np.full(n_ev, 1e6, _t6np.float32)
+
             F = {}
             F["md_since"] = (MD - last_MD)[ev_idx]
             F["gr"] = gr[ev_idx]; F["gr_grad"] = _t6np.gradient(gr)[ev_idx]
@@ -170,6 +268,11 @@ if _T6_BLEND_W > 0:
                 F["off%d" % ws] = _t6np.interp(_t6np.arange(n_ev), sub_idx, off_by_ws[ws])
                 F["peak%d" % ws] = _t6np.interp(_t6np.arange(n_ev), sub_idx, peak_by_ws[ws])
                 F["sharp%d" % ws] = _t6np.interp(_t6np.arange(n_ev), sub_idx, sharp_by_ws[ws])
+            F.update(tvtF); F["knn_d"] = knn_d
+            if len(pfz_tvt) == n_ev:
+                F["pf_z_tvt"] = pfz_tvt; F["pfz_ancc_disagree"] = pfz_tvt - pf_tvt
+            else:
+                F["pf_z_tvt"] = pf_tvt.copy(); F["pfz_ancc_disagree"] = _t6np.zeros(n_ev, _t6np.float32)
             M = _t6np.stack([F[c] for c in _T6_FEATCOLS], axis=1).astype(_t6np.float32)
             return M, ev_idx
 
@@ -181,8 +284,8 @@ if _T6_BLEND_W > 0:
                     hits = _t6glob.glob(os.path.join(_local_dir, pattern))
             return hits
 
-        _t6_model_paths = sorted(_t6_find("track6_gbm_fold*.txt"))
-        _t6_meta_paths = _t6_find("track6_gbm_meta.pkl")
+        _t6_model_paths = sorted(_t6_find("track6v3_gbm_fold*.txt"))
+        _t6_meta_paths = _t6_find("track6v3_gbm_meta.pkl")
         if not _t6_model_paths or not _t6_meta_paths:
             raise FileNotFoundError(
                 "track6 GBM checkpoints/meta not found -- attach the 'rogii-track6-gbm' Kaggle Dataset as an input.")
@@ -200,7 +303,11 @@ if _T6_BLEND_W > 0:
             if km.sum() < 20 or hw["TVT_input"].isna().sum() < 20: continue
             pf_tvt = _t6_run_pf_ancc(hw, tw_tvt, tw_gr)
             if len(pf_tvt) == 0: continue
-            _r = _t6_build_well(hw, tw_tvt, tw_gr, pf_tvt)
+            try:
+                pfz_tvt = _t6_run_pf_z(hw, tw_tvt, tw_gr)
+            except Exception:
+                pfz_tvt = _t6np.array([])
+            _r = _t6_build_well(hw, tw_tvt, tw_gr, pf_tvt, pfz_tvt)
             if _r is None: continue
             M, ev_idx = _r
             resid_preds = _t6np.mean([m.predict(M) for m in _t6_models], axis=0)
