@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<!-- saved from url=(0087)https://www.kaggle.com/competitions/rogii-wellbore-geology-prediction/discussion/718670 -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>ROGII - Wellbore Geology Prediction | Kaggle</title>
+  
+    <meta name="robots" content="index, follow">
+  <meta name="description" content="Build a model that contributes to automating drilling operations in the oil and gas industry.">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, minimum-scale=1.0">
+  <meta name="theme-color" content="#008ABC">
+  <script src="./ROGII - Wellbore Geology Prediction _ Kaggle_files/cb=gapi.loaded_0" nonce="" async=""></script><script nonce="" type="text/javascript">
+    window["pageRequestStartTime"] = 1784199018427;
+    window["pageRequestEndTime"] = 1784199018440;
+    window["initialPageLoadStartTime"] = new Date().getTime();
+  </script>
+  <script nonce="" id="gsi-client" src="./ROGII - Wellbore Geology Prediction _ Kaggle_files/client" async="" defer=""></script>
+  <script nonce="">window.KAGGLE_JUPYTERLAB_PATH = "/static/assets/jupyterlab-v4/jupyterlab-index-b404c422d18e69dc.html";</script>
+  <link rel="preconnect" href="https://www.google-analytics.com/" crossorigin="anonymous"><link rel="preconnect" href="https://stats.g.doubleclick.net/"><link rel="preconnect" href="https://storage.googleapis.com/"><link rel="preconnect" href="https://apis.google.com/">
+    <link href="https://www.kaggle.com/static/images/favicon.ico" rel="shortcut icon" type="image/x-icon" id="dynamic-favicon">
+  <link rel="manifest" href="https://www.kaggle.com/static/json/manifest.json" crossorigin="use-credentials">
+
+
+  <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
+
+  <link href="./ROGII - Wellbore Geology Prediction _ Kaggle_files/css" rel="preload" as="style">
+  <link href="./ROGII - Wellbore Geology Prediction _ Kaggle_files/css2" rel="preload" as="style">
+  <link href="./ROGII - Wellbore Geology Prediction _ Kaggle_files/css" rel="stylesheet" media="all" id="async-google-font-1">
+  <link href="./ROGII - Wellbore Geology Prediction _ Kaggle_files/css2" rel="stylesheet" media="all" id="async-google-font-2">
+  <script nonce="" type="text/javascript">
+    const styleSheetIds = ["async-google-font-1", "async-google-font-2"];
+    styleSheetIds.forEach(function (id) {
+      document.getElementById(id).addEventListener("load", function() {
+        this.media = "all";
+      });
+    });
+  </script>
+
+
+    <link rel="stylesheet" type="text/css" href="./ROGII - Wellbore Geology Prediction _ Kaggle_files/app.css">
+
+  
+    
+ 
+      <script nonce="">
+        try{(function(a,s,y,n,c,h,i,d,e){d=s.createElement("style");
+        d.appendChild(s.createTextNode(""));s.head.appendChild(d);d=d.sheet;
+        y=y.map(x => d.insertRule(x + "{ opacity: 0 !important }"));
+        h.start=1*new Date;h.end=i=function(){y.forEach(x => x<d.cssRules.length ? d.deleteRule(x) : {})};
+        (a[n]=a[n]||[]).hide=h;setTimeout(function(){i();h.end=null},c);h.timeout=c;
+        })(window,document,['.site-header-react__nav'],'dataLayer',2000,{'GTM-52LNT9S':true});}catch(ex){}
+    </script><style></style>
+    <script nonce="">
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'G-T7QHS60L4Q', {
+            'optimize_id': 'GTM-52LNT9S',
+            'displayFeaturesTask': null,
+            'send_page_view': false,
+            'content_group1': 'Competitions',
+            'user_properties': {
+                'logged_in': true,
+            }
+        });
+    </script>
+    <script nonce="" async="" src="./ROGII - Wellbore Geology Prediction _ Kaggle_files/js"></script>
+
+
+  
+    
+    <meta property="og:title" content="ROGII - Wellbore Geology Prediction">
+    <meta property="og:description" content="Build a model that contributes to automating drilling operations in the oil and gas industry.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://kaggle.com/rogii-wellbore-geology-prediction">
+
+        <meta property="og:image" content="https://www.kaggle.com/open-graph/images/Competitions/132265">
+        <meta property="twitter:image" content="https://www.kaggle.com/open-graph/images/Competitions/132265">
+    <meta property="twitter:title" content="ROGII - Wellbore Geology Prediction">
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:site" content="@kaggle">
+
+
+
+
+
+  <meta name="twitter:site" content="@Kaggle"> 
+  
+    
+
+  
+    
+
+  
+    
+
+
+
+    <script nonce="">window['useKaggleAnalytics'] = true;</script>
+
+  <script id="gapi-target" nonce="" src="./ROGII - Wellbore Geology Prediction _ Kaggle_files/api.js.Без названия" defer="" async="" gapi_processed="true"></script>
+  <script nonce="" src="./ROGII - Wellbore Geology Prediction _ Kaggle_files/runtime.js.Без названия"></script>
+  <script nonce="" src="./ROGII - Wellbore Geology Prediction _ Kaggle_files/vendor.js.Без названия"></script>
+  <script nonce="" src="./ROGII - Wellbore Geology Prediction _ Kaggle_files/app.js.Без названия"></script><style id="_goober"> .go1475592160{height:0;}.go1671063245{height:auto;}.go1888806478{display:flex;flex-wrap:wrap;flex-grow:1;}@media (min-width:600px){.go1888806478{flex-grow:initial;min-width:288px;}}.go167266335{background-color:#313131;font-size:0.875rem;line-height:1.43;letter-spacing:0.01071em;color:#fff;align-items:center;padding:6px 16px;border-radius:4px;box-shadow:0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12);}.go3162094071{padding-left:20px;}.go3844575157{background-color:#313131;}.go1725278324{background-color:#43a047;}.go3651055292{background-color:#d32f2f;}.go4215275574{background-color:#ff9800;}.go1930647212{background-color:#2196f3;}.go946087465{display:flex;align-items:center;padding:8px 0;}.go703367398{display:flex;align-items:center;margin-left:auto;padding-left:16px;margin-right:-8px;}.go3963613292{width:100%;position:relative;transform:translateX(0);top:0;right:0;bottom:0;left:0;min-width:288px;}.go1141946668{box-sizing:border-box;display:flex;max-height:100%;position:fixed;z-index:1400;height:auto;width:auto;transition:top 300ms ease 0ms,right 300ms ease 0ms,bottom 300ms ease 0ms,left 300ms ease 0ms,max-width 300ms ease 0ms;pointer-events:none;max-width:calc(100% - 40px);}.go1141946668 .notistack-CollapseWrapper{padding:6px 0px;transition:padding 300ms ease 0ms;}@media (max-width:599.95px){.go1141946668{width:100%;max-width:calc(100% - 32px);}}.go3868796639 .notistack-CollapseWrapper{padding:2px 0px;}.go3118922589{top:14px;flex-direction:column;}.go1453831412{bottom:14px;flex-direction:column-reverse;}.go4027089540{left:20px;}@media (min-width:600px){.go4027089540{align-items:flex-start;}}@media (max-width:599.95px){.go4027089540{left:16px;}}.go2989568495{right:20px;}@media (min-width:600px){.go2989568495{align-items:flex-end;}}@media (max-width:599.95px){.go2989568495{right:16px;}}.go4034260886{left:50%;transform:translateX(-50%);}@media (min-width:600px){.go4034260886{align-items:center;}}</style>
+    <script nonce="" type="text/javascript">
+      window.kaggleStackdriverConfig = {
+        key: 'AIzaSyA4eNqUdRRskJsCZWVz-qL655Xa5JEMreE',
+        projectId: 'kaggle-161607',
+        service: 'web-fe',
+        version: 'ci',
+        userId: '34630893'
+      }
+    </script>
+<style data-styled="active" data-styled-version="6.4.2"></style><style id="googleidentityservice_button_styles" nonce="">.qJTHM{-moz-user-select:none;-webkit-user-select:none;-ms-user-select:none;color:#202124;direction:ltr;-webkit-touch-callout:none;font-family:Roboto-Regular,arial,sans-serif;-webkit-font-smoothing:antialiased;font-weight:400;margin:0;overflow:hidden;-webkit-text-size-adjust:100%}.ynRLnc{left:-9999px;position:absolute;top:-9999px}.L6cTce{display:none}.bltWBb{overflow-wrap:break-word;word-break:break-word}.hSRGPd{color:#1a73e8;cursor:pointer;font-weight:500;text-decoration:none}.Bz112c-W3lGp{height:16px;width:16px}.Bz112c-E3DyYd{height:20px;width:20px}.Bz112c-r9oPif{height:24px;width:24px}.Bz112c-u2z5K{height:36px;width:36px}.Bz112c-uaxL4e{border-radius:10px}.LgbsSe-Bz112c{display:block}.S9gUrf-YoZ4jf{border:none;margin:0;padding:0}.S9gUrf-YoZ4jf *{border:none;margin:0;padding:0}.fFW7wc-ibnC6b>.aZ2wEe>div{border-color:#4285f4}.P1ekSe-ZMv3u{-webkit-transition:height .2s linear;transition:height .2s linear}.P1ekSe-ZMv3u>div:first-child{background-color:#1a73e8!important;-webkit-transition:width .3s linear;transition:width .3s linear}.P1ekSe-ZMv3u>div:nth-child(2){background-image:-webkit-gradient(linear,left top,right top,from(rgba(255,255,255,.7)),to(rgba(255,255,255,.7))),-webkit-gradient(linear,left top,right top,from(#1a73e8),to(#1a73e8))!important;background-image:-webkit-linear-gradient(left,rgba(255,255,255,.7),rgba(255,255,255,.7)),-webkit-linear-gradient(left,#1a73e8,#1a73e8)!important;background-image:linear-gradient(90deg,rgba(255,255,255,.7),rgba(255,255,255,.7)),linear-gradient(90deg,#1a73e8,#1a73e8)!important}.P1ekSe-ZMv3u>div:nth-child(3){background-image:-webkit-gradient(linear,left top,right top,from(rgba(255,255,255,.7)),to(rgba(255,255,255,.7))),-webkit-gradient(linear,left top,right top,from(#1a73e8),to(#1a73e8))!important;background-image:-webkit-linear-gradient(left,rgba(255,255,255,.7),rgba(255,255,255,.7)),-webkit-linear-gradient(left,#1a73e8,#1a73e8)!important;background-image:linear-gradient(90deg,rgba(255,255,255,.7),rgba(255,255,255,.7)),linear-gradient(90deg,#1a73e8,#1a73e8)!important}.haAclf{display:inline-block}.nsm7Bb-HzV7m-LgbsSe{border-radius:4px;box-sizing:border-box;-webkit-transition:background-color .218s,border-color .218s;transition:background-color .218s,border-color .218s;-moz-user-select:none;-webkit-user-select:none;-ms-user-select:none;-webkit-appearance:none;background-color:#fff;background-image:none;border:1px solid #dadce0;color:#3c4043;cursor:pointer;font-family:Google Sans,arial,sans-serif;font-size:.875rem;height:40px;letter-spacing:.25px;outline:none;overflow:hidden;padding:0 12px;position:relative;text-align:center;vertical-align:middle;white-space:nowrap;width:auto}@media screen and (-ms-high-contrast:active){.nsm7Bb-HzV7m-LgbsSe{border:2px solid windowText;color:windowText}}@media screen and (preferes-contrast:more){.nsm7Bb-HzV7m-LgbsSe{color:#000}}.nsm7Bb-HzV7m-LgbsSe.pSzOP-SxQuSe{font-size:.875rem;height:32px;letter-spacing:.25px;padding:0 10px}.nsm7Bb-HzV7m-LgbsSe.purZT-SxQuSe{font-size:.6875rem;height:20px;letter-spacing:.3px;padding:0 8px}.nsm7Bb-HzV7m-LgbsSe.Bz112c-LgbsSe{padding:0;width:40px}.nsm7Bb-HzV7m-LgbsSe.Bz112c-LgbsSe.pSzOP-SxQuSe{width:32px}.nsm7Bb-HzV7m-LgbsSe.Bz112c-LgbsSe.purZT-SxQuSe{width:20px}.nsm7Bb-HzV7m-LgbsSe.JGcpL-RbRzK{border-radius:20px}.nsm7Bb-HzV7m-LgbsSe.JGcpL-RbRzK.pSzOP-SxQuSe{border-radius:16px}.nsm7Bb-HzV7m-LgbsSe.JGcpL-RbRzK.purZT-SxQuSe{border-radius:10px}.nsm7Bb-HzV7m-LgbsSe.i5vt6e-to915-Ia7Qfc{border:1px solid #8e918f;background-color:#131314;color:#e3e3e3}.nsm7Bb-HzV7m-LgbsSe.MFS4be-Ia7Qfc{border:none;color:#fff}.nsm7Bb-HzV7m-LgbsSe.MFS4be-v3pZbf-Ia7Qfc{background-color:#1a73e8}.nsm7Bb-HzV7m-LgbsSe.MFS4be-JaPV2b-Ia7Qfc{background-color:#202124;color:#e8eaed}@media screen and (prefers-contrast:more){.nsm7Bb-HzV7m-LgbsSe.MFS4be-JaPV2b-Ia7Qfc{color:#fff}}.nsm7Bb-HzV7m-LgbsSe .nsm7Bb-HzV7m-LgbsSe-Bz112c{height:18px;margin-right:8px;min-width:18px;width:18px}.nsm7Bb-HzV7m-LgbsSe.pSzOP-SxQuSe .nsm7Bb-HzV7m-LgbsSe-Bz112c{height:14px;min-width:14px;width:14px}.nsm7Bb-HzV7m-LgbsSe.purZT-SxQuSe .nsm7Bb-HzV7m-LgbsSe-Bz112c{height:10px;min-width:10px;width:10px}.nsm7Bb-HzV7m-LgbsSe.jVeSEe .nsm7Bb-HzV7m-LgbsSe-Bz112c{margin-left:8px;margin-right:-4px}.nsm7Bb-HzV7m-LgbsSe.Bz112c-LgbsSe .nsm7Bb-HzV7m-LgbsSe-Bz112c{margin:0;padding:10px}.nsm7Bb-HzV7m-LgbsSe.Bz112c-LgbsSe.pSzOP-SxQuSe .nsm7Bb-HzV7m-LgbsSe-Bz112c{padding:8px}.nsm7Bb-HzV7m-LgbsSe.Bz112c-LgbsSe.purZT-SxQuSe .nsm7Bb-HzV7m-LgbsSe-Bz112c{padding:4px}.nsm7Bb-HzV7m-LgbsSe .nsm7Bb-HzV7m-LgbsSe-Bz112c-haAclf{border-top-left-radius:3px;border-bottom-left-radius:3px;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-pack:center;-webkit-justify-content:center;justify-content:center;-webkit-box-align:center;-webkit-align-items:center;align-items:center;background-color:#fff;height:36px;margin-left:-10px;margin-right:12px;min-width:36px;width:36px}.nsm7Bb-HzV7m-LgbsSe .nsm7Bb-HzV7m-LgbsSe-Bz112c-haAclf .nsm7Bb-HzV7m-LgbsSe-Bz112c,.nsm7Bb-HzV7m-LgbsSe.Bz112c-LgbsSe .nsm7Bb-HzV7m-LgbsSe-Bz112c-haAclf .nsm7Bb-HzV7m-LgbsSe-Bz112c{margin:0;padding:0}.nsm7Bb-HzV7m-LgbsSe.pSzOP-SxQuSe .nsm7Bb-HzV7m-LgbsSe-Bz112c-haAclf{height:28px;margin-left:-8px;margin-right:10px;min-width:28px;width:28px}.nsm7Bb-HzV7m-LgbsSe.purZT-SxQuSe .nsm7Bb-HzV7m-LgbsSe-Bz112c-haAclf{height:16px;margin-left:-6px;margin-right:8px;min-width:16px;width:16px}.nsm7Bb-HzV7m-LgbsSe.Bz112c-LgbsSe .nsm7Bb-HzV7m-LgbsSe-Bz112c-haAclf{border-radius:3px;margin-left:2px;margin-right:0;padding:0}.nsm7Bb-HzV7m-LgbsSe.JGcpL-RbRzK .nsm7Bb-HzV7m-LgbsSe-Bz112c-haAclf{border-radius:18px}.nsm7Bb-HzV7m-LgbsSe.pSzOP-SxQuSe.JGcpL-RbRzK .nsm7Bb-HzV7m-LgbsSe-Bz112c-haAclf{border-radius:14px}.nsm7Bb-HzV7m-LgbsSe.purZT-SxQuSe.JGcpL-RbRzK .nsm7Bb-HzV7m-LgbsSe-Bz112c-haAclf{border-radius:8px}.nsm7Bb-HzV7m-LgbsSe .nsm7Bb-HzV7m-LgbsSe-bN97Pc-sM5MNb{display:-webkit-box;display:-webkit-flex;display:flex;-webkit-align-items:center;-webkit-box-align:center;align-items:center;-webkit-flex-direction:row;-webkit-box-orient:horizontal;-webkit-box-direction:normal;flex-direction:row;-webkit-box-pack:justify;-webkit-justify-content:space-between;justify-content:space-between;-webkit-flex-wrap:nowrap;flex-wrap:nowrap;height:100%;position:relative;width:100%}.nsm7Bb-HzV7m-LgbsSe .oXtfBe-l4eHX{-webkit-box-pack:center;-webkit-justify-content:center;justify-content:center}.nsm7Bb-HzV7m-LgbsSe .nsm7Bb-HzV7m-LgbsSe-BPrWId{-webkit-flex-grow:1;-webkit-box-flex:1;flex-grow:1;font-family:Google Sans,arial,sans-serif;font-weight:500;overflow:hidden;text-overflow:ellipsis;vertical-align:top}.nsm7Bb-HzV7m-LgbsSe.purZT-SxQuSe .nsm7Bb-HzV7m-LgbsSe-BPrWId{font-weight:300}.nsm7Bb-HzV7m-LgbsSe .oXtfBe-l4eHX .nsm7Bb-HzV7m-LgbsSe-BPrWId{-webkit-flex-grow:0;-webkit-box-flex:0;flex-grow:0}.nsm7Bb-HzV7m-LgbsSe .nsm7Bb-HzV7m-LgbsSe-MJoBVe{-webkit-transition:background-color .218s;transition:background-color .218s;bottom:0;left:0;position:absolute;right:0;top:0}.nsm7Bb-HzV7m-LgbsSe:focus,.nsm7Bb-HzV7m-LgbsSe:hover{box-shadow:none;border-color:rgb(210,227,252);outline:none}.nsm7Bb-HzV7m-LgbsSe:focus-within{outline:2px solid #00639b;border-color:transparent}.nsm7Bb-HzV7m-LgbsSe:hover .nsm7Bb-HzV7m-LgbsSe-MJoBVe{background:rgba(66,133,244,.08)}.nsm7Bb-HzV7m-LgbsSe:active .nsm7Bb-HzV7m-LgbsSe-MJoBVe,.nsm7Bb-HzV7m-LgbsSe:focus .nsm7Bb-HzV7m-LgbsSe-MJoBVe{background:rgba(66,133,244,.1)}.nsm7Bb-HzV7m-LgbsSe.i5vt6e-to915-Ia7Qfc:hover .nsm7Bb-HzV7m-LgbsSe-MJoBVe{background:rgba(255,255,255,.08)}.nsm7Bb-HzV7m-LgbsSe.i5vt6e-to915-Ia7Qfc:active .nsm7Bb-HzV7m-LgbsSe-MJoBVe,.nsm7Bb-HzV7m-LgbsSe.i5vt6e-to915-Ia7Qfc:focus .nsm7Bb-HzV7m-LgbsSe-MJoBVe{background:rgba(255,255,255,.12)}.nsm7Bb-HzV7m-LgbsSe.MFS4be-Ia7Qfc:hover .nsm7Bb-HzV7m-LgbsSe-MJoBVe{background:rgba(255,255,255,.24)}.nsm7Bb-HzV7m-LgbsSe.MFS4be-Ia7Qfc:active .nsm7Bb-HzV7m-LgbsSe-MJoBVe,.nsm7Bb-HzV7m-LgbsSe.MFS4be-Ia7Qfc:focus .nsm7Bb-HzV7m-LgbsSe-MJoBVe{background:rgba(255,255,255,.32)}.nsm7Bb-HzV7m-LgbsSe .n1UuX-DkfjY{border-radius:50%;display:-webkit-box;display:-webkit-flex;display:flex;height:20px;margin-left:-4px;margin-right:8px;min-width:20px;width:20px}.nsm7Bb-HzV7m-LgbsSe.jVeSEe .nsm7Bb-HzV7m-LgbsSe-BPrWId{font-family:Roboto;font-size:12px;text-align:left}.nsm7Bb-HzV7m-LgbsSe.jVeSEe .nsm7Bb-HzV7m-LgbsSe-BPrWId .K4efff .fmcmS,.nsm7Bb-HzV7m-LgbsSe.jVeSEe .nsm7Bb-HzV7m-LgbsSe-BPrWId .ssJRIf{overflow:hidden;text-overflow:ellipsis}.nsm7Bb-HzV7m-LgbsSe.jVeSEe .nsm7Bb-HzV7m-LgbsSe-BPrWId .K4efff{display:-webkit-box;display:-webkit-flex;display:flex;-webkit-align-items:center;-webkit-box-align:center;align-items:center;color:#5f6368;fill:#5f6368;font-size:11px;font-weight:400}.nsm7Bb-HzV7m-LgbsSe.jVeSEe.i5vt6e-to915-Ia7Qfc .nsm7Bb-HzV7m-LgbsSe-BPrWId .K4efff{color:#c4c7c5;fill:#c4c7c5}.nsm7Bb-HzV7m-LgbsSe.jVeSEe.MFS4be-Ia7Qfc .nsm7Bb-HzV7m-LgbsSe-BPrWId .K4efff{color:#e8eaed;fill:#e8eaed}@media screen and (prefers-contrast:more){.nsm7Bb-HzV7m-LgbsSe.jVeSEe .nsm7Bb-HzV7m-LgbsSe-BPrWId .K4efff,.nsm7Bb-HzV7m-LgbsSe.jVeSEe.MFS4be-Ia7Qfc .nsm7Bb-HzV7m-LgbsSe-BPrWId .K4efff{color:#000;fill:#000}}.nsm7Bb-HzV7m-LgbsSe.jVeSEe .nsm7Bb-HzV7m-LgbsSe-BPrWId .K4efff .Bz112c{height:18px;margin:-3px -3px -3px 2px;min-width:18px;width:18px}.nsm7Bb-HzV7m-LgbsSe.jVeSEe .nsm7Bb-HzV7m-LgbsSe-Bz112c-haAclf{border-top-left-radius:0;border-bottom-left-radius:0;border-top-right-radius:3px;border-bottom-right-radius:3px;margin-left:12px;margin-right:-10px}.nsm7Bb-HzV7m-LgbsSe.jVeSEe.JGcpL-RbRzK .nsm7Bb-HzV7m-LgbsSe-Bz112c-haAclf{border-radius:18px}.L5Fo6c-sM5MNb{border:0;display:block;left:0;position:relative;top:0}.L5Fo6c-bF1uUb{border-radius:4px;bottom:0;cursor:pointer;left:0;position:absolute;right:0;top:0}.L5Fo6c-bF1uUb:focus{border:none;outline:none}sentinel{}</style><style data-emotion="css-global" data-s=""></style><style data-emotion="css-global" data-s=""></style><style data-emotion="css-global" data-s=""></style><style data-emotion="css" data-s=""></style><link rel="stylesheet" type="text/css" href="./ROGII - Wellbore Geology Prediction _ Kaggle_files/4912.70c86abc3e838bdc.css"></head>
+<body style="background-color: rgb(28, 29, 32);">
+  <div id="root"><nav aria-label="Main Kaggle page navigation" class="sc-biWTsH ijZsHf"><div class="sc-hglrMW cKDOTY"><div class="sc-hZhKrD jzEBVF"><div class="sc-cHazmW hwbXxe"><button aria-label="Navigation menu" title="Navigation menu" class="sc-iBjNZB bGduwL google-symbols notranslate">menu</button></div><a href="https://www.kaggle.com/competitions/rogii-wellbore-geology-prediction/discussion/718670#site-content" class="sc-dSDPUr ixAKjE">Skip to<br>content</a><div data-testid="kaggle-logo-wrapper" class="sc-Jclpx kOOdLY"><a href="https://www.kaggle.com/" aria-label="Return to Kaggle home page"><img src="./ROGII - Wellbore Geology Prediction _ Kaggle_files/site-logo.svg" alt="Kaggle" class="sc-tIyEa jALJjq"></a></div></div></div><div class="sc-findPx hSJydp"><button class="sc-Jwmfr jsHtZW"><svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink: 0;"><path fill-rule="evenodd" clip-rule="evenodd" d="M20 30L20 16L16 20L16 30L20 30Z" fill="#20BEFF"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M20 20L30 20L30 16L20 16L20 20Z" fill="#20BEFF"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M16 20L20 16L15.937 16L6 16L6 20L16 20Z" fill="#20BEFF"></path><rect x="20" y="16" width="4" height="10" transform="rotate(-180 20 16)" fill="#20BEFF"></rect></svg><span class="sc-dILkzW sc-gGKKzG iNaPtF hmZcDd">Create</span></button></div><div class="sc-lfBCjM dySFdx"><div class="sc-hCXID bekTTJ"><div class="sc-DSdOV bWAwBN"><div class="sc-dwNPMq eELAeC"><div class="sc-hjYznJ hSlpsI"><div class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root sc-dkIoQT dLCgVn css-feqhe6"><div class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedStart css-ipre3h"><span class="google-symbols notranslate MuiIcon-root MuiIcon-fontSizeMedium sc-bYgEKt bpVxIz notranslate css-1jgtvd5" aria-hidden="true" style="margin-right: 8px;">search</span><input aria-invalid="false" autocomplete="off" id=":ra:" placeholder="Search" type="text" class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedStart css-iyhe1a" value=""><fieldset aria-hidden="true" class="MuiOutlinedInput-notchedOutline css-nqlg3w"><legend class="css-ihdtdm"><span class="notranslate">​</span></legend></fieldset></div></div></div></div><ul class="MuiList-root km-list css-1uzmcsd" role="list"><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="Home List Item"><div class="sc-euUkyj cXgshv sc-hGLXNb bCUebD km-listitem--small"><a aria-label="Home" tabindex="0" href="https://www.kaggle.com/" data-click-log-id="home" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-dtvRhV llRLRt" style="min-width: 24px;"><div class="sc-dlgOLa iymbBI"><span class="google-symbols notranslate MuiIcon-root MuiIcon-fontSizeMedium sc-bYgEKt dVcKNL notranslate sc-iusvXA gtIPch css-1jgtvd5" aria-hidden="true" title="Home" aria-label="Home">explore</span></div></div><div class="sc-hCcPtG sc-bitxrY gTYZQg iQsabx"><p class="sc-fFCZOx iZNPId" style="padding-left: 4px;">Home</p></div></div></a></div></li><div role="presentation" class="sc-ehQGwK bWWbhh"><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="Competitions List Item"><div class="sc-euUkyj ikyMME sc-hGLXNb bCUebD km-listitem--small"><a aria-current="page" aria-label="Competitions" tabindex="0" href="https://www.kaggle.com/competitions" data-click-log-id="competitions" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-dtvRhV llRLRt" style="min-width: 24px;"><div class="sc-dlgOLa iymbBI"><span class="google-symbols notranslate MuiIcon-root MuiIcon-fontSizeMedium sc-bYgEKt kexQqv notranslate sc-iusvXA gtIPch css-1jgtvd5" aria-hidden="true" title="Competitions" aria-label="Competitions">emoji_events</span></div></div><div class="sc-hCcPtG sc-bitxrY gTYZQg iQsabx"><p class="sc-fFCZOx ffIPOn" style="padding-left: 4px;">Competitions</p></div></div></a></div></li><div class="sc-dbHHos krDUor"></div></div><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="Benchmarks List Item"><div class="sc-euUkyj cXgshv sc-hGLXNb bCUebD km-listitem--small"><a aria-label="Benchmarks" tabindex="0" href="https://www.kaggle.com/benchmarks" data-click-log-id="benchmarks" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-dtvRhV llRLRt" style="min-width: 24px;"><div class="sc-dlgOLa iymbBI"><span class="google-symbols notranslate MuiIcon-root MuiIcon-fontSizeMedium sc-bYgEKt dVcKNL notranslate sc-iusvXA gtIPch css-1jgtvd5" aria-hidden="true" title="Benchmarks" aria-label="Benchmarks">leaderboard</span></div></div><div class="sc-hCcPtG sc-bitxrY gTYZQg iQsabx"><p class="sc-fFCZOx iZNPId" style="padding-left: 4px;">Benchmarks</p></div></div></a></div></li><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="Game Arena List Item"><div class="sc-euUkyj cXgshv sc-hGLXNb bCUebD km-listitem--small"><a aria-label="Game Arena" tabindex="0" href="https://www.kaggle.com/game-arena" data-click-log-id="game-arena" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-dtvRhV llRLRt" style="min-width: 24px;"><div class="sc-dlgOLa iymbBI"><span class="google-symbols notranslate MuiIcon-root MuiIcon-fontSizeMedium sc-bYgEKt dVcKNL notranslate sc-iusvXA gtIPch css-1jgtvd5" aria-hidden="true" title="Game Arena" aria-label="Game Arena">smart_toy</span></div></div><div class="sc-hCcPtG sc-bitxrY gTYZQg iQsabx"><p class="sc-fFCZOx iZNPId" style="padding-left: 4px;">Game Arena</p></div></div></a></div></li></ul><ul class="MuiList-root km-list css-1uzmcsd" role="list"><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="Data Hub List Item"><div class="sc-euUkyj cXgshv sc-hGLXNb bCUebD km-listitem--small"><a aria-current="false" aria-expanded="false" aria-label="Data Hub" tabindex="0" href="https://www.kaggle.com/competitions/rogii-wellbore-geology-prediction/discussion/718670#" data-click-log-id="data-hub" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-dtvRhV llRLRt" style="min-width: 24px;"><div class="sc-dlgOLa iymbBI"><span class="google-symbols notranslate MuiIcon-root MuiIcon-fontSizeMedium sc-bYgEKt dVcKNL notranslate sc-iusvXA gtIPch css-1jgtvd5" aria-hidden="true" title="Data Hub" aria-label="Data Hub">code</span></div></div><div class="sc-hCcPtG sc-bitxrY gTYZQg iQsabx"><p class="sc-fFCZOx iZNPId" style="padding-left: 4px;">Data Hub</p></div></div></a><div class="sc-ilnrqe fdhDmN" style="padding-right: 12px;"><button aria-label="Expand" title="Expand" class="sc-iBjNZB ianyQQ google-symbols notranslate">expand_more</button></div></div></li></ul><ul class="MuiList-root km-list css-1uzmcsd" role="list"><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="More on Kaggle List Item"><div class="sc-euUkyj cXgshv sc-hGLXNb bCUebD km-listitem--small"><a aria-current="false" aria-expanded="true" aria-label="More on Kaggle" tabindex="0" href="https://www.kaggle.com/competitions/rogii-wellbore-geology-prediction/discussion/718670#" data-click-log-id="more" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-dtvRhV llRLRt" style="min-width: 24px;"><div class="sc-dlgOLa iymbBI"><span class="google-symbols notranslate MuiIcon-root MuiIcon-fontSizeMedium sc-bYgEKt dVcKNL notranslate sc-iusvXA gtIPch css-1jgtvd5" aria-hidden="true" title="More" aria-label="More">format_list_bulleted</span></div></div><div class="sc-hCcPtG sc-bitxrY gTYZQg iQsabx"><p class="sc-fFCZOx iZNPId" style="padding-left: 4px;">More</p></div></div></a><div class="sc-ilnrqe fdhDmN" style="padding-right: 12px;"><button aria-label="Collapse" title="Collapse" class="sc-iBjNZB ianyQQ google-symbols notranslate">expand_less</button></div></div></li><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="Discussions List Item"><div class="sc-euUkyj cXgshv sc-hGLXNb bCUebD km-listitem--small"><a aria-label="Discussions" tabindex="0" href="https://www.kaggle.com/discussions" data-click-log-id="discussions" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-dtvRhV llRLRt" style="min-width: 24px;"><div class="sc-dlgOLa iymbBI"><span class="google-symbols notranslate MuiIcon-root MuiIcon-fontSizeMedium sc-bYgEKt dVcKNL notranslate sc-iusvXA gtIPch css-1jgtvd5" aria-hidden="true" title="Discussions" aria-label="Discussions">comment</span></div></div><div class="sc-hCcPtG sc-bitxrY gTYZQg iQsabx"><p class="sc-fFCZOx iZNPId" style="padding-left: 4px;">Discussions</p></div></div></a></div></li><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="Kaggle Learn List Item"><div class="sc-euUkyj cXgshv sc-hGLXNb bCUebD km-listitem--small"><a aria-label="Kaggle Learn" tabindex="0" href="https://www.kaggle.com/learn" data-click-log-id="learn" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-dtvRhV llRLRt" style="min-width: 24px;"><div class="sc-dlgOLa iymbBI"><span class="google-symbols notranslate MuiIcon-root MuiIcon-fontSizeMedium sc-bYgEKt dVcKNL notranslate sc-iusvXA gtIPch css-1jgtvd5" aria-hidden="true" title="Learn" aria-label="Learn">school</span></div></div><div class="sc-hCcPtG sc-bitxrY gTYZQg iQsabx"><p class="sc-fFCZOx iZNPId" style="padding-left: 4px;">Learn</p></div></div></a></div></li><div class="sc-gVJhcH gymogj"><div class="sc-hJpFng cRusut"></div></div><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="Kaggle Rankings List Item"><div class="sc-euUkyj cXgshv sc-likWDx hIoMMp km-listitem--dense"><a aria-label="Kaggle Rankings" tabindex="0" href="https://www.kaggle.com/rankings" data-click-log-id="kaggle-rankings" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-hCcPtG sc-bitxrY gTYZQg iQsabx"><p class="sc-fFCZOx iZNPId">Kaggle Rankings</p></div></div></a></div></li><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="Progression List Item"><div class="sc-euUkyj cXgshv sc-likWDx hIoMMp km-listitem--dense"><a aria-label="Progression" tabindex="0" href="https://www.kaggle.com/progression" data-click-log-id="progression" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-hCcPtG sc-bitxrY gTYZQg iQsabx"><p class="sc-fFCZOx iZNPId">Progression</p></div></div></a></div></li><div class="sc-gVJhcH gymogj"><div class="sc-hJpFng cRusut"></div></div><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="Documentation List Item"><div class="sc-euUkyj cXgshv sc-likWDx hIoMMp km-listitem--dense"><a aria-label="Documentation" tabindex="0" href="https://www.kaggle.com/docs" data-click-log-id="documentation" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-hCcPtG sc-bitxrY gTYZQg iQsabx"><p class="sc-fFCZOx iZNPId">Documentation</p></div></div></a></div></li><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="Blog List Item"><div class="sc-euUkyj cXgshv sc-likWDx hIoMMp km-listitem--dense"><a aria-label="Blog" tabindex="0" href="https://www.kaggle.com/blog" data-click-log-id="blog" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-hCcPtG sc-bitxrY gTYZQg iQsabx"><p class="sc-fFCZOx iZNPId">Blog</p></div></div></a></div></li><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="Host a Competition List Item"><div class="sc-euUkyj cXgshv sc-likWDx hIoMMp km-listitem--dense"><a aria-label="Host a Competition" tabindex="0" href="https://www.kaggle.com/c/about/host" data-click-log-id="host-a-competition" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-hCcPtG sc-bitxrY gTYZQg iQsabx"><p class="sc-fFCZOx iZNPId">Host a Competition</p></div></div></a></div></li><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="Research Grants List Item"><div class="sc-euUkyj cXgshv sc-likWDx hIoMMp km-listitem--dense"><a aria-label="Research Grants" tabindex="0" href="https://www.kaggle.com/research-grants" data-click-log-id="research-grants" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-hCcPtG sc-bitxrY gTYZQg iQsabx"><p class="sc-fFCZOx iZNPId">Research Grants</p></div></div></a></div></li><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="Educator Resources List Item"><div class="sc-euUkyj cXgshv sc-likWDx hIoMMp km-listitem--dense"><a aria-label="Educator Resources" tabindex="0" href="https://www.kaggle.com/edu" data-click-log-id="educator-resources" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-hCcPtG sc-bitxrY gTYZQg iQsabx"><p class="sc-fFCZOx iZNPId">Educator Resources</p></div></div></a></div></li><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="Support/Contact List Item"><div class="sc-euUkyj cXgshv sc-likWDx hIoMMp km-listitem--dense"><a aria-label="Support/Contact" tabindex="0" href="https://www.kaggle.com/contact" data-click-log-id="supportcontact" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-hCcPtG sc-bitxrY gTYZQg iQsabx"><p class="sc-fFCZOx iZNPId">Support/Contact</p></div></div></a></div></li><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="Community Guidelines List Item"><div class="sc-euUkyj cXgshv sc-likWDx hIoMMp km-listitem--dense"><a aria-label="Community Guidelines" tabindex="0" href="https://www.kaggle.com/community-guidelines" data-click-log-id="community-guidelines" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-hCcPtG sc-bitxrY gTYZQg iQsabx"><p class="sc-fFCZOx iZNPId">Community Guidelines</p></div></div></a></div></li><div class="sc-gVJhcH gymogj"><div class="sc-hJpFng cRusut"></div></div><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="Team List Item"><div class="sc-euUkyj cXgshv sc-likWDx hIoMMp km-listitem--dense"><a aria-label="Team" tabindex="0" href="https://www.kaggle.com/about/team" data-click-log-id="team" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-hCcPtG sc-bitxrY gTYZQg iQsabx"><p class="sc-fFCZOx iZNPId">Team</p></div></div></a></div></li><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="Terms List Item"><div class="sc-euUkyj cXgshv sc-likWDx hIoMMp km-listitem--dense"><a aria-label="Terms" tabindex="0" href="https://www.kaggle.com/terms" data-click-log-id="terms" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-hCcPtG sc-bitxrY gTYZQg iQsabx"><p class="sc-fFCZOx iZNPId">Terms</p></div></div></a></div></li><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="Privacy List Item"><div class="sc-euUkyj cXgshv sc-likWDx hIoMMp km-listitem--dense"><a aria-label="Privacy" tabindex="0" href="https://www.kaggle.com/privacy" data-click-log-id="privacy" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-hCcPtG sc-bitxrY gTYZQg iQsabx"><p class="sc-fFCZOx iZNPId">Privacy</p></div></div></a></div></li></ul></div><div><div role="separator" class="sc-khYboC eRaHXH sc-BiJvk kwmcLw"></div><ul><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="Your Work List Item"><div class="sc-euUkyj cXgshv sc-hGLXNb bCUebD km-listitem--small"><a aria-label="Your Work" tabindex="0" href="https://www.kaggle.com/work" data-click-log-id="your-work" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-dtvRhV llRLRt" style="min-width: 24px;"><div class="sc-dlgOLa iymbBI"><span class="google-symbols notranslate MuiIcon-root MuiIcon-fontSizeMedium sc-bYgEKt dVcKNL notranslate sc-iusvXA gtIPch css-1jgtvd5" aria-hidden="true" title="Your Work" aria-label="Your Work">note_alt</span></div></div><div class="sc-hCcPtG sc-bitxrY gTYZQg iQsabx"><p class="sc-fFCZOx iZNPId" style="padding-left: 4px;">Your Work</p></div></div></a><div class="sc-ilnrqe fdhDmN" style="padding-right: 12px;"><button aria-label="Collapse Your Work" title="Collapse" class="sc-iBjNZB ianyQQ google-symbols notranslate" aria-expanded="true">expand_less</button></div></div></li><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="Collapse Viewed List Item"><div class="sc-euUkyj cXgshv sc-hGLXNb bCUebD km-listitem--small"><a aria-expanded="true" aria-label="Collapse Viewed" tabindex="0" href="https://www.kaggle.com/competitions/rogii-wellbore-geology-prediction/discussion/718670#" data-click-log-id="viewed" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-dtvRhV llRLRt" style="min-width: 24px;"><div class="sc-dlgOLa iymbBI"><span class="google-symbols notranslate MuiIcon-root MuiIcon-fontSizeMedium sc-bYgEKt dVcKNL notranslate sc-iusvXA gtIPch css-1jgtvd5" aria-hidden="true" style="visibility: hidden;">code</span></div></div><div class="sc-hCcPtG sc-bitxrY gTYZQg iQsabx"><p class="sc-fFCZOx iZNPId" style="padding-left: 4px;">Viewed</p></div></div></a><div class="sc-ilnrqe fdhDmN" style="padding-right: 12px;"><button aria-label="Collapse Viewed" title="Collapse Viewed" class="sc-iBjNZB ianyQQ google-symbols notranslate">expand_less</button></div></div></li><li class="sc-fUplsD lgRrvV"><ul class="MuiList-root km-list sc-cvtUcm jHIajL css-1uzmcsd" role="list"><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="ROGII - Wellbore Geology Prediction List Item"><div class="sc-euUkyj cXgshv sc-bTZKdb gpsALw km-listitem--dense"><a aria-label="ROGII - Wellbore Geology Prediction" tabindex="0" href="https://www.kaggle.com/competitions/rogii-wellbore-geology-prediction" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-dtvRhV llRLRt"><div class="sc-dlgOLa iymbBI"><img src="./ROGII - Wellbore Geology Prediction _ Kaggle_files/thumb76_76.png" alt="" width="20" height="20" class="sc-fTpUzR pvwDw"></div></div><div class="sc-hCcPtG sc-bitxrY iAzhEW iQsabx"><p class="sc-fFCZOx sc-hRoixq iZNPId ulIIt">ROGII - Wellbore Geology Prediction</p></div></div></a></div></li><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="The Pokémon Company - PTCG AI Battle Challenge Simulation List Item"><div class="sc-euUkyj cXgshv sc-bTZKdb gpsALw km-listitem--dense"><a aria-label="The Pokémon Company - PTCG AI Battle Challenge Simulation" tabindex="0" href="https://www.kaggle.com/competitions/pokemon-tcg-ai-battle" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-dtvRhV llRLRt"><div class="sc-dlgOLa iymbBI"><img src="./ROGII - Wellbore Geology Prediction _ Kaggle_files/thumb76_76(1).png" alt="" width="20" height="20" class="sc-fTpUzR pvwDw"></div></div><div class="sc-hCcPtG sc-bitxrY iAzhEW iQsabx"><p class="sc-fFCZOx sc-hRoixq iZNPId ulIIt">The Pokémon Company - PTCG AI Battle Challenge Simulation</p></div></div></a></div></li><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="The 2026 NeuroGolf Championship List Item"><div class="sc-euUkyj cXgshv sc-bTZKdb gpsALw km-listitem--dense"><a aria-label="The 2026 NeuroGolf Championship" tabindex="0" href="https://www.kaggle.com/competitions/neurogolf-2026" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-dtvRhV llRLRt"><div class="sc-dlgOLa iymbBI"><img src="./ROGII - Wellbore Geology Prediction _ Kaggle_files/thumb76_76(2).png" alt="" width="20" height="20" class="sc-fTpUzR pvwDw"></div></div><div class="sc-hCcPtG sc-bitxrY iAzhEW iQsabx"><p class="sc-fFCZOx sc-hRoixq iZNPId ulIIt">The 2026 NeuroGolf Championship</p></div></div></a></div></li><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="Improved Probabilistic agent List Item"><div class="sc-euUkyj cXgshv sc-bTZKdb gpsALw km-listitem--dense"><a aria-label="Improved Probabilistic agent" tabindex="0" href="https://www.kaggle.com/code/aristophanivan/improved-probabilistic-agent" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-dtvRhV llRLRt"><div class="sc-dlgOLa iymbBI"><img src="./ROGII - Wellbore Geology Prediction _ Kaggle_files/27411067-kg.jpg" alt="" width="20" height="20" class="sc-fTpUzR eXJWwY"></div></div><div class="sc-hCcPtG sc-bitxrY iAzhEW iQsabx"><p class="sc-fFCZOx sc-hRoixq iZNPId ulIIt">Improved Probabilistic agent</p></div></div></a></div></li><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="MuseumSCAT: Specimen Collection Annotation Task@CVNH ECCV26 List Item"><div class="sc-euUkyj cXgshv sc-bTZKdb gpsALw km-listitem--dense"><a aria-label="MuseumSCAT: Specimen Collection Annotation Task@CVNH ECCV26" tabindex="0" href="https://www.kaggle.com/competitions/museumscat-specimen-collection-annotation-task" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-dtvRhV llRLRt"><div class="sc-dlgOLa iymbBI"><img src="./ROGII - Wellbore Geology Prediction _ Kaggle_files/thumb76_76(3).png" alt="" width="20" height="20" class="sc-fTpUzR pvwDw"></div></div><div class="sc-hCcPtG sc-bitxrY iAzhEW iQsabx"><p class="sc-fFCZOx sc-hRoixq iZNPId ulIIt">MuseumSCAT: Specimen Collection Annotation Task@CVNH ECCV26</p></div></div></a></div></li></ul></li><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="Collapse Edited List Item"><div class="sc-euUkyj cXgshv sc-hGLXNb bCUebD km-listitem--small"><a aria-expanded="true" aria-label="Collapse Edited" tabindex="0" href="https://www.kaggle.com/competitions/rogii-wellbore-geology-prediction/discussion/718670#" data-click-log-id="edited" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-dtvRhV llRLRt" style="min-width: 24px;"><div class="sc-dlgOLa iymbBI"><span class="google-symbols notranslate MuiIcon-root MuiIcon-fontSizeMedium sc-bYgEKt dVcKNL notranslate sc-iusvXA gtIPch css-1jgtvd5" aria-hidden="true" style="visibility: hidden;">code</span></div></div><div class="sc-hCcPtG sc-bitxrY gTYZQg iQsabx"><p class="sc-fFCZOx iZNPId" style="padding-left: 4px;">Edited</p></div></div></a><div class="sc-ilnrqe fdhDmN" style="padding-right: 12px;"><button aria-label="Collapse Edited" title="Collapse Edited" class="sc-iBjNZB ianyQQ google-symbols notranslate">expand_less</button></div></div></li><li class="sc-fUplsD lgRrvV"><ul class="MuiList-root km-list sc-cvtUcm jHIajL css-1uzmcsd" role="list"><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="13_warpblend List Item"><div class="sc-euUkyj cXgshv sc-bTZKdb gpsALw km-listitem--dense"><a aria-label="13_warpblend" tabindex="0" href="https://www.kaggle.com/code/malyshevdanil/13-warpblend" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-dtvRhV llRLRt"><div class="sc-dlgOLa iymbBI"><img src="./ROGII - Wellbore Geology Prediction _ Kaggle_files/default-thumb.png" alt="" width="20" height="20" class="sc-fTpUzR eXJWwY"></div></div><div class="sc-hCcPtG sc-bitxrY iAzhEW iQsabx"><p class="sc-fFCZOx sc-hRoixq iZNPId ulIIt">13_warpblend</p></div></div></a></div></li><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="12_warpblend List Item"><div class="sc-euUkyj cXgshv sc-bTZKdb gpsALw km-listitem--dense"><a aria-label="12_warpblend" tabindex="0" href="https://www.kaggle.com/code/malyshevdanil/12-warpblend" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-dtvRhV llRLRt"><div class="sc-dlgOLa iymbBI"><img src="./ROGII - Wellbore Geology Prediction _ Kaggle_files/default-thumb.png" alt="" width="20" height="20" class="sc-fTpUzR eXJWwY"></div></div><div class="sc-hCcPtG sc-bitxrY iAzhEW iQsabx"><p class="sc-fFCZOx sc-hRoixq iZNPId ulIIt">12_warpblend</p></div></div></a></div></li><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="11_warpblend List Item"><div class="sc-euUkyj cXgshv sc-bTZKdb gpsALw km-listitem--dense"><a aria-label="11_warpblend" tabindex="0" href="https://www.kaggle.com/code/malyshevdanil/11-warpblend" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-dtvRhV llRLRt"><div class="sc-dlgOLa iymbBI"><img src="./ROGII - Wellbore Geology Prediction _ Kaggle_files/default-thumb.png" alt="" width="20" height="20" class="sc-fTpUzR eXJWwY"></div></div><div class="sc-hCcPtG sc-bitxrY iAzhEW iQsabx"><p class="sc-fFCZOx sc-hRoixq iZNPId ulIIt">11_warpblend</p></div></div></a></div></li><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="First submit the best public List Item"><div class="sc-euUkyj cXgshv sc-bTZKdb gpsALw km-listitem--dense"><a aria-label="First submit the best public" tabindex="0" href="https://www.kaggle.com/code/malyshevdanil/first-submit-the-best-public" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-dtvRhV llRLRt"><div class="sc-dlgOLa iymbBI"><img src="./ROGII - Wellbore Geology Prediction _ Kaggle_files/default-thumb.png" alt="" width="20" height="20" class="sc-fTpUzR eXJWwY"></div></div><div class="sc-hCcPtG sc-bitxrY iAzhEW iQsabx"><p class="sc-fFCZOx sc-hRoixq iZNPId ulIIt">First submit the best public</p></div></div></a></div></li><li class="MuiListItem-root MuiListItem-gutters sc-gILgRS iIxpCt css-14khl9n" aria-label="10_warpblend List Item"><div class="sc-euUkyj cXgshv sc-bTZKdb gpsALw km-listitem--dense"><a aria-label="10_warpblend" tabindex="0" href="https://www.kaggle.com/code/malyshevdanil/10-warpblend" role="link" class="sc-XpSrr bPLDUT"><div class="sc-fHmNBE dJBsWw"><div class="sc-dtvRhV llRLRt"><div class="sc-dlgOLa iymbBI"><img src="./ROGII - Wellbore Geology Prediction _ Kaggle_files/default-thumb.png" alt="" width="20" height="20" class="sc-fTpUzR eXJWwY"></div></div><div class="sc-hCcPtG sc-bitxrY iAzhEW iQsabx"><p class="sc-fFCZOx sc-hRoixq iZNPId ulIIt">10_warpblend</p></div></div></a></div></li></ul></li></ul></div></div><div class="sc-geRwcS elybkM"><button class="sc-fJMvwN ijHzCc"><div class="sc-kmjTPa eAKoLj"><span class="google-symbols notranslate MuiIcon-root MuiIcon-fontSizeMedium sc-bYgEKt caGTwn notranslate sc-hOYjXJ kWtQz css-1jgtvd5" aria-hidden="true" aria-label="Open Active Events dialog">auto_awesome_motion</span><div class="sc-fddPcQ bvBzZe">3</div></div><p class="sc-folSZX sc-HmrNY gZGcaN jaSfjW">View Active Events</p></button></div></div></nav><nav aria-label="Main menu, search and your account" class="sc-hYYjdK upiRv"><div class="sc-hKyxtL iJXvRg"><div class="sc-hZhKrD jzEBVF"><div class="sc-cHazmW hwbXxe"><button aria-label="Navigation menu" title="Navigation menu" class="sc-iBjNZB bGduwL google-symbols notranslate">menu</button></div><a href="https://www.kaggle.com/competitions/rogii-wellbore-geology-prediction/discussion/718670#site-content" class="sc-dSDPUr ixAKjE">Skip to<br>content</a><div data-testid="kaggle-logo-wrapper" class="sc-Jclpx kOOdLY"><a href="https://www.kaggle.com/" aria-label="Return to Kaggle home page"><img src="./ROGII - Wellbore Geology Prediction _ Kaggle_files/site-logo.svg" alt="Kaggle" class="sc-tIyEa jALJjq"></a></div></div></div><div class="sc-edgaEG gFsYGI"><div class="sc-jlAnuY dNfdv"><div class="sc-hjYznJ hSlpsI"><div class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root sc-dkIoQT dLCgVn css-feqhe6"><div class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedStart css-ipre3h"><span class="google-symbols notranslate MuiIcon-root MuiIcon-fontSizeMedium sc-bYgEKt bpVxIz notranslate css-1jgtvd5" aria-hidden="true" style="margin-right: 8px;">search</span><input aria-invalid="false" autocomplete="off" id=":rb:" placeholder="Search" type="text" class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedStart css-iyhe1a" value=""><fieldset aria-hidden="true" class="MuiOutlinedInput-notchedOutline css-nqlg3w"><legend class="css-ihdtdm"><span class="notranslate">​</span></legend></fieldset></div></div></div></div><div class="sc-iXaBKZ jujGnd"><div class="sc-fyzlkC gAkhdh"><div class="sc-iXuCAT OVKCZ"><div class="sc-kmYGLm hooIHD"><div class="sc-iIvZUO ebfLHz sc-gJaedx gwRoqn" aria-label="Malyshev Danil" role="button" tabindex="0"><div data-testid="avatar-image" title="Malyshev Danil" class="sc-gsdCXR hgbFAN" style="background-image: url(&quot;https://storage.googleapis.com/kaggle-avatars/thumbnails/default-thumb.png&quot;);"></div><svg width="32" height="32" viewBox="0 0 32 32"><circle r="15" cx="16" cy="16" fill="none" stroke-width="2" style="stroke: rgb(95, 99, 104);"></circle><circle r="15" cx="16" cy="16" fill="none" stroke-width="2" style="stroke: rgb(32, 190, 255);"></circle></svg></div></div></div></div></div></div></nav><div id="site-content" class="sc-cjeGuL jMjIyz legacy-less-dark-theme" role="main"><div class="sc-bAoahh ldSmbP"></div><div><div data-testid="competition-detail-render-tid" class="sc-kNYukV bPXZrh competition"><div class="sc-hWJtyg hJoffe"><div height="1px" class="sc-BlSCl cpQduB"></div><div class="sc-ivkPZN vAZGI"><div class="sc-ezjgmQ enJpoZ"><a href="https://www.kaggle.com/organizations/rogii" aria-label="ROGII&#39;s profile" class="sc-iIvZUO bmYtZQ"><div data-testid="avatar-image" title="ROGII" class="sc-gsdCXR hgbFAN" style="background-image: url(&quot;https://storage.googleapis.com/kaggle-organizations/5248/thumbnail.png?t=2026-03-18-20-59-25&quot;);"></div><svg width="32" height="32" viewBox="0 0 32 32"><circle r="15" cx="16" cy="16" fill="none" stroke-width="2" style="stroke: rgb(255, 255, 255);"></circle><circle r="15" cx="16" cy="16" fill="none" stroke-width="2" style="stroke: rgb(255, 255, 255);"></circle></svg></a><span style="flex: 1 1 0%; margin-left: 16px;"><span><span class="sc-bCgoVd hsZPdJ">ROGII </span></span><span class="sc-bCgoVd hsZPdJ"> · Featured Code Competition · <span title="Thu Aug 06 2026 04:59:00 GMT+0500 (Казахстан)" aria-label="21 days to go">21 days to go</span></span></span></div><div wrap="hide" class="sc-kNZCHa klqVkM sc-gNLSrG gtiUHo"><div class="sc-gVSTOL bAomGJ"><h1 class="sc-kEbgWM sc-giNoRI kIYlma etmmzI">ROGII - Wellbore Geology Prediction</h1><span class="sc-ieCSdj sc-ksvfsB jeARjD bpDVne" style="margin-bottom: 0px; max-width: unset;"><p class="sc-folSZX gZGcaN">Build a model that contributes to automating drilling operations in the oil and gas industry.</p></span></div><div wrap="hide" class="sc-jfTbbn dLIdar" style="align-self: unset;"><div class="sc-ayAnu eawdIy"><img src="./ROGII - Wellbore Geology Prediction _ Kaggle_files/header" alt="" class="sc-ftNwWt sc-cnaEEI cVAvdW biJxkq"></div></div></div></div><div height="1px" class="sc-BlSCl cpQduB"></div><div class="sc-dddEVg eKzFPq"><div class="sc-ivkPZN vAZGI"><div class="sc-kmHjHX eXeDA-D" style="border-left: 10px solid rgb(28, 29, 32); margin-left: -10px;"><div class="sc-lanHSw hXJUPy"><div class="sc-djNpJR gsUfnI"><h2 class="sc-dYjPD sc-iXLZEi gXCMEy gfumbc">ROGII - Wellbore Geology Prediction</h2><div class="sc-trbAL cpNyyJ"><div class="sc-ferlaH mUbTM"><div><button aria-disabled="false" class="sc-ikBzZv dtZZSK" tabindex="0" role="button"><span class="sc-dlwHGs cVnQIi">Submit Prediction</span></button><div></div></div><span><button aria-label="Competition options menu collapsed" title="Competition Options" class="sc-iBjNZB ianyQQ google-symbols notranslate">more_horiz</button></span></div></div></div></div><div class="sc-bhlHvD TQGOP"><div class="MuiTabs-root sc-hRvoDs fiXlzn sc-bUSfGc jXPkFw css-pc1mzd"><div class="MuiTabs-scrollableX MuiTabs-hideScrollbar css-oqr85h" style="width: 99px; height: 99px; position: absolute; top: -9999px; overflow: scroll;"></div><div class="MuiTabs-scroller MuiTabs-hideScrollbar MuiTabs-scrollableX css-12qnib" style="margin-bottom: 0px;"><div class="MuiTabs-flexContainer css-k008qs" role="tablist"><a class="MuiButtonBase-root MuiTab-root MuiTab-textColorPrimary sc-fbgRvb BvfkC css-1ewydek" tabindex="-1" role="tab" aria-selected="false" aria-label="Overview, 1 of 9" href="https://www.kaggle.com/competitions/rogii-wellbore-geology-prediction/overview" data-discover="true"><span class="sc-ieCSdj jeARjD">Overview</span><span class="MuiTouchRipple-root css-w0pj6f"></span></a><a class="MuiButtonBase-root MuiTab-root MuiTab-textColorPrimary sc-fbgRvb BvfkC css-1ewydek" tabindex="-1" role="tab" aria-selected="false" aria-label="Data, 2 of 9" href="https://www.kaggle.com/competitions/rogii-wellbore-geology-prediction/data" data-discover="true"><span class="sc-ieCSdj jeARjD">Data</span><span class="MuiTouchRipple-root css-w0pj6f"></span></a><a class="MuiButtonBase-root MuiTab-root MuiTab-textColorPrimary sc-fbgRvb BvfkC css-1ewydek" tabindex="-1" role="tab" aria-selected="false" aria-label="Code, 3 of 9" href="https://www.kaggle.com/competitions/rogii-wellbore-geology-prediction/code" data-discover="true"><span class="sc-ieCSdj jeARjD">Code</span><span class="MuiTouchRipple-root css-w0pj6f"></span></a><a class="MuiButtonBase-root MuiTab-root MuiTab-textColorPrimary sc-fbgRvb BvfkC css-1ewydek" tabindex="-1" role="tab" aria-selected="false" aria-label="Models, 4 of 9" href="https://www.kaggle.com/competitions/rogii-wellbore-geology-prediction/models" data-discover="true"><span class="sc-ieCSdj jeARjD">Models</span><span class="MuiTouchRipple-root css-w0pj6f"></span></a><a class="MuiButtonBase-root MuiTab-root MuiTab-textColorPrimary Mui-selected sc-fbgRvb BvfkC css-1ewydek" tabindex="0" role="tab" aria-selected="true" aria-label="Discussion, 5 of 9" href="https://www.kaggle.com/competitions/rogii-wellbore-geology-prediction/discussion" data-discover="true"><span class="sc-ieCSdj hbjmdl">Discussion</span><span class="MuiTouchRipple-root css-w0pj6f"></span></a><a class="MuiButtonBase-root MuiTab-root MuiTab-textColorPrimary sc-fbgRvb BvfkC css-1ewydek" tabindex="-1" role="tab" aria-selected="false" aria-label="Leaderboard, 6 of 9" href="https://www.kaggle.com/competitions/rogii-wellbore-geology-prediction/leaderboard" data-discover="true"><span class="sc-ieCSdj jeARjD">Leaderboard</span><span class="MuiTouchRipple-root css-w0pj6f"></span></a><a class="MuiButtonBase-root MuiTab-root MuiTab-textColorPrimary sc-fbgRvb BvfkC css-1ewydek" tabindex="-1" role="tab" aria-selected="false" aria-label="Rules, 7 of 9" href="https://www.kaggle.com/competitions/rogii-wellbore-geology-prediction/rules" data-discover="true"><span class="sc-ieCSdj jeARjD">Rules</span><span class="MuiTouchRipple-root css-w0pj6f"></span></a><a class="MuiButtonBase-root MuiTab-root MuiTab-textColorPrimary sc-fbgRvb BvfkC css-1ewydek" tabindex="-1" role="tab" aria-selected="false" aria-label="Team, 8 of 9" href="https://www.kaggle.com/competitions/rogii-wellbore-geology-prediction/team" data-discover="true"><span class="sc-ieCSdj jeARjD">Team</span><span class="MuiTouchRipple-root css-w0pj6f"></span></a><a class="MuiButtonBase-root MuiTab-root MuiTab-textColorPrimary sc-fbgRvb BvfkC css-1ewydek" tabindex="-1" role="tab" aria-selected="false" aria-label="Submissions, 9 of 9" href="https://www.kaggle.com/competitions/rogii-wellbore-geology-prediction/submissions" data-discover="true"><span class="sc-ieCSdj jeARjD">Submissions</span><span class="MuiTouchRipple-root css-w0pj6f"></span></a></div><span class="MuiTabs-indicator css-zn1p7a" style="left: 298.25px; width: 82.2812px;"></span></div></div></div></div></div><div role="separator" class="sc-khYboC dTnicw sc-jgzHYo cDhDxe sc-cQQmeh jNksHw"></div></div><div></div><div></div><div></div><div style="height: 40px;"></div><div><div style="margin-top: 0px;"><div data-testid="discussion-detail-render-tid" class="sc-kFSLPw"><div data-testid="discussions-topic-header" class="sc-jEAzxJ kPQDHJ"><div class="sc-kPiDRT etoEeA"><div class="sc-hXTDfe BXSUO"><a href="https://www.kaggle.com/jiweiliu" class="sc-iIvZUO ebfLHz sc-dfGkun bSjEKC" aria-label="Jiwei Liu&#39;s profile"><div data-testid="avatar-image" title="Jiwei Liu" class="sc-gsdCXR hgbFAN" style="background-image: url(&quot;https://storage.googleapis.com/kaggle-avatars/thumbnails/100236-kg.png?t=2024-07-09-01-29-05&quot;);"></div><svg width="32" height="32" viewBox="0 0 32 32"><circle r="15" cx="16" cy="16" fill="none" stroke-width="2" style="stroke: rgb(95, 99, 104);"></circle><circle r="15" cx="16" cy="16" fill="none" stroke-width="2" style="stroke: rgb(235, 204, 41);"></circle></svg></a><div><a href="https://www.kaggle.com/jiweiliu" target="_blank" class="sc-dMoJTN bzJA-dR"><span class="sc-bCgoVd hsZPdJ">Jiwei Liu</span></a>  ·  <span class="sc-bCgoVd hsZPdJ"><span>1543rd</span> in this Competition  ·  </span><span class="sc-bCgoVd hsZPdJ">Posted <span title="Sat Jul 04 2026 03:04:43 GMT+0500 (Казахстан)" aria-label="13 days ago">13 days ago</span></span></div></div><div class="sc-UZJgY ywCky"><div class="sc-eZpgEb euVdUS"><button mode="default" data-testid="upvotebutton__upvote" aria-label="Upvote" class="sc-kwNHia sc-gEGYpL dpLGOR doCKTk"><span class="google-symbols notranslate MuiIcon-root MuiIcon-fontSizeMedium sc-bYgEKt bpVxIz notranslate css-1jgtvd5" aria-hidden="true">arrow_drop_up</span></button><button mode="default" aria-label="25 votes" aria-live="polite" class="sc-kwNHia sc-dtTNjU dpLGOR iDSOHA">25</button><button mode="default" data-testid="upvotebutton__downvote" aria-label="Downvote" class="sc-kwNHia sc-kRiNQB dpLGOR crbkGd"><span class="google-symbols notranslate MuiIcon-root MuiIcon-fontSizeMedium sc-bYgEKt bpVxIz notranslate css-1jgtvd5" aria-hidden="true">arrow_drop_down</span></button></div><button aria-label="More Options for this Topic" title="More Options for this Topic" class="sc-iBjNZB bGduwL google-symbols notranslate">more_vert</button><div></div></div><h3 class="sc-crPgjm sc-jcLRxv fIHHsc jscxgG">A top-kernel teardown report generated by nvidia-kaggle</h3><div class="sc-glwQKG cESToU"><div class="sc-bOuOck jOacHq"><div class="sc-dFBygw jHODdG"><p>One pain point of kaggle agents is automatically tracking the kernels with correct versions. We recently open sourced <a href="https://github.com/NVIDIA/nvidia-kaggle" target="_blank" aria-label="https://github.com/NVIDIA/nvidia-kaggle (opens in a new tab)" rel="noreferrer nofollow">https://github.com/NVIDIA/nvidia-kaggle</a> The writeup below is generated by the following prompt in claude code. </p>
+<p>Please star our repo if you find it useful 😄</p>
+<blockquote>
+  <p>use /nvidia-kaggle agent skill to write a markdown report that can be drop in pasted as a kaggle post discussion. analyze top scored kernels of <a href="https://www.kaggle.com/competitions/rogii-wellbore-geology-prediction" target="_blank" aria-label="https://www.kaggle.com/competitions/rogii-wellbore-geology-prediction (opens in a new tab)">https://www.kaggle.com/competitions/rogii-wellbore-geology-prediction</a> and write a top kernel report for each selected kernel, show the score of each version. is it possible to check if there's any diff between versions? sometimes different versions are identical code rerun. also show kernel dependencies.</p>
+</blockquote>
+<p><em>Compiled 2026-07-03 with the <a href="https://github.com/NVIDIA/nvidia-kaggle" target="_blank" aria-label="nvidia-kaggle skill (opens in a new tab)" rel="noreferrer nofollow">nvidia-kaggle skill</a>. Every public-LB number below was fetched <strong>per version</strong> from Kaggle's kernel-version API; every "identical / changed" label comes from a <strong>byte-level diff of the two versions' code</strong>, not from the notebook title. Metric is <strong>RMSE, lower is better</strong>. For context, the public leaderboard leader on this date sits at <strong>5.262</strong> — well under any public notebook — so treat public-notebook scores as a floor to clear, not the ceiling.</em></p>
+<p><a href="https://www.kaggle.com/competitions/rogii-wellbore-geology-prediction" target="_blank" aria-label="Competition page (opens in a new tab)">Competition page</a></p>
+<hr>
+<h2>Why this post exists</h2>
+<p>Kaggle stores <strong>every</strong> version of a public notebook with its leaderboard score, and in the browser you <em>can</em> click into a version and see a diff — fine for a human eyeballing one notebook. But doing that <strong>programmatically, across many kernels</strong> — pulling each version's code, diffing it, and deciding whether a score move was a real edit or a <strong>lucky rerun of identical code</strong> — is exactly what a human clicking around can't scale to and what an LLM agent has no direct API for. That's the gap the nvidia-kaggle agent skill closes, and it's the machinery behind this whole post. It matters a lot here, because the strongest ROGII notebooks are <strong>stochastic</strong> (particle filters, random seeds), so the same code can land anywhere in a ~0.4-RMSE band from run to run — and eyeballing one diff won't tell you that.</p>
+<p>This teardown answers three questions for eight of the most-upvoted public kernels:</p>
+<ol>
+<li><strong>What did each version actually score?</strong> (verified, per version)</li>
+<li><strong>Was the change real, or an identical-code rerun?</strong> (byte-level code diff)</li>
+<li><strong>What does each kernel depend on, and at which version?</strong> (data/kernel sources)</li>
+</ol>
+<h3>How the "identical vs changed" call is made</h3>
+<p><img src="./ROGII - Wellbore Geology Prediction _ Kaggle_files/diff_method.png" alt="How a real edit is told apart from an identical rerun"></p>
+<p>For each version I download the exact source (<code>kernel_archive.py --version N</code>), strip cell outputs and execution counts, normalize trailing whitespace and blank lines, then hash and unified-diff consecutive versions. <strong>Same hash ⇒ identical rerun</strong> (any score move is pure run-to-run noise); <strong>non-empty diff ⇒ real change</strong> (I then read the actual edited lines). <em>SVG source: <code>plots/diff_method.svg</code>.</em></p>
+<hr>
+<h2>The eight kernels at a glance</h2>
+<p>Sorted by community votes. "Best LB" is the lowest verified public RMSE across the kernel's history; "best ver" is which version produced it — <strong>often not the latest</strong>.</p>
+<table>
+<thead>
+<tr>
+<th>Kernel</th>
+<th>Author</th>
+<th>Votes</th>
+<th>Versions</th>
+<th>Best LB</th>
+<th>Best ver</th>
+<th>What the version history shows</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://www.kaggle.com/code/nihilisticneuralnet/9-251-rogii-wellbore-geology-prediction-dwt-based" target="_blank" aria-label="9.251 DWT-based (opens in a new tab)">9.251 DWT-based</a></td>
+<td>nihilisticneuralnet</td>
+<td>645</td>
+<td>4</td>
+<td><strong>9.251</strong></td>
+<td>v3</td>
+<td>4 versions, <strong>one code hash</strong> — score is pure rerun luck</td>
+</tr>
+<tr>
+<td><a href="https://www.kaggle.com/code/bernubritz/rogii-lb7295-public-rebuild" target="_blank" aria-label="LB7295 Public Rebuild (opens in a new tab)">LB7295 Public Rebuild</a></td>
+<td>bernubritz</td>
+<td>442</td>
+<td>3</td>
+<td><strong>7.153</strong></td>
+<td>v1</td>
+<td>v1 &amp; v3 identical code, 7.153 vs 7.302</td>
+</tr>
+<tr>
+<td><a href="https://www.kaggle.com/code/lightningv08/rogii-dual-pipeline-self-verifying" target="_blank" aria-label="Dual Pipeline + Self-Verifying (opens in a new tab)">Dual Pipeline + Self-Verifying</a></td>
+<td>lightningv08</td>
+<td>281</td>
+<td>2</td>
+<td><strong>7.470</strong></td>
+<td>v1</td>
+<td><strong>v1 is a byte-for-byte fork</strong> of pixiux's blend v3</td>
+</tr>
+<tr>
+<td><a href="https://www.kaggle.com/code/ravaghi/wellbore-geology-prediction-ridge" target="_blank" aria-label="Wellbore Geology | Ridge (opens in a new tab)">Wellbore Geology | Ridge</a></td>
+<td>ravaghi</td>
+<td>260</td>
+<td>6</td>
+<td><strong>7.946</strong></td>
+<td>v6</td>
+<td>disciplined 1-line hyperparameter grind, 8.13 → 7.95</td>
+</tr>
+<tr>
+<td><a href="https://www.kaggle.com/code/pixiux/rogii-dual-pipeline-blend" target="_blank" aria-label="Dual-Pipeline Blend (opens in a new tab)">Dual-Pipeline Blend</a></td>
+<td>pixiux</td>
+<td>229</td>
+<td>3</td>
+<td><strong>7.519</strong></td>
+<td>v1</td>
+<td><code>.py</code> → notebook rewrite; best score was the first version</td>
+</tr>
+<tr>
+<td><a href="https://www.kaggle.com/code/pilkwang/rogii-target-free-tvt-geosteering" target="_blank" aria-label="Target-Free TVT Geosteering (opens in a new tab)">Target-Free TVT Geosteering</a></td>
+<td>pilkwang</td>
+<td>213</td>
+<td><strong>42</strong></td>
+<td><strong>7.501</strong></td>
+<td>v36</td>
+<td>long real-iteration grind, 8.00 → 7.50</td>
+</tr>
+<tr>
+<td><a href="https://www.kaggle.com/code/degnonguidi/public-score-rogii-lb-7-159" target="_blank" aria-label="Public Score [LB 7.159] (opens in a new tab)">Public Score [LB 7.159]</a></td>
+<td>degnonguidi</td>
+<td>200</td>
+<td>18</td>
+<td><strong>7.159</strong></td>
+<td>v16</td>
+<td>noisy: failed runs, one 3459-RMSE blowup, widest deps</td>
+</tr>
+<tr>
+<td><a href="https://www.kaggle.com/code/cdeotte/xgb-starter-cv-15" target="_blank" aria-label="XGB Starter [CV 15] (opens in a new tab)">XGB Starter [CV 15]</a></td>
+<td>cdeotte</td>
+<td>190</td>
+<td>3</td>
+<td><strong>14.336</strong></td>
+<td>v3</td>
+<td>a 4-line baseline swap moved LB 19.05 → 14.34</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Headline:</strong> for three of these kernels the <em>best</em> score sits on a version whose code is <strong>identical</strong> to a version that scored differently — i.e. the "best" is partly luck. Read on.</p>
+<hr>
+<h2>Per-version scores + diff verdicts</h2>
+<p>Below, <strong>∆code</strong> is added/removed lines vs the previous version (from the byte-diff); "identical" means the normalized code hash matched the previous version exactly.</p>
+<h3>1. nihilisticneuralnet — DWT-based (645 votes) — <em>the "same code, four scores" case</em></h3>
+<table>
+<thead>
+<tr>
+<th>Ver</th>
+<th>Public LB</th>
+<th>vs prev code</th>
+<th>Note</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>9.631</td>
+<td>—</td>
+<td>title <em>"Hill climbing 17bb04"</em></td>
+</tr>
+<tr>
+<td>2</td>
+<td>9.632</td>
+<td><strong>identical</strong> (+0/−0)</td>
+<td>rerun</td>
+</tr>
+<tr>
+<td>3</td>
+<td><strong>9.251</strong></td>
+<td><strong>identical</strong> (+0/−0)</td>
+<td>rerun — this is the number in the title</td>
+</tr>
+<tr>
+<td>4</td>
+<td>9.395</td>
+<td><strong>identical</strong> (+0/−0)</td>
+<td>rerun</td>
+</tr>
+</tbody>
+</table>
+<p>All four versions share one code hash (<code>c337477a</code>). The notebook is titled after its best rerun (9.251), but <strong>the code that produced 9.632 and 9.395 is the same code</strong>. This is the clearest example in the competition that a headline LB in a title can be a <em>sample from a noisy distribution</em>, not a reproducible result.</p>
+<h3>2. cdeotte — XGB Starter (190 votes) — <em>the highest-leverage 4 lines</em></h3>
+<table>
+<thead>
+<tr>
+<th>Ver</th>
+<th>Public LB</th>
+<th>vs prev code</th>
+<th>The actual edit</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>19.047</td>
+<td>—</td>
+<td>residual model over a <em>recent-slope</em> baseline</td>
+</tr>
+<tr>
+<td>2</td>
+<td><em>(no score — run did not submit)</em></td>
+<td>—</td>
+<td></td>
+</tr>
+<tr>
+<td>3</td>
+<td><strong>14.336</strong></td>
+<td>changed (+4/−4)</td>
+<td>switched the residual baseline to <strong>flat last-known-TVT</strong>; keeps slope baselines only as features</td>
+</tr>
+</tbody>
+</table>
+<p>A four-line change — <code>cur["baseline_tvt"] = last_known_tvt</code> instead of <code>..._recent_slope</code>, plus dropping a test-row-map arg — cut <strong>4.7 RMSE</strong>. This is the reference "anchor on the last known <code>TVT_input</code>, predict the residual" trick, and its diff is the cheapest big win in the whole set.</p>
+<h3>3. ravaghi — "Ridge" (260 votes) — <em>a textbook hyperparameter grind</em></h3>
+<p>Despite the name, this kernel is a <strong>particle-filter ensemble blended with Ridge</strong>. Every version is a 1–2 line tweak; nothing is a rerun.</p>
+<table>
+<thead>
+<tr>
+<th>Ver</th>
+<th>Public LB</th>
+<th>vs prev code</th>
+<th>The actual edit</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>8.129</td>
+<td>—</td>
+<td>PF ensemble, blend <code>0.3·tvt₁ + 0.7·tvt₂</code></td>
+</tr>
+<tr>
+<td>2</td>
+<td>8.308</td>
+<td>changed (+1/−1)</td>
+<td>blend → <code>0.25 / 0.75</code> <em>(worse)</em></td>
+</tr>
+<tr>
+<td>3</td>
+<td>8.290</td>
+<td>changed (+1/−1)</td>
+<td>blend → <code>0.35 / 0.65</code></td>
+</tr>
+<tr>
+<td>4</td>
+<td>8.252</td>
+<td>changed (+2/−2)</td>
+<td>PF <code>n_seeds 128→256</code>; blend → <code>0.3 / 0.7</code></td>
+</tr>
+<tr>
+<td>5</td>
+<td>8.125</td>
+<td>changed (+1/−1)</td>
+<td>PF <code>n_particles 500→600</code></td>
+</tr>
+<tr>
+<td>6</td>
+<td><strong>7.946</strong></td>
+<td>changed (+1/−1)</td>
+<td>PF <code>n_seeds 256→150</code> <em>(the winning move)</em></td>
+</tr>
+</tbody>
+</table>
+<p>The trajectory wobbles (v2 got worse) but trends down. The final gain came from <em>fewer</em> seeds (150) with <em>more</em> particles (600) — worth knowing before you copy someone's seed count as gospel.</p>
+<h3>4. pixiux — Dual-Pipeline Blend (229 votes) &amp; 5. lightningv08 — Self-Verifying (281 votes) — <em>a cross-author fork</em></h3>
+<table>
+<thead>
+<tr>
+<th>Kernel · Ver</th>
+<th>Public LB</th>
+<th>vs prev code</th>
+<th>Note</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>pixiux v1</td>
+<td><strong>7.519</strong></td>
+<td>—</td>
+<td><code>.py</code> script; best of the three</td>
+</tr>
+<tr>
+<td>pixiux v2</td>
+<td>7.560</td>
+<td>changed (+43/−0)</td>
+<td><code>.py</code>, added logic</td>
+</tr>
+<tr>
+<td>pixiux v3</td>
+<td>7.559</td>
+<td>changed (+62/−88)</td>
+<td>rewritten as a <strong>notebook</strong></td>
+</tr>
+<tr>
+<td>lightningv08 v1</td>
+<td>7.470</td>
+<td><strong>identical to pixiux v3</strong></td>
+<td>forked, ran, scored 0.089 better <em>for free</em></td>
+</tr>
+<tr>
+<td>lightningv08 v2</td>
+<td>7.559</td>
+<td>changed (+101/−33)</td>
+<td>added a <strong>self-verifying</strong> 2-submission blend selector</td>
+</tr>
+</tbody>
+</table>
+<p><code>lightningv08/…-self-verifying</code> <strong>version 1 is byte-for-byte identical</strong> to <code>pixiux/…-blend</code> version 3 (verified: both 110,785 bytes, SHA <code>c952972e</code>). Same code, different public score (7.470 vs 7.559) — the stochastic band again. lightningv08's <em>own</em> contribution lands in v2 (a self-verifying blend of the fleongg + SP45 submissions), which traded 0.09 of public LB for robustness.</p>
+<h3>6. bernubritz — LB7295 Public Rebuild (442 votes)</h3>
+<table>
+<thead>
+<tr>
+<th>Ver</th>
+<th>Public LB</th>
+<th>vs prev code</th>
+<th>Note</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><strong>7.153</strong></td>
+<td>—</td>
+<td>best version</td>
+</tr>
+<tr>
+<td>2</td>
+<td><em>(no score)</em></td>
+<td>—</td>
+<td>run did not submit</td>
+</tr>
+<tr>
+<td>3</td>
+<td>7.302</td>
+<td><strong>identical to v1</strong> (+0/−0)</td>
+<td>rerun scored 0.149 worse</td>
+</tr>
+</tbody>
+</table>
+<p>The 2nd-most-upvoted kernel, and its best score is v1 — a later <strong>identical rerun</strong> did <em>worse</em>. If you fork this, fork <strong>v1</strong>.</p>
+<h3>7 &amp; 8. The long grinds — real iteration, but read the noise</h3>
+<p>These two have too many versions to tabulate line-by-line, but the shape is the story (see the trajectory panel below). Verified best scores:</p>
+<ul>
+<li><strong>pilkwang — Target-Free TVT Geosteering: 42 versions</strong>, 8.004 (v1) → <strong>7.501 (v36)</strong>, then drifts back up to ~7.58. Genuine iteration — but the last version is <strong>not</strong> the best; v36 is.</li>
+<li><strong>degnonguidi — Public Score [LB 7.159]: 18 versions</strong>, best <strong>7.159 (v16)</strong>. History is noisy: several versions failed to score, and <strong>v9 scored 3459.018</strong> (a broken submission). Best ≠ latest here either.</li>
+</ul>
+<hr>
+<h2>Seeing it: version score trajectories</h2>
+<p><img src="./ROGII - Wellbore Geology Prediction _ Kaggle_files/version_trajectories.png" alt="Per-version public LB for the six fully-diffed kernels"></p>
+<p><strong>Takeaway:</strong> the green ring (best version) lands on the <em>latest</em> version only twice (ravaghi, cdeotte). For DWT, pixiux and bernubritz the best score is an earlier version — and for DWT/bernubritz it sits on <strong>code identical</strong> to a worse-scoring sibling. If you're forking for a submission, pick the version by <em>verified score</em>, not by "latest".</p>
+<h2>The core finding: same code, different leaderboard score</h2>
+<p><img src="./ROGII - Wellbore Geology Prediction _ Kaggle_files/rerun_noise.png" alt="Identical-code groups and the LB spread they produce"></p>
+<p>Three independent cases where <strong>byte-identical code</strong> produced <strong>different public LB scores</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Identical-code group</th>
+<th>Score spread (RMSE)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>DWT v1–v4 (one hash)</td>
+<td>9.251 → 9.632 = <strong>0.381</strong></td>
+</tr>
+<tr>
+<td>LB7295 Rebuild v1 &amp; v3</td>
+<td>7.153 → 7.302 = <strong>0.149</strong></td>
+</tr>
+<tr>
+<td>pixiux v3 ≡ lightningv08 v1 (fork)</td>
+<td>7.470 → 7.559 = <strong>0.089</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Implication for your own work:</strong> a 0.1–0.4 RMSE move on the public LB between two of your submissions can be <em>pure rerun variance</em>. Don't trust a single run of a stochastic pipeline; average seeds and judge on CV. And treat "LB x.xxx" in a notebook title as <em>a draw from a distribution</em>, not a guarantee.</p>
+<h2>Does the size of a code change predict the score change? No.</h2>
+<p><img src="./ROGII - Wellbore Geology Prediction _ Kaggle_files/change_vs_delta.png" alt="Lines of code touched vs change in public LB"></p>
+<p>Two extremes make the point: <strong>cdeotte moved 4 lines and gained 4.7 RMSE</strong>; <strong>pixiux rewrote ~150 lines (script → notebook) and moved essentially 0</strong>. Meanwhile the identical reruns (0 lines) still drift ±0.4. Read the <em>diff</em>, not the line count.</p>
+<hr>
+<h2>Dependencies (with version info)</h2>
+<p><img src="./ROGII - Wellbore Geology Prediction _ Kaggle_files/dependency_web.png" alt="Featured-kernel dependency web"></p>
+<p><em>SVG source: <code>plots/dependency_web.svg</code>.</em> Kaggle attaches data/kernel sources <strong>unpinned</strong> — a notebook references a dataset by <code>owner/slug</code> and resolves to that dataset's <strong>latest</strong> version at run time. So the versions below are each dataset's <strong>current</strong> version (fetched 2026-07-03), which is what a fork of these kernels loads today.</p>
+<table>
+<thead>
+<tr>
+<th>Shared data source</th>
+<th>Cur. version</th>
+<th>Size</th>
+<th>Used by (of the 8)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ravaghi/wellbore-geology-prediction-artifacts</code></td>
+<td><strong>v6</strong></td>
+<td>2.36 GB</td>
+<td><strong>7</strong> — dwt, ridge, pixiux, lightningv08, bernubritz, pilkwang, degnonguidi</td>
+</tr>
+<tr>
+<td><code>fleongg/rogii-claude-models-pub</code></td>
+<td>v1</td>
+<td>0.01 GB</td>
+<td>5 — pixiux, lightningv08, bernubritz, pilkwang, degnonguidi</td>
+</tr>
+<tr>
+<td><code>phongnguyn23021656/koolbox-offline</code></td>
+<td>v1</td>
+<td>0.05 GB</td>
+<td>4 — pixiux, lightningv08, bernubritz, degnonguidi <em>(offline pip wheels — internet is off in this comp)</em></td>
+</tr>
+<tr>
+<td><code>pilkwang/rogii-model-package</code></td>
+<td>v9</td>
+<td>0.22 GB</td>
+<td>1 — pilkwang</td>
+</tr>
+<tr>
+<td><code>thbdh5765/rogii-v10-fresh-artifacts</code></td>
+<td>v1</td>
+<td>0.41 GB</td>
+<td>1 — degnonguidi</td>
+</tr>
+<tr>
+<td><code>needless090/rogii-tabicl-mirror</code></td>
+<td>v1</td>
+<td>0.11 GB</td>
+<td>1 — degnonguidi</td>
+</tr>
+<tr>
+<td><code>nina2025/rogii-03</code></td>
+<td>v5</td>
+<td>&lt;0.01 GB</td>
+<td>1 — degnonguidi</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Two things worth knowing:</strong></p>
+<ul>
+<li><strong>One dataset is the backbone.</strong> <code>ravaghi/…-artifacts</code> (v6, 2.36 GB — it ships <code>data/train.csv</code> plus pre-trained CatBoost models) is loaded by <strong>7 of the 8</strong> kernels. If it's ever revised, a lot of public notebooks shift underneath their authors. The blend family additionally shares the exact same trio (<code>koolbox-offline</code> + <code>rogii-claude-models-pub</code> + <code>artifacts</code>), consistent with them being forks of one lineage.</li>
+<li><strong><code>kernel_sources</code> are mostly noise.</strong> Every kernel's <code>kernel_sources</code> field points at auto-generated <code>packagemanager/pm-…</code> entries (Kaggle's offline-package snapshots), <strong>not</strong> at another notebook — so the metadata does <em>not</em> reveal the pixiux → lightningv08 fork. The only way I found that lineage was the <strong>byte-identical code hash</strong>. Metadata under-reports real code reuse in this competition; diff the source.</li>
+</ul>
+<hr>
+<h2>Practical takeaways</h2>
+<ol>
+<li><strong>Pick a fork version by verified score, not "latest."</strong> For DWT, pixiux, and bernubritz the best score is an earlier version; for DWT/bernubritz that best is a <em>lucky rerun</em> of code that also scored worse.</li>
+<li><strong>Expect ±0.1–0.4 RMSE of rerun noise</strong> on the stochastic pipelines. Average seeds; trust CV over a single public-LB draw.</li>
+<li><strong>The cheapest verified win is cdeotte's residual-baseline swap</strong> (recent-slope → last-known-TVT): 4 lines, −4.7 RMSE. Start there.</li>
+<li><strong>The public frontier here (~7.15–7.5) is a shared-lineage plateau</strong> built on one artifacts dataset + a couple of model packages. Real separation on the private LB (leader 5.26) will come from <em>decorrelating</em> from that lineage, not re-forking it.</li>
+<li><strong>Don't trust <code>kernel_sources</code> for lineage</strong> — diff the code hashes.</li>
+</ol>
+<h2>Reproduce this</h2>
+<pre class="uc-code-block"><code id="code-block-1784199672462-0" data-processing="yes" data-highlighted="yes" class="hljs language-nix"><span class="hljs-comment"># per-version public LB scores for any kernel</span>
+python <span class="hljs-symbol">./scripts/kernel_archive.py</span> <span class="hljs-symbol">&lt;owner/slug&gt;</span> <span class="hljs-operator">-</span>-scores-only
+
+<span class="hljs-comment"># download a specific version's source to diff</span>
+python <span class="hljs-symbol">./scripts/kernel_archive.py</span> <span class="hljs-symbol">&lt;owner/slug&gt;</span> <span class="hljs-symbol">&lt;out_dir&gt;</span> <span class="hljs-operator">-</span>-version N
+
+<span class="hljs-comment"># dependency sources</span>
+kaggle kernels pull <span class="hljs-symbol">&lt;owner/slug&gt;</span> <span class="hljs-operator">-</span>m   <span class="hljs-comment"># then read kernel-metadata.json</span>
+</code><div class="uc-code-block-copy-button-wrapper"><button aria-label="Copy code" class="uc-code-block-copy-button google-symbols">content_copy</button></div></pre>
+<p>The diff classifier (<code>work/diff_versions.py</code>), the consolidated data (<code>work/data.json</code>), and the figure/SVG generators (<code>plots/make_plots.py</code>, <code>plots/make_svgs.py</code>) are all in this folder — every number above traces back to them.</p>
+<hr>
+<h3>Kernels referenced</h3>
+<p><a href="https://www.kaggle.com/code/nihilisticneuralnet/9-251-rogii-wellbore-geology-prediction-dwt-based" target="_blank" aria-label="DWT-based (nihilisticneuralnet) (opens in a new tab)">DWT-based (nihilisticneuralnet)</a> ·
+<a href="https://www.kaggle.com/code/bernubritz/rogii-lb7295-public-rebuild" target="_blank" aria-label="LB7295 Rebuild (bernubritz) (opens in a new tab)">LB7295 Rebuild (bernubritz)</a> ·
+<a href="https://www.kaggle.com/code/lightningv08/rogii-dual-pipeline-self-verifying" target="_blank" aria-label="Dual Pipeline + Self-Verifying (lightningv08) (opens in a new tab)">Dual Pipeline + Self-Verifying (lightningv08)</a> ·
+<a href="https://www.kaggle.com/code/ravaghi/wellbore-geology-prediction-ridge" target="_blank" aria-label="Ridge (ravaghi) (opens in a new tab)">Ridge (ravaghi)</a> ·
+<a href="https://www.kaggle.com/code/pixiux/rogii-dual-pipeline-blend" target="_blank" aria-label="Dual-Pipeline Blend (pixiux) (opens in a new tab)">Dual-Pipeline Blend (pixiux)</a> ·
+<a href="https://www.kaggle.com/code/pilkwang/rogii-target-free-tvt-geosteering" target="_blank" aria-label="Target-Free TVT Geosteering (pilkwang) (opens in a new tab)">Target-Free TVT Geosteering (pilkwang)</a> ·
+<a href="https://www.kaggle.com/code/degnonguidi/public-score-rogii-lb-7-159" target="_blank" aria-label="Public Score LB 7.159 (degnonguidi) (opens in a new tab)">Public Score LB 7.159 (degnonguidi)</a> ·
+<a href="https://www.kaggle.com/code/cdeotte/xgb-starter-cv-15" target="_blank" aria-label="XGB Starter (cdeotte) (opens in a new tab)">XGB Starter (cdeotte)</a></p></div></div></div><div class="sc-gtqWoG kbWCjd"><div class="sc-cBknwr iAVFIg"><div class="sc-jatMHM jYniJv"><span tabindex="0" class=""><button class="sc-fbyhTQ BPpHu sc-ddfonx kFdmeW" role="checkbox" aria-checked="false" aria-label=""><span class="google-symbols notranslate MuiIcon-root MuiIcon-fontSizeMedium sc-bYgEKt knbXzI notranslate sc-bjrzbB fjTHBh css-1jgtvd5" aria-hidden="true"><img src="./ROGII - Wellbore Geology Prediction _ Kaggle_files/love.svg" alt="love" class="sc-jWvXZq ijQbIu"></span><span class="sc-dILkzW sc-eTEcpQ khMpKs iApPDx">5</span></button></span><button aria-label="Add Reaction" title="Add Reaction" class="sc-iBjNZB ianyQQ google-symbols notranslate sc-jLwDsg dTrzf">add_reaction</button></div></div></div></div><div role="separator" class="sc-khYboC dTnicw" style="width: 100%;"></div></div><div class="sc-bHSKXH ldjYZQ"><div class="sc-fUuAyx hXDnwe"><div class="sc-hUxjbq kfDPZz sc-jMBjqM fliMZH"><div class="sc-fJhHEt bxzGtZ"><span class="google-symbols notranslate MuiIcon-root MuiIcon-fontSizeMedium sc-bYgEKt bpVxIz notranslate css-1jgtvd5" aria-hidden="true" style="align-self: center;">comment</span><div class="sc-cRSGRE ghoQjM"><h2 class="sc-iqkkDd sc-lgGiis csShwb bRLVMl">2 Comments</h2></div></div><div class="sc-dRSSkj ghURUB"><div class="MuiFormControl-root sc-cSXhvd dcTPyh css-13sljp9"><div class="MuiInputBase-root MuiInput-root MuiInputBase-colorPrimary MuiInputBase-formControl css-1v07m2e"><div tabindex="0" role="combobox" aria-controls=":r9f:" aria-expanded="false" aria-haspopup="listbox" aria-label="Select combobox. Hotness currently selected." class="MuiSelect-select MuiSelect-standard MuiInputBase-input MuiInput-input css-136dg50"><div class="sc-bIgIo iCuoYD"><div class="sc-folSZX junAP">Hotness</div></div></div><input aria-invalid="false" aria-hidden="true" tabindex="-1" class="MuiSelect-nativeInput css-1k3x8v3" value="Hotness"><svg class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiSelect-icon MuiSelect-iconStandard css-ntyfco" focusable="false" aria-hidden="true" viewBox="0 0 24 24" data-testid="ArrowDropDownIcon"><path d="M7 10l5 5 5-5z"></path></svg></div></div></div></div></div><div class="sc-fUuAyx hXDnwe"><div class="sc-eQBCYS lkAPXB"><div class="sc-gddHqg dLiTok"><a href="https://www.kaggle.com/malyshevdanil" aria-label="Malyshev Danil&#39;s profile" class="sc-iIvZUO ebfLHz"><div data-testid="avatar-image" title="Malyshev Danil" class="sc-gsdCXR kQeKXR" style="background-image: url(&quot;https://storage.googleapis.com/kaggle-avatars/thumbnails/default-thumb.png&quot;);"></div><svg width="48" height="48" viewBox="0 0 48 48"><circle r="22.5" cx="24" cy="24" fill="none" stroke-width="3" style="stroke: rgb(95, 99, 104);"></circle><circle r="22.5" cx="24" cy="24" fill="none" stroke-width="3" style="stroke: rgb(32, 190, 255);"></circle></svg></a></div><div class="sc-dUvALr atfbl"><div class="sc-bOuOck jOacHq"><div class="sc-hDHaMC beRKJr sc-lneCNi bTxCfV"><div class="sc-lcCscT gQmssr"><div class="sc-kPPZTE fnBzNR"><div class="sc-ekJCZb fpnCXe"><button aria-label="Undo (Ctrl+Z)" disabled="" title="Undo (Ctrl+Z)" class="sc-iBjNZB iGNOUV google-symbols notranslate">undo</button><button aria-label="Redo (Ctrl+Y)" disabled="" title="Redo (Ctrl+Y)" class="sc-iBjNZB iGNOUV google-symbols notranslate">redo</button><div class="sc-hUheUT cuiVTY sc-khYbtq jisckc" role="separator"></div><button aria-label="Insert Heading" class="sc-iBjNZB dbestb google-symbols notranslate">format_size</button><button aria-label="Bold (Ctrl+B)" class="sc-iBjNZB dbestb google-symbols notranslate">format_bold</button><button aria-label="Italicize (Ctrl+I)" class="sc-iBjNZB dbestb google-symbols notranslate">format_italic</button><button aria-label="Strikethrough (Ctrl+Shift+X)" class="sc-iBjNZB dbestb google-symbols notranslate">format_strikethrough</button><div class="sc-hUheUT cuiVTY sc-khYbtq jisckc" role="separator"></div><button aria-label="Insert Link (Ctrl+K)" class="sc-iBjNZB dbestb google-symbols notranslate">insert_link</button><button aria-label="Insert Quote (Ctrl+Shift+.)" class="sc-iBjNZB dbestb google-symbols notranslate">format_quote</button><button aria-label="Insert Code Block (Ctrl+E)" class="sc-iBjNZB dbestb google-symbols notranslate">code</button><div class="sc-hUheUT cuiVTY sc-khYbtq jisckc" role="separator"></div><button aria-label="Insert Numbered List (Ctrl+Shift+7)" class="sc-iBjNZB dbestb google-symbols notranslate">format_list_numbered</button><button aria-label="Insert Bulleted List (Ctrl+Shift+8)" class="sc-iBjNZB dbestb google-symbols notranslate">format_list_bulleted</button><div class="sc-hUheUT cuiVTY sc-khYbtq jisckc" role="separator"></div><button aria-label="Insert Table" class="sc-iBjNZB dbestb google-symbols notranslate">table_chart</button><button aria-label="Insert Image" class="sc-iBjNZB dbestb google-symbols notranslate">insert_photo</button><div></div><button aria-label="Embed YouTube Video" class="sc-iBjNZB dbestb google-symbols notranslate">smart_display</button><button aria-label="Insert Emoticon" class="sc-iBjNZB dbestb google-symbols notranslate">insert_emoticon</button><div class="sc-hUheUT cuiVTY sc-khYbtq jisckc" role="separator"></div><button aria-label="Go to Markdown documentation" class="sc-iBjNZB dbestb google-symbols notranslate">help</button></div><div class="sc-beWXlg gVdggj"><button aria-label=" Preview Comment" class="sc-ikBzZv demYhp sc-eDSoBx cQNpmc" tabindex="0" role="button"><span class="sc-dlwHGs cVnQIi"> Preview</span></button></div></div><div class="sc-kepzTD gIiiHO"><div class="sc-jTqfmt hpqujb mde-textarea sc-jTqfmt--multiLine" style="position: relative; overflow-y: visible;"><div class="sc-jTqfmt__control" style="height: 58px; min-height: 74px;"><div class="sc-jTqfmt__highlighter" style="position: relative; box-sizing: border-box; width: 100%; color: transparent; overflow: hidden; white-space: pre-wrap; overflow-wrap: break-word; border: 1px solid transparent; text-align: start;"> </div><textarea placeholder="Comment here. Be patient, be friendly, and focus on ideas. We&#39;re all here to learn and improve!" aria-describedby="warning-id" aria-label="Content" aria-required="true" class="sc-jTqfmt__input" style="display: block; width: 100%; position: absolute; margin: 0px; top: 0px; left: 0px; box-sizing: border-box; background-color: transparent; font-family: inherit; font-size: inherit; letter-spacing: inherit; height: 58px; bottom: 0px; overflow: hidden; resize: none; min-height: 74px;"></textarea></div></div></div></div><div class="sc-eMioOW gldCaK"><div class="sc-feQJLJ evPbVp"><p class="sc-fFCZOx sc-lcfifY iZNPId jHckYy">This comment will be made
+  public once posted.</p></div></div></div><div class="sc-fpGDfa fccLMP"><div class="sc-dVDgeo DtOVS"><button aria-label="Attach a File" class="sc-iBjNZB ianyQQ google-symbols notranslate" style="width: 36px; height: 36px;">attach_file</button><button data-testid="post-button" class="sc-ikBzZv dtZZSK" tabindex="0" role="button"><span class="sc-dlwHGs cVnQIi">Post Comment</span></button></div></div><div></div></div></div></div></div><div><div class="sc-ddYmpr jvtkLD"><div data-testid="discussions-comment" class="sc-jNpQqW ldPmVx"><div id="3489958" class="sc-jlthoW NrHdX"><div class="sc-cbLsDt heSPmT"><div class="sc-dqpBkE dnDRQe"><a href="https://www.kaggle.com/navneetbende" class="sc-iIvZUO ebfLHz sc-bhHuFP eeOyRq" aria-label="Navneet&#39;s profile"><div data-testid="avatar-image" title="Navneet" class="sc-gsdCXR kQeKXR" style="background-image: url(&quot;https://storage.googleapis.com/kaggle-avatars/thumbnails/15692441-kg.jpg?t=2025-05-18-07-58-06&quot;);"></div><svg width="48" height="48" viewBox="0 0 48 48"><circle r="22.5" cx="24" cy="24" fill="none" stroke-width="3" style="stroke: rgb(95, 99, 104);"></circle><circle r="22.5" cx="24" cy="24" fill="none" stroke-width="3" style="stroke: rgb(32, 190, 255);"></circle></svg></a><div class="sc-cdNwTq QIkyg"><div class="sc-gZNdlk iALzYh"><div class="sc-kvKnx iiNLsA"><div class="sc-bgBMAY hBcAnn"><a href="https://www.kaggle.com/navneetbende" target="_blank" class="sc-cujyXd dZjsYa"><h3 class="sc-krVzYl sc-bPNBZh dqazSr jDdEAF">Navneet</h3></a></div><div class="sc-fHUkRw gJiMjr"><p class="sc-fFCZOx sc-cNlnKu iZNPId cZQGxE">Posted <span title="Mon Jul 06 2026 06:38:27 GMT+0500 (Казахстан)" aria-label="10 days ago">10 days ago</span></p><div></div></div></div></div></div><div class="sc-kkAorb gwhckF"><div class="sc-gZNdlk gGVqOa"><div class="sc-eZpgEb imaCTt"><button mode="default" data-testid="upvotebutton__upvote" aria-label="Upvote" class="sc-kwNHia sc-gEGYpL hxuBtc eXdOhc"><span class="google-symbols notranslate MuiIcon-root MuiIcon-fontSizeMedium sc-bYgEKt kbsNyo notranslate css-1jgtvd5" aria-hidden="true">arrow_drop_up</span></button><button mode="default" aria-label="-2 votes" aria-live="polite" class="sc-kwNHia sc-dtTNjU hxuBtc iobwUv">-2</button><button mode="default" data-testid="upvotebutton__downvote" aria-label="Downvote" class="sc-kwNHia sc-kRiNQB hxuBtc iIKTcR"><span class="google-symbols notranslate MuiIcon-root MuiIcon-fontSizeMedium sc-bYgEKt kbsNyo notranslate css-1jgtvd5" aria-hidden="true">arrow_drop_down</span></button></div><button aria-label="More Options for this Comment" data-testid="options-menu-button" title="More Options for this Comment" class="sc-iBjNZB bGduwL google-symbols notranslate">more_vert</button></div></div><div class="sc-DlxHT bSnlac"><div class="sc-bOuOck jOacHq"><div class="sc-dFBygw jHODdG"><p>Thank you for the Wellbore Geology Prediction <a href="https://www.kaggle.com/jiweiliu" target="_blank" aria-label="@jiweiliu (opens in a new tab)" data-id="6432c0e9-761e-4977-aeec-8436e5f2b509" data-user-name="jiweiliu" class="user-mention">@jiweiliu</a> </p></div></div></div><div class="sc-fvGSax iXrRqb"><button class="sc-ikBzZv cYHmtI" tabindex="0" role="button"><span class="google-symbols notranslate MuiIcon-root MuiIcon-fontSizeMedium sc-bYgEKt knbXzI notranslate css-1jgtvd5" aria-hidden="true">reply</span><span class="sc-dlwHGs cVnQIi">Reply</span></button><div class="sc-doeIUH bgCDGQ"><button class="sc-ikBzZv cYHmtI sc-dOieXR eRmssD" tabindex="0" role="button"><span class="google-symbols notranslate MuiIcon-root MuiIcon-fontSizeMedium sc-bYgEKt knbXzI notranslate css-1jgtvd5" aria-hidden="true">add_reaction</span><span class="sc-dlwHGs cVnQIi">React</span></button></div></div></div></div></div></div><div role="separator" class="sc-khYboC dTnicw"></div></div><div class="sc-ddYmpr jvtkLD"><div data-testid="discussions-comment" class="sc-jNpQqW ldPmVx"><div id="3489522" class="sc-jlthoW NrHdX"><div class="sc-cbLsDt heSPmT"><div class="sc-dqpBkE dnDRQe"><a href="https://www.kaggle.com/georgymamarin" class="sc-iIvZUO ebfLHz sc-bhHuFP eeOyRq" aria-label="Georgy Mamarin&#39;s profile"><div data-testid="avatar-image" title="Georgy Mamarin" class="sc-gsdCXR kQeKXR" style="background-image: url(&quot;https://storage.googleapis.com/kaggle-avatars/thumbnails/9407128-kg.jpg?t=2026-04-01-15-02-02&quot;);"></div><svg width="48" height="48" viewBox="0 0 48 48"><circle r="22.5" cx="24" cy="24" fill="none" stroke-width="3" style="stroke: rgb(95, 99, 104);"></circle><circle r="22.5" cx="24" cy="24" fill="none" stroke-width="3" style="stroke: rgb(129, 72, 253);"></circle></svg></a><div class="sc-cdNwTq QIkyg"><div class="sc-gZNdlk iALzYh"><div class="sc-kvKnx iiNLsA"><div class="sc-bgBMAY hBcAnn"><a href="https://www.kaggle.com/georgymamarin" target="_blank" class="sc-cujyXd dZjsYa"><h3 class="sc-krVzYl sc-bPNBZh dqazSr jDdEAF">Georgy Mamarin</h3></a></div><div class="sc-fHUkRw gJiMjr"><p class="sc-fFCZOx sc-cNlnKu iZNPId cZQGxE">Posted <span title="Sun Jul 05 2026 22:38:42 GMT+0500 (Казахстан)" aria-label="11 days ago">11 days ago</span></p><div><p class="sc-fFCZOx iZNPId">  ·  <span>951st</span> in this Competition</p></div></div></div></div></div><div class="sc-kkAorb gwhckF"><div class="sc-gZNdlk gGVqOa"><div class="sc-eZpgEb imaCTt"><button mode="default" data-testid="upvotebutton__upvote" aria-label="Upvote" class="sc-kwNHia sc-gEGYpL hxuBtc eXdOhc"><span class="google-symbols notranslate MuiIcon-root MuiIcon-fontSizeMedium sc-bYgEKt kbsNyo notranslate css-1jgtvd5" aria-hidden="true">arrow_drop_up</span></button><button mode="default" aria-label="-2 votes" aria-live="polite" class="sc-kwNHia sc-dtTNjU hxuBtc iobwUv">-2</button><button mode="default" data-testid="upvotebutton__downvote" aria-label="Downvote" class="sc-kwNHia sc-kRiNQB hxuBtc iIKTcR"><span class="google-symbols notranslate MuiIcon-root MuiIcon-fontSizeMedium sc-bYgEKt kbsNyo notranslate css-1jgtvd5" aria-hidden="true">arrow_drop_down</span></button></div><button aria-label="More Options for this Comment" data-testid="options-menu-button" title="More Options for this Comment" class="sc-iBjNZB bGduwL google-symbols notranslate">more_vert</button></div></div><div class="sc-DlxHT bSnlac"><div class="sc-bOuOck jOacHq"><div class="sc-dFBygw jHODdG"><p>Same wall from the tooling side — and it lines up with what I measured from the estimation side. Your three identical-code spreads (0.38 / 0.15 / 0.09) are the seed band made visible by byte-diffing the version history; pilkwang put a hard number on the same effect in one of my threads — byte-identical notebooks spanning 7.168–7.286, ~0.12 from nothing but the reseed. So a fork reading 0.03 better than its neighbour is almost always a draw from that band.</p>
+<p>The "decorrelate, don't re-fork" line is the part I'd underline, and there's a measurable reason the ~7.2 plateau is sticky: the two strongest public engines carry error-correlation ρ ≈ 0.89 (fle3n's blend diagnosis), so a convex re-weight recovers under 0.001 RMSE — a correlation ceiling, not a tuning gap. New signal has to come from outside that lineage — which is your dependency-web point (one artifacts dataset under 7 of 8), reached from the other side.</p></div></div></div><div class="sc-fvGSax iXrRqb"><button class="sc-ikBzZv cYHmtI" tabindex="0" role="button"><span class="google-symbols notranslate MuiIcon-root MuiIcon-fontSizeMedium sc-bYgEKt knbXzI notranslate css-1jgtvd5" aria-hidden="true">reply</span><span class="sc-dlwHGs cVnQIi">Reply</span></button><div class="sc-doeIUH bgCDGQ"><button class="sc-ikBzZv cYHmtI sc-dOieXR eRmssD" tabindex="0" role="button"><span class="google-symbols notranslate MuiIcon-root MuiIcon-fontSizeMedium sc-bYgEKt knbXzI notranslate css-1jgtvd5" aria-hidden="true">add_reaction</span><span class="sc-dlwHGs cVnQIi">React</span></button></div></div></div></div></div></div></div></div><div class="sc-hqXMph ktzoYY"><div class="sc-iOeKyw gdRrEA"><div class="sc-gmuSuj ezbWGq"></div></div></div></div></div></div></div></div></div></div><div id="nav-footer" class="sc-jYuITo hZRBvh"></div></div><div aria-live="polite" aria-atomic="true" role="alert" class="sc-kJxzDI CyFoG"></div></div>
+
+
+</body></html>
