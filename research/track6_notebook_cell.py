@@ -1,13 +1,26 @@
-"""Submission cell for the track6 project (v3: + pf_z second backbone): an independent PF (pf_ancc, own
-momentum-free state -- NOT derived from sp45) + multi-scale NCC correlation-search features (decoupled
-from sp45) + spatial nearest-neighbor formation-plane features (reusing the base pipeline's own `_FI`
-FormationPlaneKNN) + pf_z (a SECOND independent PF with a different motion model -- Z-velocity-coupled
-instead of pure momentum; corr(pf_z_err, pf_ancc_err) on the true holdout is only 0.49, a genuinely
-different failure mode from the same underlying GR data) -> GBM predicting a RESIDUAL from pf_ancc.
-Paired bootstrap on the true 160-well holdout (v3, with pf_z added): blend gain at w=0.10 = +0.157ft,
-95%CI=[+0.036,+0.285] -- clearly excludes zero (99.5% positive), the strongest validation this project
-has had, tail-risk clean (max single-well worsening +1.41ft, better than v2's +1.82ft). Runtime
-negligible (~11s total for pf_ancc+pf_z+corr-search on the real 3-well/14151-row test set).
+"""Submission cell for the track6 project (v3-fixed: + pf_z second backbone, + 2 real deployment bugs
+fixed). Real-LB results for v1 (file 11, 6.894) and v2 (file 12, 7.063) both REGRESSED from the 6.725
+baseline -- both worse than the local bootstrap predicted, and v2 was worse than v1 despite v2's
+stronger validated CI. Root-caused two real, confirmed deployment bugs (neither present in local
+validation, which is why they weren't caught earlier):
+  1. `_FI.impute(..., self_wid=None)` -- this competition's real test wells are literal ID-overlap
+     copies of train wells (the guarded_contact_override finding), so `_FI`'s fit set CAN contain the
+     current well's own ID. self_wid=None fails to exclude it, letting the well match itself at
+     ~zero distance -- a train/inference inconsistency the GBM never saw during training (which always
+     used proper self-exclusion). Fixed: pass self_wid=_wid.
+  2. pf_ancc/pf_z's internal @njit-compiled particle filter draws from numba's own RNG state, which is
+     NOT synchronized by the outer Python np.random.seed() -- every fresh Kaggle kernel process gets a
+     different, non-reproducible realization. Fixed: added `_t6_seed_jit(42)`, called from inside jitted
+     code before the well loop (matching the same fix already used in this project's other PF research
+     scripts, e.g. beam_decoder_v1.py's `_seed_jit`).
+Architecture: independent PF (pf_ancc) + multi-scale NCC correlation-search features + spatial NN
+formation-plane features (reusing the base pipeline's own `_FI`) + pf_z (2nd independent PF, different
+motion model, corr(pf_z_err, pf_ancc_err)=0.49 on the true holdout) -> GBM predicting a RESIDUAL from
+pf_ancc. Paired bootstrap on the true 160-well holdout: blend gain at w=0.10 = +0.157ft,
+95%CI=[+0.036,+0.285] -- clearly excludes zero. Given the real-LB regressions on v1/v2 were NOT
+predicted by this validation, and n=3 real test wells is a very small, noisy sample, treat this
+validation as directionally informative but not a guarantee -- the two bugs above may fully or partly
+explain the regressions, but this is not proven; recommend a cautious re-test after the fixes.
 Inserted AFTER the GRU-refiner blend cell so it blends against the full current-best track.
 """
 
@@ -37,6 +50,14 @@ if _T6_BLEND_W > 0:
         _T6_SEARCH_HALF, _T6_SEARCH_STEP = 25.0, 1.0
         _T6_WIN_SIZES = (11, 25, 51)
         _T6_SUB_EVERY = 5
+
+        @_t6njit(cache=True)
+        def _t6_seed_jit(seed):
+            # numba maintains its own internal RNG state, separate from the outer np.random.seed() --
+            # a plain outer seed call does NOT make @njit-compiled np.random calls reproducible; only
+            # calling np.random.seed() from INSIDE jitted code does. Without this, every fresh Kaggle
+            # kernel process draws a different, non-reproducible pf_ancc/pf_z realization.
+            _t6np.random.seed(seed)
 
         @_t6njit(cache=True)
         def _t6_interp1(grid, v, vmin, step):
@@ -241,13 +262,18 @@ if _T6_BLEND_W > 0:
                     off_by_ws[ws][si] = off; peak_by_ws[ws][si] = peak; sharp_by_ws[ws][si] = sharp
 
             # spatial NN formation-plane features -- reuse the base pipeline's own `_FI` (FormationPlaneKNN
-            # fit on all 773 train wells); test wells are never in that fit set, so no self-exclusion needed.
+            # fit on all 773 train wells). IMPORTANT: pass self_wid=_wid, NOT None -- this competition's
+            # real test wells can be literal ID-overlap copies of train wells (the guarded_contact_override
+            # finding), so `_FI`'s fit set CAN contain the current well's own ID. Training always used
+            # self_wid=wid (proper self-exclusion, track6_stage6_spatial_feats.py); using None here would
+            # silently let the well match itself at ~zero distance, a train/inference inconsistency never
+            # seen during GBM training.
             if "_FI" in globals() and _FI is not None and getattr(_FI, "tree", None) is not None \
                     and all(_fc in hw.columns for _fc in _T6_FORMATIONS) and "X" in hw.columns:
                 xy_kn = hw.loc[km, ["X", "Y"]].to_numpy(_t6np.float64)
                 xy_ev = hw.loc[~km, ["X", "Y"]].to_numpy(_t6np.float64)
-                form_kn, _ = _FI.impute(xy_kn, self_wid=None)
-                form_ev, knn_d = _FI.impute(xy_ev, self_wid=None)
+                form_kn, _ = _FI.impute(xy_kn, self_wid=_wid)
+                form_ev, knn_d = _FI.impute(xy_ev, self_wid=_wid)
                 kz_ = hw.loc[km, "Z"].to_numpy(_t6np.float32); z_ev_ = hw.loc[~km, "Z"].to_numpy(_t6np.float32)
                 tvtF = {}
                 for _fi2, _fn in enumerate(_T6_FORMATIONS):
@@ -292,6 +318,8 @@ if _T6_BLEND_W > 0:
         _t6_meta = _t6pickle.load(open(_t6_meta_paths[0], "rb"))
         _t6_pf_col = _t6_meta["pf_col"]
         _t6_models = [_t6lgb.Booster(model_file=_p) for _p in _t6_model_paths]
+
+        _t6_seed_jit(42)  # fixed seed for reproducible pf_ancc/pf_z across Kaggle reruns
 
         _t6_pred_by_id = {}
         for _wid in list_wells("test"):
