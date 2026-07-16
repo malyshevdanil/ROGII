@@ -85,7 +85,7 @@ def decode_well(wid, data_dir=TRAIN_DIR, beam_width=BEAM_WIDTH):
     while True:
         n_iter += 1
         active = [p for p in beam if p['md'] < md_end - 1.0]
-        if not active or n_iter > 40:
+        if not active or n_iter > 400:
             break
         new_beam = []
         for p in beam:
@@ -121,12 +121,19 @@ def decode_well(wid, data_dir=TRAIN_DIR, beam_width=BEAM_WIDTH):
     best = max(beam, key=lambda x: x['logp'])
     segs = best['segs']
     if not segs: return None
-    pred_tvt = np.empty(len(ev_md))
+    pred_tvt = np.full(len(ev_md), np.nan)
     for (a, b, ta, tb) in segs:
         m = (ev_md >= a) & (ev_md <= b + 1e-6)
         if not m.any(): continue
         frac = (ev_md[m] - a) / max(b - a, 1e-6)
         pred_tvt[m] = ta + frac * (tb - ta)
+    # fallback: if the beam didn't reach md_end (safety cap or dead end), extrapolate the last
+    # segment's own dip for any remaining uncovered tail, instead of leaving garbage/NaN.
+    if np.isnan(pred_tvt).any():
+        last_a, last_b, last_ta, last_tb = segs[-1]
+        last_dip = (last_tb - last_ta) / max(last_b - last_a, 1e-6)
+        m = np.isnan(pred_tvt)
+        pred_tvt[m] = last_tb + last_dip * (ev_md[m] - last_b)
     true_tvt = ev['TVT'].values.astype(float)
     return pred_tvt, true_tvt, ev_md
 
