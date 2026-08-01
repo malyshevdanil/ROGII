@@ -171,6 +171,21 @@ assert old_head in src_fd, 'unexpected _find_data() shape in cell %d' % i_fd
 cells[i_fd]['source'] = src_fd.replace(old_head, new_head).splitlines(keepends=True)
 print('patched _find_data() to honour the harness root in cell', i_fd)
 
+# --- disable the model-package correction under the harness ------------------------------------
+# That stage calls an external pre-trained feature builder shipped in pilkwang/rogii-model-package,
+# which is bound to the real test wells: on held-out wells it matches zero sample ids and raises
+# "Feature builder missing 59554 sample ids". It cannot be made to run here, so switch it off and
+# note the caveat -- the harness then measures the pipeline WITHOUT this one correction layer.
+i_mp = next(i for i, c in enumerate(cells)
+            if "RUN_MODEL_PACKAGE_CORRECTION" in ''.join(c['source'])
+            and 'globals().get' in ''.join(c['source']))
+cells.insert(i_mp, code_cell(
+    'if globals().get("HARNESS_WELLS"):\n'
+    '    RUN_MODEL_PACKAGE_CORRECTION = False\n'
+    '    print("harness: model-package correction disabled -- its external feature builder is bound "\n'
+    '          "to the real test wells and cannot score held-out ones")\n'))
+print('disabled model-package correction for harness runs before cell', i_mp)
+
 # --- neutralise Q0522 under the harness --------------------------------------------------------
 # Q0522 is a hand-tuned constant shift for one specific REAL test well (00e12e8b) and hard-raises on
 # any deviation from its recorded sha/stats/row-count. None of that applies to held-out wells, so it
