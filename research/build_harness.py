@@ -91,22 +91,44 @@ print('harness: COMPETITION_DATA_ROOT ->', COMPETITION_DATA_ROOT)
 
 cells.insert(1, code_cell(builder))
 
-# --- drop the held-out wells from the artifact-derived train_df -------------------------------
-i_build = next(i for i, c in enumerate(cells) if 'test_df = build_dataset' in ''.join(c['source']))
-src = ''.join(cells[i_build]['source'])
-anchor = "features = [c for c in train_df.columns if c not in {'well','id','target'}]"
-assert anchor in src, 'features anchor not found in cell %d' % i_build
-guard = (
-    "# HARNESS: the artifact train.csv still holds the held-out wells -- drop them so the GBM/ridge\n"
-    "# anchor never sees their labels (masking the synthetic test dir alone would not prevent this).\n"
-    "_held_wells = set(globals().get('HARNESS_WELLS', []))\n"
-    "if _held_wells:\n"
-    "    _n_before = len(train_df)\n"
-    "    train_df = train_df[~train_df['well'].astype(str).isin(_held_wells)].reset_index(drop=True)\n"
-    "    print('harness: dropped %d artifact rows for %d held-out wells'\n"
-    "          % (_n_before - len(train_df), len(_held_wells)))\n\n" + anchor)
-cells[i_build]['source'] = src.replace(anchor, guard).splitlines(keepends=True)
-print('patched train_df guard into cell', i_build)
+# --- make the GBM/ridge anchor honest for the held-out wells ----------------------------------
+# The LGB/CatBoost trainers are loaded from ravaghi's cached artifact, so train_df CANNOT be filtered
+# (trainer.oof_preds is a stored array sized to the full 773-well train set -- filtering desynchronises
+# it from y and the ridge stage dies on a shape mismatch).
+# It also does not need to be: trainer.oof_preds are OUT-OF-FOLD predictions under GroupKFold BY WELL,
+# so each well's OOF value comes from a fold-model that never saw that well -- honest by construction.
+# The one genuinely leaked path is trainer.predict(X_test), which uses models fitted on all 773 wells
+# including our held-out ones. So instead of filtering, overwrite the ridge anchor for the held-out
+# wells with their honest OOF counterparts, matched by row id.
+honest_anchor = r'''# HARNESS: replace the (leaked) ridge test predictions with honest out-of-fold values ------------
+import numpy as _ha_np, pandas as _ha_pd
+
+_ha_held = set(str(w) for w in globals().get('HARNESS_WELLS', []))
+if _ha_held:
+    _ha_oof = _ha_np.asarray(ridge_oof_preds, dtype=float).ravel()
+    assert len(_ha_oof) == len(train_df), 'ridge_oof_preds does not align with train_df'
+    _ha_map = _ha_pd.Series(_ha_oof, index=train_df['id'].astype(str).to_numpy())
+    _ha_map = _ha_map[~_ha_map.index.duplicated(keep='first')]
+
+    _ha_test_ids = test_df['id'].astype(str).to_numpy()
+    _ha_repl = _ha_map.reindex(_ha_test_ids)
+    _ha_found = int(_ha_repl.notna().sum())
+    print('harness: honest-anchor coverage %d/%d test rows (%.1f%%)'
+          % (_ha_found, len(_ha_test_ids), 100.0 * _ha_found / max(len(_ha_test_ids), 1)))
+    if _ha_found < 0.99 * len(_ha_test_ids):
+        raise RuntimeError('harness: OOF anchor covers only %d of %d test rows -- id formats differ '
+                           'between train_df and test_df, cannot guarantee an honest anchor'
+                           % (_ha_found, len(_ha_test_ids)))
+
+    _ha_before = _ha_np.asarray(ridge_test_preds, dtype=float).ravel().copy()
+    ridge_test_preds = _ha_repl.to_numpy(dtype=float)
+    print('harness: swapped leaked -> honest anchor, mean abs shift %.4f'
+          % float(_ha_np.abs(ridge_test_preds - _ha_before).mean()))
+'''
+i_ridge = next(i for i, c in enumerate(cells)
+               if 'ridge_test_preds = ridge_trainer.predict' in ''.join(c['source']))
+cells.insert(i_ridge + 1, code_cell(honest_anchor))
+print('inserted honest-anchor swap after ridge cell', i_ridge)
 
 
 def snapshot(tag):
