@@ -171,6 +171,42 @@ assert old_head in src_fd, 'unexpected _find_data() shape in cell %d' % i_fd
 cells[i_fd]['source'] = src_fd.replace(old_head, new_head).splitlines(keepends=True)
 print('patched _find_data() to honour the harness root in cell', i_fd)
 
+# --- point the contact-override stages at the harness root -------------------------------------
+# Both override cells build their own candidate path list starting with the hardcoded competition
+# root, so on a harness run they looked for held-out wells under the REAL test/ dir, failed, and
+# skipped every well ("GUARDED override done: overridden=0 skipped=12"). That silently removed a
+# major stage and left the measured base far worse than production. Put the harness root first.
+_OV_PATCHES = [
+    ("[_OvPath('/kaggle/input/competitions/rogii-wellbore-geology-prediction'),",
+     "[_OvPath(globals().get('COMPETITION_DATA_ROOT', '.')),\n"
+     "                   _OvPath('/kaggle/input/competitions/rogii-wellbore-geology-prediction'),"),
+    ("_GoldPath('/kaggle/input/competitions/rogii-wellbore-geology-prediction'),",
+     "_GoldPath(globals().get('COMPETITION_DATA_ROOT', '.')),\n"
+     "        _GoldPath('/kaggle/input/competitions/rogii-wellbore-geology-prediction'),"),
+]
+_ov_fixed = 0
+for _i, _c in enumerate(cells):
+    _s = ''.join(_c['source'])
+    if 'override fallback' not in _s:
+        continue
+    for _old, _new in _OV_PATCHES:
+        if _old in _s:
+            _s = _s.replace(_old, _new, 1)
+            _ov_fixed += 1
+    cells[_i]['source'] = _s.splitlines(keepends=True)
+assert _ov_fixed >= 2, 'expected to patch both override path lists, patched %d' % _ov_fixed
+print('pointed %d contact-override path list(s) at the harness root' % _ov_fixed)
+
+# --- let the final visual audit accept the harness row count ------------------------------------
+i_gs = next(i for i, c in enumerate(cells) if '_GS_EXPECTED_ROWS = 14151' in ''.join(c['source']))
+s_gs = ''.join(cells[i_gs]['source'])
+cells[i_gs]['source'] = s_gs.replace(
+    '_GS_EXPECTED_ROWS = 14151',
+    '_GS_EXPECTED_ROWS = 14151 if not globals().get("HARNESS_WELLS") else len(\n'
+    '    __import__("pandas").read_csv(str(globals()["COMPETITION_DATA_ROOT"]) + "/sample_submission.csv"))'
+).splitlines(keepends=True)
+print('relaxed the visual audit row-count expectation in cell', i_gs)
+
 # --- disable the model-package correction under the harness ------------------------------------
 # That stage calls an external pre-trained feature builder shipped in pilkwang/rogii-model-package,
 # which is bound to the real test wells: on held-out wells it matches zero sample ids and raises
