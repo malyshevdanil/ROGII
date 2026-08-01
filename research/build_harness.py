@@ -9,7 +9,7 @@ which layers actually help, with no competition submission spent.
 import json
 
 SCRATCH = r'C:\Users\user\AppData\Local\Temp\claude\d--ROGII\6761a874-94c4-40fb-a605-d49c9b58b718\scratchpad'
-nb = json.load(open(SCRATCH + r'\rogii_51_kernel\51_gru_theirbase_blend.ipynb', encoding='utf-8'))
+nb = json.load(open(r'D:\ROGII\51_gru_theirbase_blend.ipynb', encoding='utf-8'))
 cells = nb['cells']
 
 
@@ -148,6 +148,43 @@ i_ridge = next(i for i, c in enumerate(cells)
                if 'ridge_test_preds = ridge_trainer.predict' in ''.join(c['source']))
 cells.insert(i_ridge + 1, code_cell(honest_anchor))
 print('inserted honest-anchor swap after ridge cell', i_ridge)
+
+
+# --- make the second (PF / sp45 / learned-trajectory) section read the harness root ------------
+# That section defines its OWN _find_data() with the competition path hardcoded, so it silently
+# evaluated the real 3 test wells (14151 rows) while the anchor section above used the harness set
+# (59554 rows) -- the two then collided in the sp45/learned blend with "Blend id mismatch".
+i_fd = next(i for i, c in enumerate(cells) if 'def _find_data' in ''.join(c['source']))
+src_fd = ''.join(cells[i_fd]['source'])
+old_head = ('def _find_data():\n'
+            '    for c in ["/kaggle/input/competitions/rogii-wellbore-geology-prediction",\n'
+            '              "/kaggle/input/rogii-wellbore-geology-prediction"]:\n'
+            '        if Path(c).exists() and (Path(c)/"train").exists():')
+new_head = ('def _find_data():\n'
+            '    # HARNESS: honour the data root chosen at the top of this notebook first, so this\n'
+            '    # section evaluates the same held-out wells as the anchor section.\n'
+            '    for c in [globals().get("COMPETITION_DATA_ROOT", ""),\n'
+            '              "/kaggle/input/competitions/rogii-wellbore-geology-prediction",\n'
+            '              "/kaggle/input/rogii-wellbore-geology-prediction"]:\n'
+            '        if c and Path(c).exists() and (Path(c)/"train").exists():')
+assert old_head in src_fd, 'unexpected _find_data() shape in cell %d' % i_fd
+cells[i_fd]['source'] = src_fd.replace(old_head, new_head).splitlines(keepends=True)
+print('patched _find_data() to honour the harness root in cell', i_fd)
+
+# --- neutralise Q0522 under the harness --------------------------------------------------------
+# Q0522 is a hand-tuned constant shift for one specific REAL test well (00e12e8b) and hard-raises on
+# any deviation from its recorded sha/stats/row-count. None of that applies to held-out wells, so it
+# would abort the harness for no analytical loss -- skip it when the harness is active.
+i_q = next(i for i, c in enumerate(cells) if "_EX_LABEL = 'Q0522'" in ''.join(c['source']))
+body = ''.join(cells[i_q]['source'])
+assert '"""' not in body and "'''" not in body, 'Q0522 cell has triple-quoted text; indenting is unsafe'
+guarded = ('# HARNESS: skip the well-specific Q0522 hedge (targets real test well 00e12e8b only).\n'
+           'if globals().get("HARNESS_WELLS"):\n'
+           '    print("harness: Q0522 skipped -- hand-tuned hedge for a real test well, absent here")\n'
+           'else:\n'
+           + '\n'.join(('    ' + ln) if ln.strip() else ln for ln in body.split('\n')))
+cells[i_q]['source'] = guarded.splitlines(keepends=True)
+print('guarded the Q0522 cell for harness runs at cell', i_q)
 
 
 def snapshot(tag):
