@@ -111,17 +111,36 @@ if _ha_held:
     _ha_map = _ha_map[~_ha_map.index.duplicated(keep='first')]
 
     _ha_test_ids = test_df['id'].astype(str).to_numpy()
-    _ha_repl = _ha_map.reindex(_ha_test_ids)
-    _ha_found = int(_ha_repl.notna().sum())
-    print('harness: honest-anchor coverage %d/%d test rows (%.1f%%)'
+    _ha_vals = _ha_map.reindex(_ha_test_ids).to_numpy(dtype=float)
+    _ha_found = int(_ha_np.isfinite(_ha_vals).sum())
+    print('harness: honest-anchor direct id coverage %d/%d test rows (%.1f%%)'
           % (_ha_found, len(_ha_test_ids), 100.0 * _ha_found / max(len(_ha_test_ids), 1)))
-    if _ha_found < 0.99 * len(_ha_test_ids):
-        raise RuntimeError('harness: OOF anchor covers only %d of %d test rows -- id formats differ '
-                           'between train_df and test_df, cannot guarantee an honest anchor'
-                           % (_ha_found, len(_ha_test_ids)))
+    if _ha_found < 0.90 * len(_ha_test_ids):
+        raise RuntimeError('harness: OOF anchor covers only %d of %d test rows -- too low to repair, '
+                           'train_df/test_df id formats likely differ' % (_ha_found, len(_ha_test_ids)))
+
+    # build_dataset does not emit a row for every well row (rolling-window warm-up etc.), so a few
+    # percent of test rows have no direct OOF counterpart. Fill those by interpolating along MD order
+    # from the SAME well's honest OOF values -- still leak-free, no fitted model involved.
+    _ha_well = test_df['well'].astype(str).to_numpy()
+    _ha_row = test_df['id'].astype(str).str.rsplit('_', n=1).str[-1].astype(int).to_numpy()
+    for _w in sorted(set(_ha_well)):
+        _m = _ha_np.flatnonzero(_ha_well == _w)
+        if _m.size == 0:
+            continue
+        _order = _m[_ha_np.argsort(_ha_row[_m])]
+        _r, _v = _ha_row[_order], _ha_vals[_order]
+        _ok = _ha_np.isfinite(_v)
+        if _ok.sum() < 2:
+            raise RuntimeError('harness: well %s has %d honest anchor values, cannot interpolate'
+                               % (_w, int(_ok.sum())))
+        _ha_vals[_order] = _ha_np.interp(_r, _r[_ok], _v[_ok])
+    assert _ha_np.isfinite(_ha_vals).all(), 'harness: anchor still has gaps after interpolation'
+    print('harness: filled %d remaining rows by within-well interpolation'
+          % (len(_ha_test_ids) - _ha_found))
 
     _ha_before = _ha_np.asarray(ridge_test_preds, dtype=float).ravel().copy()
-    ridge_test_preds = _ha_repl.to_numpy(dtype=float)
+    ridge_test_preds = _ha_vals
     print('harness: swapped leaked -> honest anchor, mean abs shift %.4f'
           % float(_ha_np.abs(ridge_test_preds - _ha_before).mean()))
 '''
